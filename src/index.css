@@ -1,0 +1,124 @@
+/*
+* Import de las fuentes desde google fonts 
+*/
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@800&family=IBM+Plex+Mono:wght@500&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter&family=Xanh+Mono&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;700;900&display=swap");
+
+@tailwind base;
+
+/*
+* aplicar fuente base y scroll suave a la página 
+*/
+* {
+  @apply font-sans;
+}
+
+@tailwind components;
+
+/*** NAVBAR CSS ***/
+
+/*
+* Navbar sticky con borde redondeado, sombra normal y sombra xl en hover 
+*/
+.navbar {
+  @apply fixed top-0 left-0 m-0 flex h-screen flex-col;
+}
+
+.nav-logo {
+  @apply transition-all sm:w-12 md:w-16 lg:w-24 lg:hover:w-32;
+}
+
+.nav-buttons {
+  @apply fixed top-[250px] left-0 m-0 flex h-1/3 flex-col;
+}
+
+/*** BUTTON CSS ***/
+
+/*
+* Botón redondo blanco con borde 4px de ancho azul on hover
+*/
+.button {
+  @apply rounded-full border-[4px] p-4 text-center text-3xl transition-all hover:translate-x-2 hover:border-blue-600 md:m-3 lg:m-4;
+}
+
+.button-still {
+  @apply m-4 rounded-full border-[4px] p-4 text-center text-3xl transition-all hover:border-blue-600;
+}
+
+.sendbox-button {
+  @apply transition-opacity duration-200 ease-in-out;
+}
+
+/*
+* Copia de .button pero con el borde siempre azul
+*/
+.button-active {
+  @apply m-4  translate-x-2 rounded-full border-[4px] border-blue-600 p-4 text-center text-3xl font-semibold text-blue-600;
+}
+
+/*** TEXT PANEL CSS ***/
+
+/*
+* Área de texto input del formulario del post. Pendiente de cambios 
+*/
+.post-input {
+  @apply relative z-50 m-auto my-14 rounded-[50px] shadow-inner outline-none transition-all
+  duration-200 ease-in-out focus-within:shadow-indigo-700 sm:w-11/12 md:w-2/3 lg:w-1/3;
+}
+
+.countdown {
+  @apply absolute bottom-7 left-5 border-none pl-5 text-2xl text-stone-700 opacity-100 transition-opacity duration-200 ease-in-out;
+}
+
+.countdown-active {
+  @apply absolute bottom-7 left-5 border-none pl-5 text-2xl text-red-500 opacity-100 transition-opacity duration-200 ease-in-out;
+}
+
+/*** POST AREA CSS ***/
+
+.post-feed {
+  @apply text-center;
+}
+
+/*
+* Caja contenedora de los posts 
+*/
+.panel-post {
+  @apply m-auto my-5 overflow-hidden
+  rounded-lg border border-green-400 p-5 text-left text-xl 
+
+  shadow-md transition-all sm:w-11/12  md:w-2/3 lg:w-1/3;
+}
+
+/*** USER AREA CSS ***/
+
+/*
+* Panel de usuario 
+*/
+.user-panel {
+  @apply relative m-auto mt-8 h-72 overflow-hidden  rounded-2xl border p-7
+  text-left text-lg shadow-md sm:w-11/12 md:w-2/3 lg:w-1/3;
+}
+
+.user-panel-avatar {
+  @apply absolute top-0 left-0 shadow-md;
+}
+
+.user-panel-top {
+  @apply absolute top-0 left-0 z-0 h-40 w-full bg-gradient-to-tr from-blue-400 to-green-500;
+}
+
+.user-panel-data {
+  @apply absolute bottom-20;
+}
+
+.user-panel-button {
+  @apply button-still absolute bottom-3 right-5 text-lg;
+}
+
+.user-panel-followers {
+  @apply absolute bottom-5;
+}
+
+@tailwind utilities;
