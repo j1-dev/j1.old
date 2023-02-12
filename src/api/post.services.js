@@ -11,6 +11,9 @@ import {
   doc,
 } from "firebase/firestore";
 
+/**
+ * Post collection interface
+ */
 export const PostCollectionRef = collection(db, "Posts");
 
 class PostService {

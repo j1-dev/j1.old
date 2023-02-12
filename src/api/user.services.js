@@ -10,6 +10,9 @@ import {
   doc,
 } from "firebase/firestore";
 
+/**
+ * User collection interface
+ */
 export const UserCollectionRef = collection(db, "Users");
 
 class UserService {

@@ -1,6 +1,9 @@
 import React from "react";
-import Button from "./Button";
+import { NavLink } from "react-router-dom";
 
+/**
+ * This component lets the user chose wether they want to log in or Register
+ */
 const LogInNavbar = () => {
   return (
     <nav
@@ -8,8 +11,8 @@ const LogInNavbar = () => {
                       bg-white pt-96 transition-all"
     >
       <div className="inline-flex">
-        <Button path="/Login">Login</Button>
-        <Button path="/Register">Register</Button>
+        <NavLink to="/Login">Login</NavLink>
+        <NavLink to="/Register">Register</NavLink>
       </div>
     </nav>
   );

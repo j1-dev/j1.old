@@ -3,6 +3,9 @@ import "./App.css";
 //import Header from './components/Header';
 import Navbar from "./components/Navbar";
 import MenuS from "./components/MenuS";
+import PrivateRoutes from "./components/PrivateRoute";
+import Topbar from "./components/Topbar";
+import UserCount from "./components/UserCount";
 import About from "./pages/About";
 import Home from "./pages/Home";
 import Shop from "./pages/Shop";
@@ -13,8 +16,6 @@ import Ajustes from "./pages/Ajustes";
 import PostPage from "./pages/PostPage";
 import { Route, Routes } from "react-router-dom";
 import { AuthProvider } from "./api/authContext";
-import PrivateRoutes from "./components/PrivateRoute";
-import Topbar from "./components/Topbar";
 import { auth } from "./api/firebase-config";
 
 function App() {

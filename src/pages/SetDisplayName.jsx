@@ -7,13 +7,23 @@ import { query, where, collection, onSnapshot } from "firebase/firestore";
 import { db } from "../api/firebase-config";
 import { Tilt } from "../api/TiltApi";
 
+/**
+ *
+ * @returns SetDisplayName Element
+ */
 const SetDisplayName = () => {
+  // State variables
   const [user, setUser] = useState(null);
-
+  // Current logged in
   const currentUser = auth.currentUser;
+  // References
   const refName = useRef();
+  // Navigate
   const navigate = useNavigate();
 
+  /**
+   * Fetches the currentUser info from the firestore database
+   */
   useEffect(() => {
     const unsub = () => {
       const ref = collection(db, "Users");
@@ -34,6 +44,12 @@ const SetDisplayName = () => {
     };
   }, [currentUser]);
 
+  /**
+   * Modifies the display name of the user fetches in the
+   * previous useEffect
+   *
+   * @param {event} e
+   */
   const handleNameChange = (e) => {
     e.preventDefault();
     navigate(0);

@@ -2,6 +2,10 @@ import React from "react";
 
 import { Tilt } from "../api/TiltApi";
 
+/**
+ * @deprecated
+ * old header from 4 months ago when I started this shit
+ */
 const Header = () => {
   return (
     <div className="py-28 font-cg">

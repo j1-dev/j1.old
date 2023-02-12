@@ -8,19 +8,32 @@ import UserService from "./user.services";
 
 export const authContext = createContext();
 
+/**
+ *
+ * @returns authContext
+ */
 export const useAuth = () => {
   const cont = useContext(authContext);
   if (!cont) throw new Error("tiene que tener contexto puto");
   return cont;
 };
 
+/**
+ * This element passes information down the DOM about the state of the user
+ *
+ * @param {any} children
+ */
 export function AuthProvider({ children }) {
   const defaultProfilePicUrl =
     "https://firebasestorage.googleapis.com/v0/b/j1web-7dc6e.appspot.com/o/profilePics%2Fdefault%2Fblank-profile-picture-973460_1280.webp?alt=media&token=4196e70b-dbb5-4ca6-8526-9169a854635a";
+  // user State variable that will be passed down the current user that's logged in
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
+  /**
+   * This function sets the user to the user that has logged/signed in
+   */
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
@@ -30,6 +43,17 @@ export function AuthProvider({ children }) {
     return () => unsub();
   }, []);
 
+  /**
+   * This function takes an email and a password and creates a new
+   * user with email and passwordand also adds it to the firestore
+   * database. After that, the login function is called
+   *
+   * @todo Add error and success indicators such as green/red cards
+   * with an exclamation icon or something idk
+   *
+   * @param {String} email
+   * @param {String} password
+   */
   const signup = async (email, password) => {
     const now = new Date();
     const time = {
@@ -45,7 +69,7 @@ export function AuthProvider({ children }) {
           photo: defaultProfilePicUrl, // imagen de perfil
           phone: user.phoneNumber, // número de teléfono
           verified: user.emailVerified, // correo verificado
-          nickName: user.displayName, // nickName
+          nickName: user.displayName, // nickName (Change to displayName b4 1/3)
           email: user.email, // email
           bio: "", // biografía
           joined: time.seconds, // hora de registro
@@ -65,6 +89,13 @@ export function AuthProvider({ children }) {
       });
   };
 
+  /**
+   * This function takes an email and a password and calls the signInWithEmailAndPassword
+   * with them and then it navigates to /Home
+   *
+   * @param {String} email
+   * @param {String} password
+   */
   const login = async (email, password) => {
     await signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {

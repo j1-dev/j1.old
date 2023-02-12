@@ -3,7 +3,6 @@ import { push as Menu } from "react-burger-menu";
 import { useSwipeable } from "react-swipeable";
 import { NavLink } from "react-router-dom";
 import { auth } from "../api/firebase-config";
-
 import {
   HiOutlineHome,
   HiOutlineUserCircle,
@@ -11,6 +10,14 @@ import {
   HiOutlineCog,
 } from "react-icons/hi";
 
+/**
+ * This component is a side menu that appears on mobile mode when the screen is swiped from the left,
+ * but I'll change it to open on click because the swipe library doesn't work too well
+ *
+ * @param {DOMPoint} pageWrapId
+ * @param {DOMPoint} outerContainerId
+ * @returns
+ */
 const MenuS = ({ pageWrapId, outerContainerId }) => {
   const [isOpen, setOpen] = useState(null);
   const user = auth.currentUser;
