@@ -8,6 +8,7 @@ import {
   collection,
   orderBy,
   onSnapshot,
+  limit,
 } from "firebase/firestore";
 import { db } from "../api/firebase-config";
 import Post from "../components/Post";
@@ -25,6 +26,9 @@ const Perfil = () => {
   const currentUser = auth.currentUser;
   const [posts, setPosts] = useState(null);
   const [user, setUser] = useState(null);
+  const [limite, setLimite] = useState(5);
+  const [loading, setLoading] = useState(false);
+  const [atBottom, setAtBottom] = useState(false);
   const [ready, setReady] = useState(false);
 
   /**
@@ -68,20 +72,72 @@ const Perfil = () => {
       const refQuery = query(
         ref,
         orderBy("createdAt", "desc"),
-        where("uid", "==", user.uid)
+        where("uid", "==", user.uid),
+        limit(limite)
       );
       onSnapshot(refQuery, (snapshot) => {
         const data = snapshot.docs.map((doc) => ({
           ...doc.data(),
           id: doc.id,
         }));
-        return setPosts(data);
+        setPosts(data);
+        setLoading(false);
       });
     };
     if (ready === false) return;
 
     return unsub();
-  }, [ready, user]);
+  }, [ready, user, limite]);
+
+  /**
+   * Increases the limit + 5 when it is called
+   */
+  const handleLoadMore = () => {
+    setLoading(true);
+    setLimite(limite + 5);
+    // const q = query(
+    //   CommentCollectionRef,
+    //   orderBy("createdAt", "desc"),
+    //   limit(limite),
+    //   startAfter(start)
+    // );
+    // onSnapshot(q, (snapshot) => {
+    //   const data = snapshot.docs.map((doc) => ({
+    //     ...doc.data(),
+    //     id: doc.id,
+    //   }));
+    //   setStart(snapshot.docs[4]);
+    //   setPosts((posts) => (posts = [...posts, ...data]));
+    //   setLoading(false);
+    // });
+    setAtBottom(false);
+  };
+
+  /**
+   * This useEffect adds/removes a scroll event listener and attaches it to the handleScroll() function
+   */
+  useEffect(() => {
+    /**
+     * Checks when the user has scrolled to the bottom of the feed and calls the handleLoadMoreFuncion when it does
+     *
+     * @returns {boolean} true/false
+     */
+    const handleScroll = () => {
+      if (loading || atBottom) return;
+      if (
+        window.innerHeight + document.documentElement.scrollTop >=
+        document.documentElement.offsetHeight
+      ) {
+        console.log("Scrolled to bottom!");
+        setAtBottom(true);
+        handleLoadMore();
+      }
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [posts, atBottom, loading]);
 
   return (
     <div>
