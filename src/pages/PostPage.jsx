@@ -54,12 +54,12 @@ const PostPage = () => {
         //el path del snapshot está almacenado en path, pero _path contiene los segmentos del path, que
         //serán necesarios para ir consiguiendo los documentos "padre"
         doc.ref._path.segments.map((segment) => {
-          newSegments.push(segment);
+          return newSegments.push(segment);
         });
         newSegments.splice(0, 5); //Los 5 primeros segmentos son del proyecto y han de ser eliminados
 
         newSegments.map((segment) => {
-          commentPath += segment + "/";
+          return (commentPath += segment + "/");
         });
         commentPath += "Posts";
         console.log(commentPath);
@@ -68,11 +68,11 @@ const PostPage = () => {
         newSegments.pop(); //El último elemento se quita porque es la id del post actual y no es necesaria
         setSegments(newSegments);
         newSegments.map((segment) => {
-          newPath += segment + "/";
+          return (newPath += segment + "/");
         });
 
         newPath = newPath.substring(0, newPath.length - 1); //Eliminar "/" sobrante
-        setPathPost(newPath);
+        return setPathPost(newPath);
       });
     });
   }, [id]);
@@ -91,9 +91,9 @@ const PostPage = () => {
     const parentPosts = [];
     parentPath.map((path, index) => {
       const parentRef = doc(db, path, parentId[index]);
-      onSnapshot(parentRef, (doc) => {
+      return onSnapshot(parentRef, (doc) => {
         parentPosts.unshift(doc);
-        setParentData(parentPosts);
+        return setParentData(parentPosts);
       });
     });
     if (parentPosts.length > 0) {
@@ -108,7 +108,7 @@ const PostPage = () => {
       let id = segment.pop();
       let path = "/";
       segment.map((segments) => {
-        path += segments + "/";
+        return (path += segments + "/");
       });
       path = path.substring(0, path.length - 1);
       idList.push(id);

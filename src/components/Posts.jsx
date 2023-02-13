@@ -54,12 +54,9 @@ import {
   query,
   onSnapshot,
   limit,
-  startAt,
-  startAfter,
 } from "firebase/firestore";
 import Post from "./Post";
-import { useEffect } from "react";
-import { useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 
 /**
  * This post renders all of the Posts of the Posts collection. It first loads the first 5 posts and when it scrolls to the
@@ -74,19 +71,18 @@ import { useState } from "react";
  */
 const Posts = ({ path, className }) => {
   // Reference to the collection that has been passed through the path prop
-  const CommentCollectionRef = collection(db, path);
   // State variables
   const [posts, setPosts] = useState([]);
   const [limite, setLimite] = useState(5);
   const [loading, setLoading] = useState(false);
   const [atBottom, setAtBottom] = useState(false);
-  const [start, setStart] = useState(null);
 
   /**
    * This useEffect fetches "limite" posts and sets the starting for the next batch of posts to the last post currently
    * loaded.
    */
   useEffect(() => {
+    const CommentCollectionRef = collection(db, path);
     const unsub = () => {
       const q = query(
         CommentCollectionRef,
@@ -98,19 +94,18 @@ const Posts = ({ path, className }) => {
           ...doc.data(),
           id: doc.id,
         }));
-        setStart(snapshot.docs[4]);
         setPosts(data);
         setLoading(false);
       });
     };
 
     return unsub();
-  }, [limite]);
+  }, [limite, path]);
 
   /**
    * Increases the limit + 5 when it is called
    */
-  const handleLoadMore = () => {
+  const handleLoadMore = useCallback(() => {
     setLoading(true);
     setLimite(limite + 5);
     // const q = query(
@@ -129,14 +124,14 @@ const Posts = ({ path, className }) => {
     //   setLoading(false);
     // });
     setAtBottom(false);
-  };
+  }, [limite]);
 
   /**
    * Checks when the user has scrolled to the bottom of the feed and calls the handleLoadMoreFuncion when it does
    *
    * @returns {boolean} true/false
    */
-  const handleScroll = () => {
+  const handleScroll = useCallback(() => {
     if (loading || atBottom) return;
     if (
       window.innerHeight + document.documentElement.scrollTop >=
@@ -146,7 +141,7 @@ const Posts = ({ path, className }) => {
       setAtBottom(true);
       handleLoadMore();
     }
-  };
+  }, [loading, atBottom, handleLoadMore]);
 
   /**
    * This useEffect adds/removes a scroll event listener and attaches it to the handleScroll() function
@@ -156,7 +151,7 @@ const Posts = ({ path, className }) => {
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
-  }, [posts]);
+  }, [posts, handleScroll]);
 
   /**
    * This useEffect changes atBottom back to false when atBottom is true and loading is false, which means

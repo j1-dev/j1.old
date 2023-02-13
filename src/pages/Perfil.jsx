@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import SetDisplayName from "./SetDisplayName";
 import { auth } from "../api/firebase-config";
 import {
@@ -92,7 +92,7 @@ const Perfil = () => {
   /**
    * Increases the limit + 5 when it is called
    */
-  const handleLoadMore = () => {
+  const handleLoadMore = useCallback(() => {
     setLoading(true);
     setLimite(limite + 5);
     // const q = query(
@@ -111,33 +111,44 @@ const Perfil = () => {
     //   setLoading(false);
     // });
     setAtBottom(false);
-  };
+  }, [limite]);
+
+  /**
+   * Checks when the user has scrolled to the bottom of the feed and calls the handleLoadMoreFuncion when it does
+   *
+   * @returns {boolean} true/false
+   */
+  const handleScroll = useCallback(() => {
+    if (loading || atBottom) return;
+    if (
+      window.innerHeight + document.documentElement.scrollTop >=
+      document.documentElement.offsetHeight
+    ) {
+      console.log("Scrolled to bottom!");
+      setAtBottom(true);
+      handleLoadMore();
+    }
+  }, [loading, atBottom, handleLoadMore]);
 
   /**
    * This useEffect adds/removes a scroll event listener and attaches it to the handleScroll() function
    */
   useEffect(() => {
-    /**
-     * Checks when the user has scrolled to the bottom of the feed and calls the handleLoadMoreFuncion when it does
-     *
-     * @returns {boolean} true/false
-     */
-    const handleScroll = () => {
-      if (loading || atBottom) return;
-      if (
-        window.innerHeight + document.documentElement.scrollTop >=
-        document.documentElement.offsetHeight
-      ) {
-        console.log("Scrolled to bottom!");
-        setAtBottom(true);
-        handleLoadMore();
-      }
-    };
     window.addEventListener("scroll", handleScroll);
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
-  }, [posts, atBottom, loading]);
+  }, [posts, atBottom, loading, handleScroll]);
+
+  /**
+   * This useEffect changes atBottom back to false when atBottom is true and loading is false, which means
+   * that the user has reached the bottom and the next batch of posts has been loaded
+   */
+  useEffect(() => {
+    if (!loading && atBottom) {
+      setAtBottom(false);
+    }
+  }, [loading, atBottom]);
 
   return (
     <div>
