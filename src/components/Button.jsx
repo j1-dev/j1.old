@@ -20,11 +20,26 @@ import { NavLink } from "react-router-dom";
  */
 
 const Button = ({ path, children }) => {
+  /**
+   * Prevents the default behavior of an event and logs the event object to the console.
+   *
+   * @function
+   * @name expand
+   * @param {Event} e - The event object to be processed.
+   * @returns {undefined} This function does not return anything.
+   */
   const expand = (e) => {
     e.preventDefault();
     console.log(e);
   };
 
+  /**
+   * Renders a navigation link with a hover effect and an active state.
+   *
+   * @function
+   * @name Button
+   * @returns {JSX.Element} A navigation link element with a hover effect and an active state.
+   */
   return (
     <NavLink
       onMouseEnter={expand}

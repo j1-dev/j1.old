@@ -33,6 +33,13 @@ const MenuS = ({ pageWrapId, outerContainerId }) => {
   const [isOpen, setOpen] = useState(null);
   const user = auth.currentUser;
 
+  /**
+   * An object containing the swipe event handlers to be assigned to the element.
+   *
+   * @type {Object}
+   * @property {Function} onSwipedRight - A function that is called when the user swipes right on the element.
+   * @property {boolean} trackMouse - A boolean value indicating whether to track mouse events in addition to touch events.
+   */
   const handlers = useSwipeable({
     trackMouse: true,
     onSwipedRight: () => {
@@ -41,6 +48,13 @@ const MenuS = ({ pageWrapId, outerContainerId }) => {
     },
   });
 
+  /**
+   * Renders a menu component with navigation links if the user is authenticated.
+   *
+   * @function
+   * @name MenuS
+   * @returns {JSX.Element} The rendered menu component with navigation links, or an empty fragment if the user is not authenticated.
+   */
   return (
     <div>
       {!!user && user.displayName != null ? (

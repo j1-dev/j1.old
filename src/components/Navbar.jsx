@@ -29,27 +29,68 @@ import { Tooltip } from "@mui/material";
  */
 
 const Navbar = () => {
+  /**
+   * Gets the current user from the Firebase authentication service.
+   *
+   * @type {firebase.User} The current user object or null if there is no authenticated user.
+   */
   const currentUser = auth.currentUser;
+
+  /**
+   * A hook from the React Router package that provides a navigate function for changing the URL programmatically.
+   *
+   * @type {function} The navigate function for the current route.
+   */
   const navigate = useNavigate();
+
+  /**
+   * A hook from a custom `useAuth` hook that provides loading status for authentication data.
+   *
+   * @type {boolean} True if authentication data is loading, false otherwise.
+   */
   const { loading } = useAuth();
+
+  /**
+   * A state hook that sets the window size as an array of width and height values.
+   *
+   * @type {Array<number>} An array containing the current window width and height in pixels.
+   */
   const [windowSize, setWindowSize] = useState([
     window.innerWidth,
     window.innerHeight,
   ]);
 
+  /**
+   * A hook from React that sets up a callback for when the window is resized.
+   *
+   * @type {function} A callback function that updates the window size state whenever the window is resized.
+   * @returns {function} A cleanup function that removes the event listener when the component is unmounted.
+   */
   useEffect(() => {
+    /**
+     * The callback function that updates the window size state whenever the window is resized.
+     */
     const handleWindowResize = () => {
       setWindowSize([window.innerWidth, window.innerHeight]);
       console.log(window.innerWidth);
     };
 
+    // Add an event listener for the window resize event and call the callback function.
     window.addEventListener("resize", handleWindowResize);
 
+    // Remove the event listener when the component is unmounted.
     return () => {
       window.removeEventListener("resize", handleWindowResize);
     };
   }, []);
 
+  /**
+   * Handles the logout button click event by signing out the user and redirecting to the login page.
+   *
+   * @function
+   * @param {object} e The click event object.
+   * @returns {undefined}
+   */
   const handleLogout = (e) => {
     e.preventDefault();
     auth.signOut().then(() => {
@@ -60,6 +101,13 @@ const Navbar = () => {
 
   if (loading) return <></>;
 
+  /**
+   * Renders a navbar component with navigation links if the user is authenticated.
+   *
+   * @function
+   * @name Navbar
+   * @returns {JSX.Element} The rendered menu component with navigation links, or an empty fragment if the user is not authenticated.
+   */
   return (
     <div>
       {/* 
