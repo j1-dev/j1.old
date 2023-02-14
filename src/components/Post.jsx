@@ -57,19 +57,82 @@ import { Avatar } from "@mui/material";
  */
 
 const Post = ({ data, path, className }) => {
+  /**
+   * The current user object obtained from Firebase Auth
+   * @type {Object}
+   */
   const user = auth.currentUser;
+
+  /**
+   * A Firestore query object used to retrieve the user with matching uid
+   * @type {Object}
+   */
   const q = query(UserCollectionRef, where("uid", "==", data.uid));
-  const [value, loading] = useCollection(q);
+
+  /**
+   * A collection object used to perform CRUD operations on the Likes subcollection
+   * @type {Object}
+   */
   const likesRef = collection(db, `${path}/${data.id}/Likes`);
+
+  /**
+   * A collection object used to perform CRUD operations on the Dislikes subcollection
+   * @type {Object}
+   */
   const dislikesRef = collection(db, `${path}/${data.id}/Dislikes`);
+
+  /**
+   * A collection object used to perform CRUD operations on the Posts subcollection
+   * @type {Object}
+   */
   const commentsRef = collection(db, `${path}/${data.id}/Posts`);
+
+  /**
+   * A Firestore query object used to retrieve the Likes subcollection
+   * @type {Object}
+   */
   const queryLikes = useMemo(() => query(likesRef), [path, data.id]);
+
+  /**
+   * A Firestore query object used to retrieve the Dislikes subcollection
+   * @type {Object}
+   */
   const queryDislikes = useMemo(() => query(dislikesRef), [path, data.id]);
+
+  /**
+   * A Firestore query object used to retrieve the Posts subcollection
+   * @type {Object}
+   */
   const queryComments = useMemo(() => query(commentsRef), [path, data.id]);
+
+  /**
+   * An array of documents representing the Likes subcollection
+   * @type {Array}
+   */
   const [likes, loading2] = useCollection(queryLikes);
+
+  /**
+   * An array of documents representing the Dislikes subcollection
+   * @type {Array}
+   */
   const [dislikes, loading3] = useCollection(queryDislikes);
+
+  /**
+   * An array of documents representing the Posts subcollection
+   * @type {Array}
+   */
   const [comments, loading4] = useCollection(queryComments);
+
+  /**
+   * A state variable that determines if the post can be liked
+   * @type {boolean}
+   */
   const [likeable, setLikeable] = useState(true);
+
+  /**
+   * A state variable that determines if the post can be disliked
+   * @type {boolean}
+   */
   const [dislikeable, setDislikeable] = useState(true);
 
   useEffect(() => {
