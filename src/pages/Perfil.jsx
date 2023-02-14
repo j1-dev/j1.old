@@ -16,11 +16,30 @@ import UserCard from "../components/UserCard";
 import { useParams } from "react-router-dom";
 
 /**
- * Componente Perfil
+ * @component
+ * Renders the user profile page, displaying the user's posts and user information.
  *
- * @returns Tarjeta de usuario y todos los posts y comentarios publicados por
- * el usuario
+ * @function
+ * @name Perfil
+ *
+ * @return {JSX.Element} JSX element representing the Perfil component.
+ *
+ * @requires React from react
+ * @requires SetDisplayName from ./SetDisplayName
+ * @requires auth from ../api/firebase-config
+ * @requires query from firebase/firestore
+ * @requires where from firebase/firestore
+ * @requires collectionGroup from firebase/firestore
+ * @requires collection from firebase/firestore
+ * @requires orderBy from firebase/firestore
+ * @requires onSnapshot from firebase/firestore
+ * @requires limit from firebase/firestore
+ * @requires db from ../api/firebase-config
+ * @requires Post from ../components/Post
+ * @requires UserCard from ../components/UserCard
+ * @requires useParams from react-router-dom
  */
+
 const Perfil = () => {
   const { username } = useParams();
   const currentUser = auth.currentUser;
@@ -31,15 +50,6 @@ const Perfil = () => {
   const [atBottom, setAtBottom] = useState(false);
   const [ready, setReady] = useState(false);
 
-  /**
-   * UseEffect que utiliza el nombre de usuario (encontrado en la
-   * ruta y extraido por useParams()). Cuando se actualiza username, se
-   * ejecuta unsub, que escucha los cambios de onSnapshot, que devuelve el
-   * documento de la colección Users cuyo nickname es el obtenido por la ruta.
-   * (((necesita limpieza)))
-   *
-   * @requires username
-   */
   useEffect(() => {
     const unsub = () => {
       const ref = collection(db, "Users");
@@ -59,13 +69,6 @@ const Perfil = () => {
     return unsub();
   }, [username]);
 
-  /**
-   * UseEffect que recupera todos los posts y comentarios publicados por el
-   * usuario conectado. Los posts se guardan en [posts] con la función de
-   * estado setPosts()
-   *
-   * @requires {ready, user}
-   */
   useEffect(() => {
     const unsub = () => {
       const ref = collectionGroup(db, "Posts");
@@ -89,35 +92,12 @@ const Perfil = () => {
     return unsub();
   }, [ready, user, limite]);
 
-  /**
-   * Increases the limit + 5 when it is called
-   */
   const handleLoadMore = useCallback(() => {
     setLoading(true);
     setLimite(limite + 5);
-    // const q = query(
-    //   CommentCollectionRef,
-    //   orderBy("createdAt", "desc"),
-    //   limit(limite),
-    //   startAfter(start)
-    // );
-    // onSnapshot(q, (snapshot) => {
-    //   const data = snapshot.docs.map((doc) => ({
-    //     ...doc.data(),
-    //     id: doc.id,
-    //   }));
-    //   setStart(snapshot.docs[4]);
-    //   setPosts((posts) => (posts = [...posts, ...data]));
-    //   setLoading(false);
-    // });
     setAtBottom(false);
   }, [limite]);
 
-  /**
-   * Checks when the user has scrolled to the bottom of the feed and calls the handleLoadMoreFuncion when it does
-   *
-   * @returns {boolean} true/false
-   */
   const handleScroll = useCallback(() => {
     if (loading || atBottom) return;
     if (
@@ -130,9 +110,6 @@ const Perfil = () => {
     }
   }, [loading, atBottom, handleLoadMore]);
 
-  /**
-   * This useEffect adds/removes a scroll event listener and attaches it to the handleScroll() function
-   */
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);
     return () => {
@@ -140,10 +117,6 @@ const Perfil = () => {
     };
   }, [posts, atBottom, loading, handleScroll]);
 
-  /**
-   * This useEffect changes atBottom back to false when atBottom is true and loading is false, which means
-   * that the user has reached the bottom and the next batch of posts has been loaded
-   */
   useEffect(() => {
     if (!loading && atBottom) {
       setAtBottom(false);

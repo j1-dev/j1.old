@@ -12,26 +12,31 @@ import {
 import { Tooltip } from "@mui/material";
 
 /**
+ * @component
+ * React component for rendering the navigation bar of the website.
  *
- * @returns Navbar component
+ * @function
+ * @name Navbar
+ *
+ * @returns {JSX.Element} The rendered React element representing the navigation bar.
+ *
+ * @requires react
+ * @requires react-router-dom
+ * @requires @mui/material
+ * @requires ../api/firebase-config
+ * @requires ../api/authContext
+ * @requires ../logo.png
  */
+
 const Navbar = () => {
-  // Current User that is logged int
   const currentUser = auth.currentUser;
-  // Navigate object that's used for navigating to a given link
   const navigate = useNavigate();
-  // Loading from the authContext
   const { loading } = useAuth();
-  // Window size state veriables to keep track of the window size
   const [windowSize, setWindowSize] = useState([
     window.innerWidth,
     window.innerHeight,
   ]);
 
-  /**
-   * This useEffect adds a resize event listener and calls the handleWindowResize function
-   * on every resize event
-   */
   useEffect(() => {
     const handleWindowResize = () => {
       setWindowSize([window.innerWidth, window.innerHeight]);
@@ -45,12 +50,6 @@ const Navbar = () => {
     };
   }, []);
 
-  /**
-   * This function loggs the current user out and navigates them to the
-   * login screen
-   *
-   * @param {event} e
-   */
   const handleLogout = (e) => {
     e.preventDefault();
     auth.signOut().then(() => {
@@ -59,17 +58,8 @@ const Navbar = () => {
     });
   };
 
-  /**
-   * If the auth hasn't finish loading, it return an empty element
-   */
   if (loading) return <></>;
 
-  /**
-   * The navbar consists of three parts:
-   *  - The logo (up)
-   *  - The navbuttons (center)
-   *  - The logout button (down)
-   */
   return (
     <div>
       {/* 

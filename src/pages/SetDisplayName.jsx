@@ -8,22 +8,36 @@ import { db } from "../api/firebase-config";
 import { Tilt } from "../api/TiltApi";
 
 /**
+ * @component
+ * Renders a form for the user to set their display name if they have not already done so.
  *
- * @returns SetDisplayName Element
+ * @function
+ * @name SetDisplayName
+ *
+ * @return {JSX.Element} JSX element representing the SetDisplayName component.
+ *
+ * @requires React from react
+ * @requires useRef from react
+ * @requires useState from react
+ * @requires useEffect from react
+ * @requires auth from ../api/firebase-config
+ * @requires updateProfile from firebase/auth
+ * @requires useNavigate from react-router-dom
+ * @requires UserServices from ../api/user.services
+ * @requires query from firebase/firestore
+ * @requires where from firebase/firestore
+ * @requires collection from firebase/firestore
+ * @requires onSnapshot from firebase/firestore
+ * @requires db from ../api/firebase-config
+ * @requires Tilt from ../api/TiltApi
  */
+
 const SetDisplayName = () => {
-  // State variables
   const [user, setUser] = useState(null);
-  // Current logged in
   const currentUser = auth.currentUser;
-  // References
   const refName = useRef();
-  // Navigate
   const navigate = useNavigate();
 
-  /**
-   * Fetches the currentUser info from the firestore database
-   */
   useEffect(() => {
     const unsub = () => {
       const ref = collection(db, "Users");
@@ -44,12 +58,6 @@ const SetDisplayName = () => {
     };
   }, [currentUser]);
 
-  /**
-   * Modifies the display name of the user fetches in the
-   * previous useEffect
-   *
-   * @param {event} e
-   */
   const handleNameChange = (e) => {
     e.preventDefault();
     navigate(0);

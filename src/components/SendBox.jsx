@@ -13,16 +13,49 @@ import Picker from "emoji-picker-react";
 import { doc, collection } from "firebase/firestore";
 import { db } from "../api/firebase-config";
 
+/**
+ * @component
+ * Renders a SendBox component that allows a user to input a message and send it.
+ *
+ * @function
+ * @name SendBox
+ *
+ * @param {Object} props - The props object.
+ * @param {string} props.className - The class name for the SendBox component.
+ * @param {string} props.path - The path for the SendBox component.
+ *
+ * @return {JSX.Element} JSX element representing the SendBox component.
+ *
+ * @requires React from react
+ * @requires useState from react
+ * @requires useRef from react
+ * @requires useEffect from react
+ * @requires postServices from ../api/post.services
+ * @requires auth from ../api/firebase-config
+ * @requires storage from ../api/firebase-config
+ * @requires getDownloadURL from firebase/storage
+ * @requires ref from firebase/storage
+ * @requires uploadBytes from firebase/storage
+ * @requires v4 from uuid
+ * @requires TbSend from react-icons/tb
+ * @requires CgImage from react-icons/cg
+ * @requires BsFillEmojiSmileFill from react-icons/bs
+ * @requires GrClose from react-icons/gr
+ * @requires Tooltip from @mui/material
+ * @requires Popper from @mui/material
+ * @requires Picker from emoji-picker-react
+ * @requires doc from firebase/firestore
+ * @requires collection from firebase/firestore
+ * @requires db from ../api/firebase-config
+ */
+
 const SendBox = ({ className, path }) => {
-  // current user
   const user = auth.currentUser;
-  // References
   const postRef = useRef(null);
   const imageRef = useRef(null);
   const fileRef = useRef(null);
   const drop = useRef(null);
   const drag = useRef(null);
-  // State Variables
   const [imageURL, setImageURL] = useState(null);
   const [post, setPost] = useState("");
   const [chars, setChars] = useState(null);
@@ -32,11 +65,6 @@ const SendBox = ({ className, path }) => {
   const [dragging, setDragging] = useState(false);
   const [focused, setFocused] = useState(false);
 
-  /**
-   * Image drop events useEffect
-   *
-   * Handles the dragenter and dragleave events
-   */
   useEffect(() => {
     if (drop.current) {
       drop.current.addEventListener("dragenter", handleDragEnter);
@@ -66,11 +94,6 @@ const SendBox = ({ className, path }) => {
     }
   };
 
-  /**
-   * EmojiBox Sutff
-   *
-   * Currently broken af
-   */
   const onEmojiClick = (e, emojiObject) => {
     setPost((post) => post + emojiObject.emoji);
   };
@@ -81,42 +104,22 @@ const SendBox = ({ className, path }) => {
     setShowPicker(!showPicker);
   };
 
-  /**
-   * Handles the character limit of the text area
-   *
-   * @param {event} e
-   */
   const handleLimit = (e) => {
     e.preventDefault();
     setChars(e.target.maxLength - e.target.value.length);
     setPost(e.target.value);
   };
 
-  /**
-   * Checks if the text area is focused
-   *
-   * @param {event} e
-   */
   const handleFocus = (e) => {
     e.preventDefault();
     setFocused(true);
   };
 
-  /**
-   * Checks if the text area is not focused
-   *
-   * @param {event} e
-   */
   const handleBlur = (e) => {
     e.preventDefault();
     setFocused(false);
   };
 
-  /**
-   * Opens image selector menu
-   *
-   * @param {event} e
-   */
   const handleImageButton = (e) => {
     e.preventDefault();
     fileRef.current.click();
@@ -198,11 +201,6 @@ const SendBox = ({ className, path }) => {
     imageRef.current.value = null;
   };
 
-  /**
-   * This function sets the image preview
-   *
-   * @param {event} e
-   */
   const previewImage = (e) => {
     e.preventDefault();
     var file = e.target.files[0];
@@ -211,7 +209,6 @@ const SendBox = ({ className, path }) => {
   };
 
   return (
-    // Outter container
     <div className={className} ref={drop}>
       {/* Profile pic */}
       <img

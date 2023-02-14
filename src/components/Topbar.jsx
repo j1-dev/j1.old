@@ -4,6 +4,22 @@ import { auth } from "../api/firebase-config";
 import { useNavigate } from "react-router-dom";
 import { FiArrowLeft } from "react-icons/fi";
 
+/**
+ * @component
+ * Renders the Topbar component which displays the logo, title and navigation options for the app.
+ *
+ * @function
+ * @name Topbar
+ *
+ * @return {JSX.Element} JSX element representing the Topbar component.
+ *
+ * @requires React from react
+ * @requires logo from ../logo.png
+ * @requires auth from ../api/firebase-config
+ * @requires useNavigate from react-router-dom
+ * @requires FiArrowLeft from react-icons/fi
+ */
+
 const Topbar = () => {
   const user = auth.currentUser;
   const navigate = useNavigate();

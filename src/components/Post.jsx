@@ -19,21 +19,47 @@ import { TbMessage } from "react-icons/tb";
 import { Avatar } from "@mui/material";
 
 /**
- * This component renders a single post and handles likes and dislikes
+ * @component
+ * A component that displays a single post, along with information about its author and comments, likes, and dislikes.
  *
- * @param {Object} data Post data
- * @param {String} path Post path
- * @param {String} clasName Post tailwind css
- * @returns
+ * @function
+ * @name Post
+ *
+ * @param {object} props - The props for the Post component.
+ * @param {object} props.data - An object containing information about the post, such as its content, author, and creation time.
+ * @param {string} props.path - The path to the post in the Firebase database.
+ * @param {string} props.className - The class name(s) to apply to the root element of the component.
+ * @returns {JSX.Element} - The rendered Post component.
+ *
+ * @requires collection from firebase/firestore
+ * @requires query from firebase/firestore
+ * @requires setDoc from firebase/firestore
+ * @requires where from firebase/firestore
+ * @requires doc from firebase/firestore
+ * @requires deleteDoc from firebase/firestore
+ * @requires getDoc from firebase/firestore
+ * @requires React from react
+ * @requires useState from react
+ * @requires useMemo from react
+ * @requires useEffect from react
+ * @requires useCallback from react
+ * @requires auth from ../api/firebase-config
+ * @requires db from ../api/firebase-config
+ * @requires UserCollectionRef from ../api/user.services
+ * @requires useCollection from react-firebase-hooks/firestore
+ * @requires NavLink from react-router-dom
+ * @requires Link from react-router-dom
+ * @requires YouTube from react-youtube
+ * @requires GoThumbsdown from react-icons/go
+ * @requires GoThumbsup from react-icons/go
+ * @requires TbMessage from react-icons/tb
+ * @requires Avatar from @mui/material.
  */
+
 const Post = ({ data, path, className }) => {
-  // Current logged in user
   const user = auth.currentUser;
-  // Query to the Users collection to retrieve aditional info about the user who posted this post
   const q = query(UserCollectionRef, where("uid", "==", data.uid));
-  // This hook fetches the query info
   const [value, loading] = useCollection(q);
-  // Refs, querys, and fecth hooks that handle the likes, dislikes, and comments
   const likesRef = collection(db, `${path}/${data.id}/Likes`);
   const dislikesRef = collection(db, `${path}/${data.id}/Dislikes`);
   const commentsRef = collection(db, `${path}/${data.id}/Posts`);
@@ -43,13 +69,9 @@ const Post = ({ data, path, className }) => {
   const [likes, loading2] = useCollection(queryLikes);
   const [dislikes, loading3] = useCollection(queryDislikes);
   const [comments, loading4] = useCollection(queryComments);
-  // State variables to check if a Post is likeable/dislikeable or not
   const [likeable, setLikeable] = useState(true);
   const [dislikeable, setDislikeable] = useState(true);
 
-  /**
-   * This useEffect checks if the currently logged in user has liked the post or not
-   */
   useEffect(() => {
     const unsub = async () => {
       const likeRef = doc(likesRef, user.uid);
@@ -64,9 +86,6 @@ const Post = ({ data, path, className }) => {
     unsub();
   }, [path]);
 
-  /**
-   * This useEffect checks if the currently logged in user has disliked the post or not
-   */
   useEffect(() => {
     const unsub = async () => {
       const dislikeRef = doc(dislikesRef, user.uid);
@@ -81,10 +100,6 @@ const Post = ({ data, path, className }) => {
     unsub();
   }, [path]);
 
-  /**
-   * Use the useCallback hook to memoize the handleLike and handleDislike functions
-   * so that they don't have to be re-created every time the component re-renders
-   */
   const handleLike = useCallback(
     async (e) => {
       e.preventDefault();
@@ -107,10 +122,6 @@ const Post = ({ data, path, className }) => {
     [likeable, dislikesRef, likesRef, user.uid]
   );
 
-  /**
-   * Use the useCallback hook to memoize the handleLike and handleDislike functions
-   * so that they don't have to be re-created every time the component re-renders
-   */
   const handleDislike = useCallback(
     async (e) => {
       e.preventDefault();
@@ -133,24 +144,12 @@ const Post = ({ data, path, className }) => {
     [dislikeable, likesRef, dislikesRef, user.uid]
   );
 
-  /**
-   * Converts secconds from epoch to a timestamp
-   *
-   * @param {Number} secs seconds since epoch when the post was posted
-   * @returns {timestamp}
-   */
   function toDateTime(secs) {
     var t = new Date(1970, 0, 1); // Epoch
     t.setSeconds(secs);
     return t;
   }
 
-  /**
-   * Checks wether the url is a youtube link or not
-   *
-   * @param {String} url
-   * @returns {boolean}
-   */
   function matchYoutubeUrl(url) {
     var p =
       /^(?:https?:\/\/)?(?:m\.|www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})(?:\S+)?$/;

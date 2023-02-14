@@ -11,6 +11,36 @@ import {
 import { Avatar } from "@mui/material";
 import { useCollection } from "react-firebase-hooks/firestore";
 
+/**
+ * @component
+ * Renders a UserCard component that displays user information and allows following/unfollowing.
+ *
+ * @function
+ * @name UserCard
+ *
+ * @param {Object} props - The props object.
+ * @param {Object} props.user - The user object.
+ * @param {string} props.user.uid - The user ID.
+ * @param {string} props.user.nickName - The user nickname.
+ * @param {string} props.user.photo - The user photo URL.
+ *
+ * @return {JSX.Element} JSX element representing the UserCard component.
+ *
+ * @requires React from react
+ * @requires useEffect from react
+ * @requires useState from react
+ * @requires auth from ../api/firebase-config
+ * @requires db from ../api/firebase-config
+ * @requires setDoc from firebase/firestore
+ * @requires doc from firebase/firestore
+ * @requires getDoc from firebase/firestore
+ * @requires collection from firebase/firestore
+ * @requires deleteDoc from firebase/firestore
+ * @requires query from firebase/firestore
+ * @requires useCollection from react-firebase-hooks/firestore
+ * @requires Avatar from @mui/material
+ */
+
 const UserCard = ({ user }) => {
   const currentUser = auth.currentUser;
   const [followeable, setFolloweable] = useState(true);

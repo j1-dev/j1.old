@@ -11,13 +11,24 @@ import {
 } from "react-icons/hi";
 
 /**
- * This component is a side menu that appears on mobile mode when the screen is swiped from the left,
- * but I'll change it to open on click because the swipe library doesn't work too well
- *
- * @param {DOMPoint} pageWrapId
- * @param {DOMPoint} outerContainerId
- * @returns
- */
+* @component
+* React component for rendering a sidebar menu using react-burger-menu and react-swipeable.
+
+* @function
+* @name MenuS
+
+* @param {string} pageWrapId - The ID of the page wrap element.
+* @param {string} outerContainerId - The ID of the outer container element.
+* @returns {JSX.Element} The rendered React element representing the sidebar menu.
+
+* @requires react
+* @requires react-burger-menu
+* @requires react-swipeable
+* @requires react-router-dom
+* @requires ../api/firebase-config
+* @requires react-icons/hi
+*/
+
 const MenuS = ({ pageWrapId, outerContainerId }) => {
   const [isOpen, setOpen] = useState(null);
   const user = auth.currentUser;

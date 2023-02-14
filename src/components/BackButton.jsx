@@ -3,7 +3,16 @@ import { useNavigate } from "react-router-dom";
 
 /**
  * @deprecated
- * Button to navigate back to the previous page visitedS
+ * @component
+ * React component for rendering a back button that navigates to the previous page using React Router.
+ *
+ * @function
+ * @name BackButton
+ *
+ * @returns {JSX.Element} The rendered React element representing the back button.
+ *
+ * @requires react
+ * @requires react-router-dom
  */
 function BackButton() {
   const navigate = useNavigate();

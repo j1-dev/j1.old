@@ -14,6 +14,35 @@ import { v4 } from "uuid";
 import { updateProfile } from "firebase/auth";
 import userServices from "../api/user.services";
 
+/**
+ * @component
+ * Renders a Settings component that allows the user to update their profile information and profile picture.
+ *
+ * @function
+ * @name Settings
+ *
+ * @return {JSX.Element} JSX element representing the Settings component.
+ *
+ * @requires React from react
+ * @requires useState from react
+ * @requires useRef from react
+ * @requires useEffect from react
+ * @requires auth from ../api/firebase-config
+ * @requires BsCheckLg from react-icons/bs
+ * @requires GrAdd from react-icons/gr
+ * @requires Modal from @mui/material
+ * @requires Box from @mui/material
+ * @requires Avatar from @mui/material
+ * @requires ref from firebase/storage
+ * @requires uploadBytes from firebase/storage
+ * @requires getDownloadURL from firebase/storage
+ * @requires deleteObject from firebase/storage
+ * @requires storage from ../api/firebase-config
+ * @requires v4 from uuid
+ * @requires updateProfile from firebase/auth
+ * @requires userServices from ../api/user.services
+ */
+
 const Settings = () => {
   const currentUser = auth.currentUser;
   const defaultProfilePicUrl =

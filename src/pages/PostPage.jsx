@@ -12,51 +12,58 @@ import { db } from "../api/firebase-config";
 import { useParams } from "react-router-dom";
 import SendBox from "../components/SendBox";
 
+/**
+ * @component
+ * Renders a post page, including the post, its parent posts and its comments.
+ *
+ * @function
+ * @name PostPage
+ *
+ * @return {JSX.Element} JSX element representing the PostPage component.
+ *
+ * @requires React from react
+ * @requires useEffect from react
+ * @requires useState from react
+ * @requires useRef from react
+ * @requires Post from ../components/Post
+ * @requires Posts from ../components/Posts
+ * @requires query from firebase/firestore
+ * @requires where from firebase/firestore
+ * @requires onSnapshot from firebase/firestore
+ * @requires collectionGroup from firebase/firestore
+ * @requires doc from firebase/firestore
+ * @requires db from ../api/firebase-config
+ * @requires useParams from react-router-dom
+ * @requires SendBox from ../components/SendBox
+ */
+
 const PostPage = () => {
-  const [data, setData] = useState(null); //Datos del post actual
-  const [pathComments, setPathComments] = useState(null); //Path de la colección de los comentarios del post actual
-  const [pathPost, setPathPost] = useState(null); //Path de la colección donde se encuentra el post actual
-  const [segments, setSegments] = useState([]); //Array de segmentos del path
-  const [parentPath, setParentPath] = useState([]); //Array de path de posts antecesores a data
-  const [parentId, setParentId] = useState([]); //Array de ids de posts antecesores a data
-  const [parentData, setParentData] = useState(null); //Array de datos de posts antecesores a data
+  const [data, setData] = useState(null);
+  const [pathComments, setPathComments] = useState(null);
+  const [pathPost, setPathPost] = useState(null);
+  const [segments, setSegments] = useState([]);
+  const [parentPath, setParentPath] = useState([]);
+  const [parentId, setParentId] = useState([]);
+  const [parentData, setParentData] = useState(null);
   const ref = useRef(null);
-  const { id } = useParams(); //id del post actual
+  const { id } = useParams();
 
-  /*** TAREA ***
-   *
-   * (1) Mostrar todos los posts anidados anteriores: done
-   * (2) Añadir caja de comentarios (SendBox): done
-   * (3) Mostrar todos los comentarios al post actual: done
-   * (4) Cambiar className de los padres y los commentarios
-   * (5) Averiguar como hacer scroll automáticamente
-   *
-   */
-
-  /**
-   * useEffect para recoger el post cuya id se conoce gracias a useParams().
-   * Se ejecutará cada vez que cambie id.
-   */
   useEffect(() => {
-    //La única manera de conseguir un post solo con el id es con colectionGroup buscando todos los posts
-    //donde la id es la id conseguida por useParams()
     setParentData([]);
     setPathComments(null);
     const postRef = collectionGroup(db, "Posts");
     const queryPost = query(postRef, where("id", "==", id));
     onSnapshot(queryPost, (snapshot) => {
       snapshot.docs.map((doc) => {
-        setData(doc); //{doc} -> snapshot del documento que queremos recuperar
-        let newPath = "/"; //newPath almacenará el path que le pasaremos al elemento Post
-        let commentPath = "/"; //commentPath almacenará el path que le pasaremos a SendBox para que almacene el comentario en el lugar correcto
-        let newSegments = []; //newSegments almacenará los segmentos del path
+        setData(doc);
+        let newPath = "/";
+        let commentPath = "/";
+        let newSegments = [];
 
-        //el path del snapshot está almacenado en path, pero _path contiene los segmentos del path, que
-        //serán necesarios para ir consiguiendo los documentos "padre"
         doc.ref._path.segments.map((segment) => {
           return newSegments.push(segment);
         });
-        newSegments.splice(0, 5); //Los 5 primeros segmentos son del proyecto y han de ser eliminados
+        newSegments.splice(0, 5);
 
         newSegments.map((segment) => {
           return (commentPath += segment + "/");
@@ -65,22 +72,18 @@ const PostPage = () => {
         console.log(commentPath);
         setPathComments(commentPath);
 
-        newSegments.pop(); //El último elemento se quita porque es la id del post actual y no es necesaria
+        newSegments.pop();
         setSegments(newSegments);
         newSegments.map((segment) => {
           return (newPath += segment + "/");
         });
 
-        newPath = newPath.substring(0, newPath.length - 1); //Eliminar "/" sobrante
+        newPath = newPath.substring(0, newPath.length - 1);
         return setPathPost(newPath);
       });
     });
   }, [id]);
 
-  /**
-   * useEffect para recuperar los posts padres del post actual.
-   * Se ejecutará cada vez que cambie segments.
-   */
   useEffect(() => {
     let newSegments = segments;
     newSegments.pop();

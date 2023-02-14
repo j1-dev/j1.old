@@ -1,34 +1,45 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState } from "react";
 import ThreadDisplay from "../components/ThreadDisplay";
 import SetDisplayName from "./SetDisplayName";
 import { auth, db } from "../api/firebase-config";
 import { query, collection, doc } from "firebase/firestore";
 import { useCollection, useDocument } from "react-firebase-hooks/firestore";
-import { authContext } from "../api/authContext";
+
 /**
- * Componente Home.
+ * @component
+ * Renders the home page, displaying the user's threads if they have set their display name,
+ * or allowing them to set their display name if they haven't already.
  *
- * @returns componente SetDisplayName o ThreadDisplay
+ * @function
+ * @name Home
+ *
+ * @return {JSX.Element} JSX element representing the Home component.
+ *
+ * @requires React from react
+ * @requires useEffect from react
+ * @requires useState from react
+ * @requires ThreadDisplay from ../components/ThreadDisplay
+ * @requires SetDisplayName from ./SetDisplayName
+ * @requires auth from ../api/firebase-config
+ * @requires db from ../api/firebase-config
+ * @requires query from firebase/firestore
+ * @requires collection from firebase/firestore
+ * @requires doc from firebase/firestore
+ * @requires useCollection from react-firebase-hooks/firestore
+ * @requires useDocument from react-firebase-hooks/firestore
  */
+
 const Home = ({}) => {
-  const { user, userPlus } = useContext(authContext);
-  const currentUser = auth.currentUser; //Usuario conectado actualmente
-  const followsRef = collection(db, `Users/${currentUser.uid}/Follows`); //Referencia a la colección de los usuarios seguidos por currentUser
-  const queryFollows = query(followsRef); //Query de la referencia followsRef
-  const userRef = doc(db, "Users", currentUser.uid); //Referencia a el documento usuario conectado actualmente
-  const [value, loading] = useCollection(queryFollows); //Fetch de los documentos pedidos por queryFollows
-  const [value2, loading2] = useDocument(userRef); //Fetch del documento userRef
-  const [users, setUsers] = useState(null); //Variable de estado donde se guardarán los usuarios seguido
-  //se le pasará al componente ThreadDisplay que se encargará de mostrar                                                                                //todos los posts de los usuarios seguidos y el propio usuario
-  /*                                                                            //todos los posts de los usuarios seguidos
-    Hook que se ejecuta cada vez que se actualiza la colección de usuarios
-    seguidos o el usuario.
-    Añade el usuario actual a la colección de usuarios seguidos para que 
-    se muestren también los posts del usuario actual 
-  */
+  const currentUser = auth.currentUser;
+  const followsRef = collection(db, `Users/${currentUser.uid}/Follows`);
+  const queryFollows = query(followsRef);
+  const userRef = doc(db, "Users", currentUser.uid);
+  const [value, loading] = useCollection(queryFollows);
+  const [value2, loading2] = useDocument(userRef);
+  const [users, setUsers] = useState(null);
+
   useEffect(() => {
     if (!loading && !loading2) {
-      console.log(userPlus);
       const users = value.docs;
       users.push(value2);
       setUsers(users);

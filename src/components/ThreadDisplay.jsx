@@ -5,6 +5,31 @@ import { collection, query, where, onSnapshot } from "firebase/firestore";
 import { db } from "../api/firebase-config";
 import SendBox from "./SendBox";
 
+/**
+ * @component
+ * Renders a ThreadDisplay component that displays a feed of Posts and a SendBox to input and send messages.
+ *
+ * @function
+ * @name ThreadDisplay
+ *
+ * @param {Object} props - The props object.
+ * @param {Array} props.users - An array of user objects.
+ *
+ * @return {JSX.Element} JSX element representing the ThreadDisplay component.
+ *
+ * @requires React from react
+ * @requires useState from react
+ * @requires useEffect from react
+ * @requires Post from ./Post
+ * @requires Posts from ./Posts
+ * @requires collection from firebase/firestore
+ * @requires query from firebase/firestore
+ * @requires where from firebase/firestore
+ * @requires onSnapshot from firebase/firestore
+ * @requires db from ../api/firebase-config
+ * @requires SendBox from ./SendBox
+ */
+
 const ThreadDisplay = ({ users }) => {
   const [posts, setPosts] = useState([]);
   const [feed, setFeed] = useState([]);

@@ -4,10 +4,22 @@ import LogInNavbar from "../components/LogInNavbar";
 import { Tilt } from "../api/TiltApi";
 
 /**
- * Componente Login
+ * @component
+ * Renders the login page with a form for users to input their email and password and submit
+ * to log in. Also includes a Tilt component for the "Log-in" text.
  *
- * @returns Página de Login
+ * @function
+ * @name Login
+ *
+ * @return {JSX.Element} JSX element representing the Login component.
+ *
+ * @requires React from react
+ * @requires useState from react
+ * @requires useAuth from ../api/authContext
+ * @requires LogInNavbar from ../components/LogInNavbar
+ * @requires Tilt from ../api/TiltApi
  */
+
 const Login = () => {
   const [user, setUser] = useState({
     email: "",
@@ -16,10 +28,27 @@ const Login = () => {
 
   const { login } = useAuth();
 
+  /**
+   * Handles changes to the input fields in the form by updating the user state object
+   * with the new values.
+   *
+   * @function
+   * @name handleChange
+   *
+   * @param {Object} event - The event object representing the input field change.
+   */
   const handleChange = ({ target: { name, value } }) => {
     setUser({ ...user, [name]: value });
   };
 
+  /**
+   * Submits the form to log the user in with the entered email and password.
+   *
+   * @function
+   * @name handleSubmit
+   *
+   * @param {Object} event - The event object representing the form submission.
+   */
   const handleSubmit = (e) => {
     e.preventDefault();
     login(user.email, user.password);

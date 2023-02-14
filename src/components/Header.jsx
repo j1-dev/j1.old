@@ -1,11 +1,19 @@
 import React from "react";
-
 import { Tilt } from "../api/TiltApi";
 
 /**
- * @deprecated
- * old header from 4 months ago when I started this shit
+ * @component
+ * React component for rendering the header of the website.
+ *
+ * @function
+ * @name Header
+ *
+ * @returns {JSX.Element} The rendered React element representing the header.
+ *
+ * @requires react
+ * @requires ../api/TiltApi
  */
+
 const Header = () => {
   return (
     <div className="py-28 font-cg">

@@ -1,12 +1,29 @@
-import React, { useState } from 'react';
-import { useAuth } from '../api/authContext';
-import LogInNavbar from '../components/LogInNavbar';
-import { Tilt }  from '../api/TiltApi';
+import React, { useState } from "react";
+import { useAuth } from "../api/authContext";
+import LogInNavbar from "../components/LogInNavbar";
+import { Tilt } from "../api/TiltApi";
+
+/**
+ * @component
+ * Renders a registration form where the user can sign up by providing their email and password.
+ * Uses the `useAuth` hook to handle the signup process.
+ *
+ * @function
+ * @name Register
+ *
+ * @return {JSX.Element} JSX element representing the Register component.
+ *
+ * @requires React from react
+ * @requires useState from react
+ * @requires useAuth from ../api/authContext
+ * @requires LogInNavbar from ../components/LogInNavbar
+ * @requires Tilt from ../api/TiltApi
+ */
 
 const Register = () => {
   const [user, setUser] = useState({
-    email: '',
-    password: '',
+    email: "",
+    password: "",
   });
 
   const { signup } = useAuth();
@@ -15,19 +32,17 @@ const Register = () => {
     setUser({ ...user, [name]: value });
   };
 
-  const handleSubmit = async(e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     await signup(user.email, user.password);
   };
 
   return (
     <div>
-      <div className='w-1/2 float-right border-l-2 border-black h-screen'>
-        <Tilt className='font-bold text-9xl w-full mt-80'>
-          Register
-        </Tilt>
+      <div className="float-right h-screen w-1/2 border-l-2 border-black">
+        <Tilt className="mt-80 w-full text-9xl font-bold">Register</Tilt>
       </div>
-      <div className='w-1/2 float-right'>
+      <div className="float-right w-1/2">
         <form className="pt-60">
           <label htmlFor="email" className="p-3">
             Email
@@ -37,7 +52,7 @@ const Register = () => {
             placeholder="ejemplo@gmail.com"
             name="email"
             id="email"
-            className="p-3 border"
+            className="border p-3"
             onChange={handleChange}
           />
 
@@ -46,10 +61,10 @@ const Register = () => {
           </label>
           <input
             type="password"
-            placeholder='password'
+            placeholder="password"
             name="password"
             id="password"
-            className="p-3 border"
+            className="border p-3"
             onChange={handleChange}
           />
 
@@ -60,7 +75,6 @@ const Register = () => {
         </form>
       </div>
     </div>
-      
   );
 };
 
