@@ -31,29 +31,25 @@ import { Tooltip } from "@mui/material";
 const Navbar = () => {
   /**
    * Gets the current user from the Firebase authentication service.
-   *
-   * @type {firebase.User} The current user object or null if there is no authenticated user.
+   * @type {firebase.User}
    */
   const currentUser = auth.currentUser;
 
   /**
    * A hook from the React Router package that provides a navigate function for changing the URL programmatically.
-   *
-   * @type {function} The navigate function for the current route.
+   * @type {function}
    */
   const navigate = useNavigate();
 
   /**
    * A hook from a custom `useAuth` hook that provides loading status for authentication data.
-   *
-   * @type {boolean} True if authentication data is loading, false otherwise.
+   * @type {boolean}
    */
   const { loading } = useAuth();
 
   /**
    * A state hook that sets the window size as an array of width and height values.
-   *
-   * @type {Array<number>} An array containing the current window width and height in pixels.
+   * @type {Array<number>}
    */
   const [windowSize, setWindowSize] = useState([
     window.innerWidth,
@@ -63,7 +59,7 @@ const Navbar = () => {
   /**
    * A hook from React that sets up a callback for when the window is resized.
    *
-   * @type {function} A callback function that updates the window size state whenever the window is resized.
+   * @function
    * @returns {function} A cleanup function that removes the event listener when the component is unmounted.
    */
   useEffect(() => {

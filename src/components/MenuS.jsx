@@ -30,7 +30,18 @@ import {
 */
 
 const MenuS = ({ pageWrapId, outerContainerId }) => {
+  /**
+   * Represents the state of whether a component is open or closed.
+   *
+   * @type {boolean|null}
+   */
   const [isOpen, setOpen] = useState(null);
+
+  /**
+   * Represents the current authenticated user.
+   *
+   * @type {firebase.User|null}
+   */
   const user = auth.currentUser;
 
   /**

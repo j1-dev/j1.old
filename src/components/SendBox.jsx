@@ -50,21 +50,96 @@ import { db } from "../api/firebase-config";
  */
 
 const SendBox = ({ className, path }) => {
+  /**
+   * The current authenticated user.
+   * @type {firebase.User}
+   */
   const user = auth.currentUser;
+
+  /**
+   * A ref object that refers to the post input field.
+   * @type {React.MutableRefObject<null>}
+   */
   const postRef = useRef(null);
+
+  /**
+   * A ref object that refers to the image input field.
+   * @type {React.MutableRefObject<null>}
+   */
   const imageRef = useRef(null);
+
+  /**
+   * A ref object that refers to the file input field.
+   * @type {React.MutableRefObject<null>}
+   */
   const fileRef = useRef(null);
+
+  /**
+   * A ref object that refers to the dropzone element.
+   * @type {React.MutableRefObject<null>}
+   */
   const drop = useRef(null);
+
+  /**
+   * A ref object that refers to the dragover element.
+   * @type {React.MutableRefObject<null>}
+   */
   const drag = useRef(null);
+
+  /**
+   * The URL of the currently selected image.
+   * @type {string|null}
+   */
   const [imageURL, setImageURL] = useState(null);
+
+  /**
+   * The current text content of the post input field.
+   * @type {string}
+   */
   const [post, setPost] = useState("");
+
+  /**
+   * The number of characters in the current text content of the post input field.
+   * @type {number|null}
+   */
   const [chars, setChars] = useState(null);
+
+  /**
+   * The currently selected image file.
+   * @type {File|null}
+   */
   const [image, setImage] = useState(null);
+
+  /**
+   * A boolean indicating whether or not to show the color picker.
+   * @type {boolean}
+   */
   const [showPicker, setShowPicker] = useState(false);
+
+  /**
+   * A reference to the element that the color picker should be anchored to.
+   * @type {Element|null}
+   */
   const [anchorEl, setAnchorEl] = useState(null);
+
+  /**
+   * A boolean indicating whether or not an image is currently being dragged.
+   * @type {boolean}
+   */
   const [dragging, setDragging] = useState(false);
+
+  /**
+   * A boolean indicating whether or not the post input field is currently focused.
+   * @type {boolean}
+   */
   const [focused, setFocused] = useState(false);
 
+  /**
+   * Set up drag and drop event listeners for the file input
+   *
+   * @function
+   * @return {void}
+   */
   useEffect(() => {
     if (drop.current) {
       drop.current.addEventListener("dragenter", handleDragEnter);
@@ -76,6 +151,13 @@ const SendBox = ({ className, path }) => {
     };
   }, []);
 
+  /**
+   * Handle drag enter event.
+   *
+   * @function
+   * @param {Object} e - Drag event object.
+   * @returns {undefined}
+   */
   const handleDragEnter = (e) => {
     e.preventDefault();
     e.stopPropagation();
@@ -85,6 +167,13 @@ const SendBox = ({ className, path }) => {
     }
   };
 
+  /**
+   * Handle drag leave event.
+   *
+   * @function
+   * @param {Object} e - Drag event object.
+   * @returns {undefined}
+   */
   const handleDragLeave = (e) => {
     e.preventDefault();
     e.stopPropagation();
@@ -94,32 +183,75 @@ const SendBox = ({ className, path }) => {
     }
   };
 
+  /**
+   * Handler for the click event of an emoji in the emoji picker.
+   *
+   * @function
+   * @param {Object} e - The click event object.
+   * @param {Object} emojiObject - The object containing the selected emoji.
+   * @returns {void}
+   */
   const onEmojiClick = (e, emojiObject) => {
     setPost((post) => post + emojiObject.emoji);
   };
 
+  /**
+   * Handler for opening and closing the emoji picker.
+   *
+   * @function
+   * @param {Object} e - The click event object.
+   * @returns {void}
+   */
   const handleOpen = (e) => {
     e.preventDefault();
     setAnchorEl(anchorEl ? null : e.currentTarget);
     setShowPicker(!showPicker);
   };
 
+  /**
+   * Handler for character limit of the post input field.
+   *
+   * @function
+   * @param {Object} e - The input event object.
+   * @returns {void}
+   */
   const handleLimit = (e) => {
     e.preventDefault();
     setChars(e.target.maxLength - e.target.value.length);
     setPost(e.target.value);
   };
 
+  /**
+   * Handler for the focus event of the post input field.
+   *
+   * @function
+   * @param {Object} e - The focus event object.
+   * @returns {void}
+   */
   const handleFocus = (e) => {
     e.preventDefault();
     setFocused(true);
   };
 
+  /**
+   * Handler for the blur event of the post input field.
+   *
+   * @function
+   * @param {Object} e - The blur event object.
+   * @returns {void}
+   */
   const handleBlur = (e) => {
     e.preventDefault();
     setFocused(false);
   };
 
+  /**
+   * Handler for the click event of the "Add Image" button.
+   *
+   * @function
+   * @param {Object} e - The click event object.
+   * @returns {void}
+   */
   const handleImageButton = (e) => {
     e.preventDefault();
     fileRef.current.click();
@@ -131,7 +263,9 @@ const SendBox = ({ className, path }) => {
    * sith the url of the image. If it doesn't, it calls the uploadPost
    * function with an empty sting.
    *
+   * @function
    * @param {event} e
+   * @returns {void}
    */
   const handlePost = (e) => {
     e.preventDefault();
@@ -156,7 +290,9 @@ const SendBox = ({ className, path }) => {
    * using a reference. After that it resets the image input and
    * the text area
    *
+   * @function
    * @param {String} url url of the attached image
+   * @returns {void}
    */
   const uploadPost = async ({ url }) => {
     const now = new Date();
@@ -201,6 +337,13 @@ const SendBox = ({ className, path }) => {
     imageRef.current.value = null;
   };
 
+  /**
+   * Preview selected image and store its URL to the state
+   *
+   * @function
+   * @param {object} e - Event object
+   * @returns {void}
+   */
   const previewImage = (e) => {
     e.preventDefault();
     var file = e.target.files[0];
@@ -208,6 +351,15 @@ const SendBox = ({ className, path }) => {
     setImageURL(URL.createObjectURL(file));
   };
 
+  /**
+   * A React functional component that renders a post input area. It includes a text area for the post body,
+   * an image upload button, a send button and a character countdown. The component also includes the option
+   * to upload a photo to accompany the post. It has drag and drop functionality, and displays the image after
+   * it has been selected. Additionally, the component has an emoji button, although this feature is currently
+   * broken.
+   *
+   * @returns {JSX.Element} - A JSX element that represents the component
+   */
   return (
     <div className={className} ref={drop}>
       {/* Profile pic */}

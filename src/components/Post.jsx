@@ -70,6 +70,12 @@ const Post = ({ data, path, className }) => {
   const q = query(UserCollectionRef, where("uid", "==", data.uid));
 
   /**
+   * An array of the user of the post and a loading state variable
+   * @type {array}
+   */
+  const [value, loading] = useCollection(q);
+
+  /**
    * A collection object used to perform CRUD operations on the Likes subcollection
    * @type {Object}
    */
@@ -135,49 +141,94 @@ const Post = ({ data, path, className }) => {
    */
   const [dislikeable, setDislikeable] = useState(true);
 
+  /**
+   * A useEffect hook that checks if the current user has already liked a specific post
+   * and sets the likeable state to true or false accordingly.
+   *
+   * @function
+   * @returns {void}
+   */
   useEffect(() => {
     const unsub = async () => {
+      // Get a reference to the user's likes for the post
       const likeRef = doc(likesRef, user.uid);
+
+      // Get the like document snapshot
       const likeSnap = await getDoc(likeRef);
+
+      // If the user has already liked the post, set likeable to false
       if (typeof likeSnap.data() !== "undefined") {
         return setLikeable(false);
       } else {
+        // If the user hasn't liked the post, set likeable to true
         return setLikeable(true);
       }
     };
 
+    // Unsubscribe the snapshot listener
     unsub();
   }, [path]);
 
+  /**
+   * A useEffect hook that checks if the current user has already disliked a specific post
+   * and sets the dislikeable state to true or false accordingly.
+   *
+   * @function
+   * @returns {void}
+   */
   useEffect(() => {
     const unsub = async () => {
+      // Get a reference to the user's dislikes for the post
       const dislikeRef = doc(dislikesRef, user.uid);
+
+      // Get the dislike document snapshot
       const dislikeSnap = await getDoc(dislikeRef);
+
+      // If the user has already disliked the post, set dislikeable to false
       if (typeof dislikeSnap.data() !== "undefined") {
         return setDislikeable(false);
       } else {
+        // If the user hasn't disliked the post, set dislikeable to true
         return setDislikeable(true);
       }
     };
 
+    // Unsubscribe the snapshot listener
     unsub();
   }, [path]);
 
+  /**
+   * A memoized function that handles the like button click event.
+   * @callback
+   * @param {React.MouseEvent<HTMLButtonElement>} e - The click event.
+   * @returns {Promise<void>}
+   */
   const handleLike = useCallback(
     async (e) => {
       e.preventDefault();
 
+      // Get a reference to the user's likes for the post
       const likeRef = doc(likesRef, user.uid);
+
+      // Create a new user object with the user ID
       const newUser = {
         uid: user.uid,
       };
 
+      // If the post has not been liked by the user yet
       if (likeable) {
+        // Set dislikeable to true and likeable to false
         setDislikeable(true);
         setLikeable(false);
+
+        // Add the user to the likes collection
         await setDoc(likeRef, newUser);
+
+        // If the user has already disliked the post, remove the dislike
         await deleteDoc(doc(dislikesRef, user.uid));
       } else {
+        // If the post has already been liked by the user
+        // Set likeable to true and remove the user from the likes collection
         setLikeable(true);
         await deleteDoc(likeRef);
       }
@@ -185,21 +236,38 @@ const Post = ({ data, path, className }) => {
     [likeable, dislikesRef, likesRef, user.uid]
   );
 
+  /**
+   * A memoized function that handles the dislike button click event.
+   * @callback
+   * @param {React.MouseEvent<HTMLButtonElement>} e - The click event.
+   * @returns {Promise<void>}
+   */
   const handleDislike = useCallback(
     async (e) => {
       e.preventDefault();
 
+      // Get a reference to the user's dislikes for the post
       const dislikeRef = doc(dislikesRef, user.uid);
+
+      // Create a new user object with the user ID
       const newUser = {
         uid: user.uid,
       };
 
+      // If the post has not been disliked by the user yet
       if (dislikeable) {
+        // Set likeable to true and dislikeable to false
         setLikeable(true);
         setDislikeable(false);
+
+        // Add the user to the dislikes collection
         await setDoc(dislikeRef, newUser);
+
+        // If the user has already liked the post, remove the like
         await deleteDoc(doc(likesRef, user.uid));
       } else {
+        // If the post has already been disliked by the user
+        // Set dislikeable to true and remove the user from the dislikes collection
         setDislikeable(true);
         await deleteDoc(dislikeRef);
       }
@@ -207,12 +275,24 @@ const Post = ({ data, path, className }) => {
     [dislikeable, likesRef, dislikesRef, user.uid]
   );
 
+  /**
+   * Converts a Unix timestamp (in seconds) to a JavaScript Date object.
+   * @function
+   * @param {number} secs - The Unix timestamp to convert, in seconds.
+   * @returns {Date} The corresponding Date object.
+   */
   function toDateTime(secs) {
     var t = new Date(1970, 0, 1); // Epoch
     t.setSeconds(secs);
     return t;
   }
 
+  /**
+   * Matches a YouTube video URL and extracts the video ID.
+   * @function
+   * @param {string} url - The URL to match.
+   * @returns {string|false} The video ID if a match is found, or false otherwise.
+   */
   function matchYoutubeUrl(url) {
     var p =
       /^(?:https?:\/\/)?(?:m\.|www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})(?:\S+)?$/;
@@ -222,6 +302,15 @@ const Post = ({ data, path, className }) => {
     return false;
   }
 
+  /**
+   * Returns a JSX div element that represents a post with information about the user
+   * who posted it, the post's content (either a text or a youtube video), the post's
+   * photo (if it exists), and the post's like/dislike/comments counters and buttons.
+   *
+   * @function
+   * @name Post
+   * @returns {JSX.Element} A JSX div element that represents a post.
+   */
   return (
     <div className={className} key={data.id}>
       {/* 
