@@ -99,11 +99,6 @@ const Topbar = () => {
     }
   };
 
-  /**
-   * Renders a header bar with the window title and back button
-   *
-   * @returns {JSX.Element} - Returns a JSX Element that represents the header bar
-   */
   return (
     <div className="h-20 ">
       {!!user && user.displayName != null ? (

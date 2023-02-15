@@ -33,13 +33,6 @@ const Button = ({ path, children }) => {
     console.log(e);
   };
 
-  /**
-   * Renders a navigation link with a hover effect and an active state.
-   *
-   * @function
-   * @name Button
-   * @returns {JSX.Element} A navigation link element with a hover effect and an active state.
-   */
   return (
     <NavLink
       onMouseEnter={expand}

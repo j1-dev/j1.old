@@ -97,13 +97,6 @@ const Navbar = () => {
 
   if (loading) return <></>;
 
-  /**
-   * Renders a navbar component with navigation links if the user is authenticated.
-   *
-   * @function
-   * @name Navbar
-   * @returns {JSX.Element} The rendered menu component with navigation links, or an empty fragment if the user is not authenticated.
-   */
   return (
     <div>
       {/* 

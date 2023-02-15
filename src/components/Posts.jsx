@@ -145,11 +145,6 @@ const Posts = ({ path, className }) => {
     }
   }, [loading, atBottom]);
 
-  /**
-   * Renders the post feed.
-   *
-   * @returns {JSX.Element} The JSX representation of the post feed.
-   */
   return (
     <div className="post-feed text-center">
       {posts.map((doc) => {

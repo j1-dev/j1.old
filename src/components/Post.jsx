@@ -302,15 +302,6 @@ const Post = ({ data, path, className }) => {
     return false;
   }
 
-  /**
-   * Returns a JSX div element that represents a post with information about the user
-   * who posted it, the post's content (either a text or a youtube video), the post's
-   * photo (if it exists), and the post's like/dislike/comments counters and buttons.
-   *
-   * @function
-   * @name Post
-   * @returns {JSX.Element} A JSX div element that represents a post.
-   */
   return (
     <div className={className} key={data.id}>
       {/* 

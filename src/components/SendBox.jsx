@@ -15,7 +15,11 @@ import { db } from "../api/firebase-config";
 
 /**
  * @component
- * Renders a SendBox component that allows a user to input a message and send it.
+ * A React functional component that renders a post input area. It includes a text area for the post body,
+ * an image upload button, a send button and a character countdown. The component also includes the option
+ * to upload a photo to accompany the post. It has drag and drop functionality, and displays the image after
+ * it has been selected. Additionally, the component has an emoji button, although this feature is currently
+ * broken.
  *
  * @function
  * @name SendBox
@@ -47,6 +51,8 @@ import { db } from "../api/firebase-config";
  * @requires doc from firebase/firestore
  * @requires collection from firebase/firestore
  * @requires db from ../api/firebase-config
+ *
+ * @todo fix emoji picker
  */
 
 const SendBox = ({ className, path }) => {
