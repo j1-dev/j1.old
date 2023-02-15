@@ -34,6 +34,7 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
+    "lint": "./node_modules/.bin/tslint -p tslint.json",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
