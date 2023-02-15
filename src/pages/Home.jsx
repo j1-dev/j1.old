@@ -30,14 +30,55 @@ import { useCollection, useDocument } from "react-firebase-hooks/firestore";
  */
 
 const Home = ({}) => {
+  /**
+   * The current user object.
+   * @type {Object}
+   */
   const currentUser = auth.currentUser;
+
+  /**
+   * The collection reference to the user's follows.
+   * @type {Object}
+   */
   const followsRef = collection(db, `Users/${currentUser.uid}/Follows`);
+
+  /**
+   * The query for the user's follows.
+   * @type {Array}
+   */
   const queryFollows = query(followsRef);
+
+  /**
+   * The document reference to the current user.
+   * @type {Object}
+   */
   const userRef = doc(db, "Users", currentUser.uid);
+
+  /**
+   * The array of followed users from the query.
+   * @type {Array}
+   */
   const [value, loading] = useCollection(queryFollows);
+
+  /**
+   * The current user's document from the database.
+   * @type {Object}
+   */
   const [value2, loading2] = useDocument(userRef);
+
+  /**
+   * The list of users.
+   * @type {Array}
+   */
   const [users, setUsers] = useState(null);
 
+  /**
+   * useEffect to set the state of users array.
+   * When the value and value2 change, if they are not loading, the array is set with the documents obtained.
+   *
+   * @function
+   * @returns {void}
+   */
   useEffect(() => {
     if (!loading && !loading2) {
       const users = value.docs;

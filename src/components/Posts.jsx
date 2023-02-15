@@ -60,7 +60,7 @@ const Posts = ({ path, className }) => {
   /**
    * Hook that fetches posts from the Firestore database when the component is mounted or when the "limite" state changes.
    *
-   * @callback
+   * @function
    * @returns {function} A cleanup function to remove the Firestore listener.
    */
   useEffect(() => {
@@ -136,7 +136,7 @@ const Posts = ({ path, className }) => {
   /**
    * Clears the "atBottom" state if it's set to true and the component is not loading.
    *
-   * @callback
+   * @function
    * @returns {void}
    */
   useEffect(() => {

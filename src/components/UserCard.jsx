@@ -42,21 +42,67 @@ import { useCollection } from "react-firebase-hooks/firestore";
  */
 
 const UserCard = ({ user }) => {
+  /**
+   * The current logged in user.
+   * @type {Object}
+   */
   const currentUser = auth.currentUser;
+
+  /**
+   * Boolean state to determine whether the current user can be followed.
+   * @type {Boolean}
+   */
   const [followeable, setFolloweable] = useState(true);
 
+  /**
+   * Firestore reference to the current user's followers collection.
+   * @type {Object}
+   */
   const followersRef = collection(db, `Users/${user.uid}/Followers`);
+
+  /**
+   * Firestore reference to the current user's follows collection.
+   * @type {Object}
+   */
   const followsRef = collection(db, `Users/${user.uid}/Follows`);
+
+  /**
+   * A Firestore query to retrieve the current user's followers.
+   * @type {Object}
+   */
   const queryFollowers = query(followersRef);
+
+  /**
+   * A Firestore query to retrieve the users that the current user follows.
+   * @type {Object}
+   */
   const queryFollows = query(followsRef);
+
+  /**
+   * The result of a Firestore query to retrieve the current user's followers.
+   * @type {Array<Object>|null}
+   */
   const [value, loading] = useCollection(queryFollowers);
+
+  /**
+   * The result of a Firestore query to retrieve the users that the current user follows.
+   * @type {Array<Object>|null}
+   */
   const [value2, loading2] = useCollection(queryFollows);
 
+  /**
+   * Handles the action of following a user, updating both the current user's followers collection and the target user's follows collection.
+   * @function
+   * @async
+   * @param {Event} e - The event object that triggered the function.
+   * @returns {void}
+   */
   const handleFollow = async (e) => {
     e.preventDefault();
 
-    setFolloweable(false);
+    setFolloweable(false); // disable the follow button
 
+    // If the user is followeable, i.e. not already following them
     if (followeable) {
       const followerRef = collection(db, `Users/${user.uid}/Followers`);
       const userRef = doc(followerRef, currentUser.uid);
@@ -65,7 +111,7 @@ const UserCard = ({ user }) => {
         uid: currentUser.uid,
       };
 
-      await setDoc(userRef, newFollower);
+      await setDoc(userRef, newFollower); // add the current user to the target user's followers collection
 
       const followRef = collection(db, `Users/${currentUser.uid}/Follows`);
       const userFollowRef = doc(followRef, user.uid);
@@ -74,44 +120,60 @@ const UserCard = ({ user }) => {
         uid: user.uid,
       };
 
-      await setDoc(userFollowRef, newFollow);
+      await setDoc(userFollowRef, newFollow); // add the target user to the current user's follows collection
     } else {
-      return console.log("You are already a follower");
+      return console.log("You are already a follower"); // if the user is already following them, log a message and do nothing
     }
   };
 
+  /**
+   * Handles the action of unfollowing a user, removing the current user from both the target user's followers collection and the current user's follows collection.
+   * @function
+   * @async
+   * @param {Event} e - The event object that triggered the function.
+   * @returns {void}
+   */
   const handleUnfollow = async (e) => {
     e.preventDefault();
 
-    setFolloweable(true);
+    setFolloweable(true); // enable the follow button
 
+    // If the user is not followeable, i.e. already following them
     if (!followeable) {
       const followerRef = collection(db, `Users/${user.uid}/Followers`);
       const userRef = doc(followerRef, currentUser.uid);
 
-      await deleteDoc(userRef);
+      await deleteDoc(userRef); // remove the current user from the target user's followers collection
 
       const followRef = collection(db, `Users/${currentUser.uid}/Follows`);
       const userFollowRef = doc(followRef, user.uid);
 
-      await deleteDoc(userFollowRef);
+      await deleteDoc(userFollowRef); // remove the target user from the current user's follows collection
     } else {
-      return console.log("You are already a follower");
+      return console.log("You are not following this user"); // if the user is not following them, log a message and do nothing
     }
   };
 
+  /**
+   * Checks whether the current user is following the target user and updates the followeable state accordingly.
+   * @function
+   * @async
+   * @returns {void}
+   */
   useEffect(() => {
     const unsub = async () => {
       const usersRef = collection(db, `Users/${user.uid}/Followers`);
       const userRef = doc(usersRef, currentUser.uid);
       const userSnap = await getDoc(userRef);
       console.log(userSnap.data());
+
+      // If the current user is already following the target user, set followeable to false
       if (typeof userSnap.data() !== "undefined") {
-        console.log("no seguible");
+        console.log("not followeable");
         return setFolloweable(false);
       } else {
-        console.log("seguible");
-        return setFolloweable(true);
+        console.log("followeable");
+        return setFolloweable(true); // Otherwise, set followeable to true
       }
     };
 

@@ -41,15 +41,60 @@ import { useParams } from "react-router-dom";
  */
 
 const Perfil = () => {
+  /**
+   * The username extracted from the URL parameters
+   * @type {string}
+   */
   const { username } = useParams();
+
+  /**
+   * The currently authenticated user object
+   * @type {firebase.User|null}
+   */
   const currentUser = auth.currentUser;
+
+  /**
+   * The array of posts to display
+   * @type {Array<Object>|null}
+   */
   const [posts, setPosts] = useState(null);
+
+  /**
+   * The user object whose profile is being displayed
+   * @type {Object|null}
+   */
   const [user, setUser] = useState(null);
+
+  /**
+   * The maximum number of posts to display at once
+   * @type {number}
+   */
   const [limite, setLimite] = useState(5);
+
+  /**
+   * Whether the posts are currently being loaded
+   * @type {boolean}
+   */
   const [loading, setLoading] = useState(false);
+
+  /**
+   * Whether the user has scrolled to the bottom of the page
+   * @type {boolean}
+   */
   const [atBottom, setAtBottom] = useState(false);
+
+  /**
+   * Whether the component is ready to render
+   * @type {boolean}
+   */
   const [ready, setReady] = useState(false);
 
+  /**
+   * Sets the user state variable to the user with a given nickname.
+   * @function
+   * @param {string} username - The user's nickname to search for.
+   * @returns {function} - Unsubscribes the listener for the username.
+   */
   useEffect(() => {
     const unsub = () => {
       const ref = collection(db, "Users");
@@ -69,6 +114,11 @@ const Perfil = () => {
     return unsub();
   }, [username]);
 
+  /**
+   * Sets the posts state variable to a list of posts from the user, in descending order of creation time.
+   * @function
+   * @returns {function} - Unsubscribes the listener for the user's posts.
+   */
   useEffect(() => {
     const unsub = () => {
       const ref = collectionGroup(db, "Posts");
@@ -92,12 +142,25 @@ const Perfil = () => {
     return unsub();
   }, [ready, user, limite]);
 
+  /**
+   * Increments the limit of posts to fetch and sets loading to true.
+   *
+   * @function
+   * @returns {void}
+   */
   const handleLoadMore = useCallback(() => {
     setLoading(true);
     setLimite(limite + 5);
     setAtBottom(false);
   }, [limite]);
 
+  /**
+   * Event handler for scrolling the page, checks whether the user has scrolled to the bottom
+   * of the page and calls handleLoadMore() if true.
+   *
+   * @function
+   * @returns {void}
+   */
   const handleScroll = useCallback(() => {
     if (loading || atBottom) return;
     if (
@@ -110,6 +173,12 @@ const Perfil = () => {
     }
   }, [loading, atBottom, handleLoadMore]);
 
+  /**
+   * Adds an event listener for scrolling the page and removes the listener when the component unmounts.
+   *
+   * @function
+   * @returns {void}
+   */
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);
     return () => {
@@ -117,6 +186,12 @@ const Perfil = () => {
     };
   }, [posts, atBottom, loading, handleScroll]);
 
+  /**
+   * Sets atBottom state variable to false when loading is false and atBottom is true.
+   *
+   * @function
+   * @returns {void}
+   */
   useEffect(() => {
     if (!loading && atBottom) {
       setAtBottom(false);

@@ -21,11 +21,19 @@ import { Tilt } from "../api/TiltApi";
  */
 
 const Login = () => {
+  /**
+   * User object that holds email and password values.
+   * @type {object}
+   */
   const [user, setUser] = useState({
     email: "",
     password: "",
   });
 
+  /**
+   * Object that contains the login method from useAuth hook.
+   * @type {object}
+   */
   const { login } = useAuth();
 
   /**
@@ -33,8 +41,6 @@ const Login = () => {
    * with the new values.
    *
    * @function
-   * @name handleChange
-   *
    * @param {Object} event - The event object representing the input field change.
    */
   const handleChange = ({ target: { name, value } }) => {
@@ -45,8 +51,6 @@ const Login = () => {
    * Submits the form to log the user in with the entered email and password.
    *
    * @function
-   * @name handleSubmit
-   *
    * @param {Object} event - The event object representing the form submission.
    */
   const handleSubmit = (e) => {

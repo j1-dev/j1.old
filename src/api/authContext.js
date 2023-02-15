@@ -8,10 +8,6 @@ import UserService from "./user.services";
 
 export const authContext = createContext();
 
-/**
- *
- * @returns authContext
- */
 export const useAuth = () => {
   const cont = useContext(authContext);
   if (!cont) throw new Error("tiene que tener contexto puto");
@@ -32,7 +28,10 @@ export function AuthProvider({ children }) {
   const navigate = useNavigate();
 
   /**
-   * This function sets the user to the user that has logged/signed in
+   * Hook that sets the user to the user that has logged/signed in
+   *
+   * @function
+   * @return {function} - clean up function for the onAuthStateChanged listener
    */
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, async (currentUser) => {
@@ -51,6 +50,7 @@ export function AuthProvider({ children }) {
    * @todo Add error and success indicators such as green/red cards
    * with an exclamation icon or something idk
    *
+   * @function
    * @param {String} email
    * @param {String} password
    */
@@ -93,6 +93,10 @@ export function AuthProvider({ children }) {
    * This function takes an email and a password and calls the signInWithEmailAndPassword
    * with them and then it navigates to /Home
    *
+   * @todo Add error and success indicators such as green/red cards
+   * with an exclamation icon or something idk
+   *
+   * @function
    * @param {String} email
    * @param {String} password
    */

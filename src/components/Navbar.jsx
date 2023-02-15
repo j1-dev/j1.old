@@ -49,7 +49,7 @@ const Navbar = () => {
 
   /**
    * A state hook that sets the window size as an array of width and height values.
-   * @type {Array<number>}
+   * @type {Array}
    */
   const [windowSize, setWindowSize] = useState([
     window.innerWidth,

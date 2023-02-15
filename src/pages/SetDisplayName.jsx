@@ -33,11 +33,36 @@ import { Tilt } from "../api/TiltApi";
  */
 
 const SetDisplayName = () => {
+  /**
+   * User state
+   * @type {object}
+   */
   const [user, setUser] = useState(null);
+
+  /**
+   * Currently logged in user
+   * @type {object}
+   */
   const currentUser = auth.currentUser;
+
+  /**
+   * Reference for the display name input element
+   * @type {object}
+   */
   const refName = useRef();
+
+  /**
+   * Navigation hook
+   * @type {function}
+   */
   const navigate = useNavigate();
 
+  /**
+   * Updates the user state with the current user's data
+   * @function
+   * @param {object} currentUser - Current user object
+   * @returns {function} unsub - cleanup function for the onSnapshot listener
+   */
   useEffect(() => {
     const unsub = () => {
       const ref = collection(db, "Users");
@@ -58,6 +83,11 @@ const SetDisplayName = () => {
     };
   }, [currentUser]);
 
+  /**
+   * Event handler for changing the display name
+   * @function
+   * @param {Object} e - Event object
+   */
   const handleNameChange = (e) => {
     e.preventDefault();
     navigate(0);

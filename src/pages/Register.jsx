@@ -21,17 +21,40 @@ import { Tilt } from "../api/TiltApi";
  */
 
 const Register = () => {
+  /**
+   * The current user state.
+   * @type {object}
+   */
   const [user, setUser] = useState({
     email: "",
     password: "",
   });
 
+  /**
+   * The authentication hook for signing up.
+   * @type {object}
+   * @property {function} signup - The function for signing up.
+   */
   const { signup } = useAuth();
 
+  /**
+   * Updates the user state when input values change.
+   *
+   * @function
+   * @param {Object} event - The input change event.
+   * @returns {void}
+   */
   const handleChange = ({ target: { name, value } }) => {
     setUser({ ...user, [name]: value });
   };
 
+  /**
+   * Submits the user sign-up form.
+   *
+   * @function
+   * @async
+   * @param {Object} event - The form submit event.
+   */
   const handleSubmit = async (e) => {
     e.preventDefault();
     await signup(user.email, user.password);

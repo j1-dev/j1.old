@@ -21,29 +21,63 @@ import { FiArrowLeft } from "react-icons/fi";
  */
 
 const Topbar = () => {
+  /**
+   * The currently authenticated user.
+   * @type {firebase.User | null}
+   */
   const user = auth.currentUser;
+
+  /**
+   * A function for navigating between pages using React Router.
+   * @type {function}
+   */
   const navigate = useNavigate();
+
+  /**
+   * The current path of the window.
+   * @type {string}
+   */
   const path = window.location.pathname;
 
+  /**
+   * Renders a window title based on the current pathname.
+   *
+   * @function
+   * @param {string} pathname - The current pathname of the window.
+   * @returns {JSX.Element} A window title element based on the current pathname.
+   */
   const renderWindowTitle = (pathname) => {
     switch (pathname) {
       case "/":
       case "/Home":
+        // Render the 'Home' title for the home page.
         return <p className="pt-5 text-3xl font-bold">Home</p>;
       case `/${user.displayName}`:
+        // Render the user's display name as the title for their profile page.
         return <p className="pt-5 text-3xl font-bold">{user.displayName}</p>;
       case "/Shop":
+        // Render the 'Tienda' title for the shop page.
         return <p className="pt-5 text-3xl font-bold">Tienda</p>;
       case "/Ajustes":
+        // Render the 'Ajustes' title for the settings page.
         return <p className="pt-5 text-3xl font-bold">Ajustes</p>;
       default:
         if (pathname.includes("/Post"))
+          // Render the 'Post' title for the post detail page.
           return <p className="pt-5 text-3xl font-bold">Post</p>;
+        // Render the title based on the pathname, removing the leading forward slash.
         else
           return <p className="pt-5 text-3xl font-bold">{pathname.slice(1)}</p>;
     }
   };
 
+  /**
+   * Renders the back button or user avatar depending on the pathname
+   *
+   * @function
+   * @param {string} pathname - The current pathname
+   * @returns {JSX.Element} - Returns a JSX Element that represents a back button or a user avatar
+   */
   const renderBackButton = (pathname) => {
     if (pathname === "/Home" || pathname === "/") {
       return (
@@ -65,6 +99,11 @@ const Topbar = () => {
     }
   };
 
+  /**
+   * Renders a header bar with the window title and back button
+   *
+   * @returns {JSX.Element} - Returns a JSX Element that represents the header bar
+   */
   return (
     <div className="h-20 ">
       {!!user && user.displayName != null ? (
