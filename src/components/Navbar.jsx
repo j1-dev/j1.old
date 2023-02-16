@@ -95,7 +95,7 @@ const Navbar = () => {
     });
   };
 
-  if (loading) return <></>;
+  if (loading) return null;
 
   return (
     <div>

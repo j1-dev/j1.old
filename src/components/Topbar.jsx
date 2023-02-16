@@ -1,5 +1,6 @@
 import React from "react";
 import logo from "../logo.png";
+import { useAuth } from "../api/authContext";
 import { auth } from "../api/firebase-config";
 import { useNavigate } from "react-router-dom";
 import { FiArrowLeft } from "react-icons/fi";
@@ -18,9 +19,17 @@ import { FiArrowLeft } from "react-icons/fi";
  * @requires auth from ../api/firebase-config
  * @requires useNavigate from react-router-dom
  * @requires FiArrowLeft from react-icons/fi
+ * @requires useAuth from ../api/authContext
+ *
  */
 
 const Topbar = () => {
+  /**
+   * A hook from a custom `useAuth` hook that provides loading status for authentication data.
+   * @type {boolean}
+   */
+  const { loading } = useAuth();
+
   /**
    * The currently authenticated user.
    * @type {firebase.User | null}
@@ -99,24 +108,22 @@ const Topbar = () => {
     }
   };
 
+  if (loading) return <></>;
+
   return (
     <div className="h-20 ">
-      {!!user && user.displayName != null ? (
-        <div className="">
-          <div className="float-right w-1/3">
-            <img
-              src={logo}
-              alt="J1"
-              onClick={() => navigate("/Home")}
-              className="float-right h-20 p-2"
-            />
-          </div>
-          <div className="float-right w-1/3">{renderWindowTitle(path)}</div>
-          <div className="float-left w-1/3">{renderBackButton(path)}</div>
+      <div className="">
+        <div className="float-right w-1/3">
+          <img
+            src={logo}
+            alt="J1"
+            onClick={() => navigate("/Home")}
+            className="float-right h-20 p-2"
+          />
         </div>
-      ) : (
-        <></>
-      )}
+        <div className="float-right w-1/3">{renderWindowTitle(path)}</div>
+        <div className="float-left w-1/3">{renderBackButton(path)}</div>
+      </div>
     </div>
   );
 };
