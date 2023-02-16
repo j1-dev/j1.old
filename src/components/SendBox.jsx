@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, Fragment } from "react";
 import postServices from "../api/post.services";
 import { auth } from "../api/firebase-config";
 import { storage } from "../api/firebase-config";
@@ -8,10 +8,13 @@ import { TbSend } from "react-icons/tb";
 import { CgImage } from "react-icons/cg";
 import { BsFillEmojiSmileFill } from "react-icons/bs";
 import { GrClose } from "react-icons/gr";
-import { Tooltip, Popper } from "@mui/material";
+import { Tooltip } from "@mui/material";
+import { Popover, Transition } from "@headlessui/react";
+import { usePopper } from "react-popper";
 import Picker from "emoji-picker-react";
 import { doc, collection } from "firebase/firestore";
 import { db } from "../api/firebase-config";
+import zIndex from "@mui/material/styles/zIndex";
 
 /**
  * @component
@@ -56,6 +59,25 @@ import { db } from "../api/firebase-config";
  */
 
 const SendBox = ({ className, path }) => {
+  /**
+   * Reference of the button to open the emoji picker
+   * @type {Reference}
+   */
+  const [referenceElement, setReferenceElement] = useState();
+
+  /**
+   * Reference of the emoji picker itself
+   * @type {Reference}
+   */
+  const [popperElement, setPopperElement] = useState();
+
+  /**
+   * Styles and attributes values from usePopper hook
+   * @type {CSSStyleSheet, Object}
+   */
+  const { styles, attributes } = usePopper(referenceElement, popperElement, {
+    placement: "bottom",
+  });
   /**
    * The current authenticated user.
    * @type {firebase.User}
@@ -193,11 +215,10 @@ const SendBox = ({ className, path }) => {
    * Handler for the click event of an emoji in the emoji picker.
    *
    * @function
-   * @param {Object} e - The click event object.
    * @param {Object} emojiObject - The object containing the selected emoji.
    * @returns {void}
    */
-  const onEmojiClick = (e, emojiObject) => {
+  const onEmojiClick = (emojiObject) => {
     setPost((post) => post + emojiObject.emoji);
   };
 
@@ -210,6 +231,7 @@ const SendBox = ({ className, path }) => {
    */
   const handleOpen = (e) => {
     e.preventDefault();
+    console.log(showPicker);
     setAnchorEl(anchorEl ? null : e.currentTarget);
     setShowPicker(!showPicker);
   };
@@ -490,28 +512,25 @@ const SendBox = ({ className, path }) => {
           Emoji button - fucking broken
         */}
         <Tooltip title="Emojis">
-          <div>
-            <div>
-              <button
-                className="button-still z-40 float-right mb-3 p-3 text-2xl hover:border-yellow-400"
-                onClick={handleOpen}
-              >
-                <BsFillEmojiSmileFill />
-              </button>
-            </div>
+          <Popover className="relative">
+            <Popover.Button
+              ref={setReferenceElement}
+              className="button-still z-40 float-right mb-3 p-3 text-2xl hover:border-yellow-400"
+            >
+              <BsFillEmojiSmileFill />
+            </Popover.Button>
 
-            {/* 
-              El puto popper de los cojones me cago en sus putos muertos no funciona nunca cojones
-            */}
-            <Popper anchorEl={anchorEl} placement="bottom">
-              <div>
-                <Picker
-                  pickerStyle={{ zIndex: 5000 }}
-                  onEmojiClick={onEmojiClick}
-                />
-              </div>
-            </Popper>
-          </div>
+            <Popover.Panel
+              ref={setPopperElement}
+              style={styles.popper}
+              {...attributes.popper}
+            >
+              <Picker
+                onEmojiClick={onEmojiClick}
+                pickerStyle={{ zIndex: 5000 }}
+              />
+            </Popover.Panel>
+          </Popover>
         </Tooltip>
       </div>
       {/* 
