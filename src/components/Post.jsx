@@ -372,7 +372,7 @@ const Post = ({ data, path, className }) => {
                 <GoThumbsup
                   className={`${
                     likeable ? "text-black" : "text-green-600"
-                  } absolute z-10 scale-150`}
+                  } absolute scale-150`}
                 />
                 {likes && likes.size}
               </div>
@@ -393,7 +393,7 @@ const Post = ({ data, path, className }) => {
           <button className="float-left w-1/6">
             {!loading4 && (
               <div className="pt-2">
-                <TbMessage className="absolute z-10 scale-150" />
+                <TbMessage className="absolute scale-150" />
                 {comments && comments.size}
               </div>
             )}
