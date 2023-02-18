@@ -68,7 +68,6 @@ const Navbar = () => {
      */
     const handleWindowResize = () => {
       setWindowSize([window.innerWidth, window.innerHeight]);
-      console.log(window.innerWidth);
     };
 
     // Add an event listener for the window resize event and call the callback function.

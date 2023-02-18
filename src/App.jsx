@@ -5,7 +5,6 @@ import Navbar from "./components/Navbar";
 import MenuS from "./components/MenuS";
 import PrivateRoutes from "./components/PrivateRoute";
 import Topbar from "./components/Topbar";
-import UserCount from "./components/UserCount";
 import About from "./pages/About";
 import Home from "./pages/Home";
 import Shop from "./pages/Shop";
@@ -16,7 +15,6 @@ import Ajustes from "./pages/Ajustes";
 import PostPage from "./pages/PostPage";
 import { Route, Routes } from "react-router-dom";
 import { AuthProvider } from "./api/authContext";
-import { auth } from "./api/firebase-config";
 
 function App() {
   const [windowSize, setWindowSize] = useState([
@@ -24,19 +22,15 @@ function App() {
     window.innerHeight,
   ]);
 
-  const user = auth.currentUser;
-
   useEffect(() => {
     const handleWindowResize = (e) => {
       e.preventDefault();
       setWindowSize([window.innerWidth, window.innerHeight]);
-      console.log(windowSize[0]);
     };
 
     const handleWindowLoad = (e) => {
       e.preventDefault();
       setWindowSize([window.innerWidth, window.innerHeight]);
-      console.log(windowSize[0]);
     };
 
     window.addEventListener("resize", handleWindowResize);

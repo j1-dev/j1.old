@@ -59,6 +59,7 @@
   },
   "devDependencies": {
     "autoprefixer": "^10.4.12",
+    "dotenv": "^16.0.3",
     "postcss": "^8.4.17",
     "prettier": "^2.7.1",
     "prettier-plugin-tailwindcss": "^0.2.3",
