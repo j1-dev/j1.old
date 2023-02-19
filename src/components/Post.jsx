@@ -112,9 +112,14 @@ const Post = ({ data, path, className }) => {
    */
   const queryComments = useMemo(() => query(commentsRef), [path, data.id]);
 
+  /**
+   * @todo - document pls
+   */
   const [likes, setLikes] = useState(null);
   const [dislikes, setDislikes] = useState(null);
   const [comments, setComments] = useState(null);
+  const [l, setL] = useState(0);
+  const [d, setD] = useState(0);
 
   /**
    * A state variable that determines if the post can be liked
@@ -219,15 +224,18 @@ const Post = ({ data, path, className }) => {
         setLikeable(false);
 
         // Add the user to the likes collection
+        setL(l + 1);
         await setDoc(likeRef, newUser);
 
         // If the user has already disliked the post, remove the dislike
         if (!dislikeable) {
+          setD(d - 1);
           await deleteDoc(doc(dislikesRef, user.uid));
         }
       } else {
         // If the post has already been liked by the user
         // Set likeable to true and remove the user from the likes collection
+        setL(l - 1);
         setLikeable(true);
         await deleteDoc(likeRef);
       }
@@ -260,15 +268,18 @@ const Post = ({ data, path, className }) => {
         setDislikeable(false);
 
         // Add the user to the dislikes collection
+        setD(d + 1);
         await setDoc(dislikeRef, newUser);
 
         // If the user has already liked the post, remove the like
         if (!likeable) {
+          setL(l - 1);
           await deleteDoc(doc(likesRef, user.uid));
         }
       } else {
         // If the post has already been disliked by the user
         // Set dislikeable to true and remove the user from the dislikes collection
+        setD(d - 1);
         setDislikeable(true);
         await deleteDoc(dislikeRef);
       }
@@ -375,7 +386,7 @@ const Post = ({ data, path, className }) => {
                     likeable ? "text-black" : "text-green-600"
                   } absolute scale-150`}
                 />
-                {likes && likes.data().count}
+                {likes && likes.data().count + l}
               </div>
             )}
           </button>
@@ -387,7 +398,7 @@ const Post = ({ data, path, className }) => {
                     dislikeable ? "text-black" : "text-red-600"
                   } absolute z-10 scale-150`}
                 />
-                {dislikes && dislikes.data().count}
+                {dislikes && dislikes.data().count + d}
               </div>
             )}
           </button>
