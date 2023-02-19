@@ -6,6 +6,7 @@ import {
   doc,
   deleteDoc,
   getDoc,
+  getCountFromServer,
   // updateDoc,
 } from "firebase/firestore";
 import React, { useState, useMemo, useEffect, useCallback } from "react";
@@ -111,23 +112,9 @@ const Post = ({ data, path, className }) => {
    */
   const queryComments = useMemo(() => query(commentsRef), [path, data.id]);
 
-  /**
-   * An array of documents representing the Likes subcollection
-   * @type {Array}
-   */
-  const [likes, loading2] = useCollection(queryLikes);
-
-  /**
-   * An array of documents representing the Dislikes subcollection
-   * @type {Array}
-   */
-  const [dislikes, loading3] = useCollection(queryDislikes);
-
-  /**
-   * An array of documents representing the Posts subcollection
-   * @type {Array}
-   */
-  const [comments, loading4] = useCollection(queryComments);
+  const [likes, setLikes] = useState(null);
+  const [dislikes, setDislikes] = useState(null);
+  const [comments, setComments] = useState(null);
 
   /**
    * A state variable that determines if the post can be liked
@@ -140,6 +127,16 @@ const Post = ({ data, path, className }) => {
    * @type {boolean}
    */
   const [dislikeable, setDislikeable] = useState(true);
+
+  useEffect(() => {
+    const unsub = async () => {
+      setLikes(await getCountFromServer(queryLikes));
+      setDislikes(await getCountFromServer(queryDislikes));
+      setComments(await getCountFromServer(queryComments));
+    };
+
+    unsub();
+  }, [queryLikes, queryDislikes, queryComments]);
 
   /**
    * A useEffect hook that checks if the current user has already liked a specific post
@@ -225,7 +222,9 @@ const Post = ({ data, path, className }) => {
         await setDoc(likeRef, newUser);
 
         // If the user has already disliked the post, remove the dislike
-        await deleteDoc(doc(dislikesRef, user.uid));
+        if (!dislikeable) {
+          await deleteDoc(doc(dislikesRef, user.uid));
+        }
       } else {
         // If the post has already been liked by the user
         // Set likeable to true and remove the user from the likes collection
@@ -264,7 +263,9 @@ const Post = ({ data, path, className }) => {
         await setDoc(dislikeRef, newUser);
 
         // If the user has already liked the post, remove the like
-        await deleteDoc(doc(likesRef, user.uid));
+        if (!likeable) {
+          await deleteDoc(doc(likesRef, user.uid));
+        }
       } else {
         // If the post has already been disliked by the user
         // Set dislikeable to true and remove the user from the dislikes collection
@@ -367,34 +368,34 @@ const Post = ({ data, path, className }) => {
         */}
         <div className="float-left w-full pt-5 pl-3 text-base">
           <button className="float-left w-1/6" onClick={handleLike}>
-            {!loading2 && (
+            {!!likes && (
               <div className="pt-2">
                 <GoThumbsup
                   className={`${
                     likeable ? "text-black" : "text-green-600"
                   } absolute scale-150`}
                 />
-                {likes && likes.size}
+                {likes && likes.data().count}
               </div>
             )}
           </button>
           <button className="float-left w-1/6" onClick={handleDislike}>
-            {!loading3 && (
+            {!!dislikes && (
               <div className="pt-2">
                 <GoThumbsdown
                   className={`${
                     dislikeable ? "text-black" : "text-red-600"
                   } absolute z-10 scale-150`}
                 />
-                {dislikes && dislikes.size}
+                {dislikes && dislikes.data().count}
               </div>
             )}
           </button>
           <button className="float-left w-1/6">
-            {!loading4 && (
+            {!!comments && (
               <div className="pt-2">
                 <TbMessage className="absolute scale-150" />
-                {comments && comments.size}
+                {comments && comments.data().count}
               </div>
             )}
           </button>
