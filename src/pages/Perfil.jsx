@@ -70,7 +70,7 @@ const Perfil = () => {
    * The maximum number of posts to display at once
    * @type {number}
    */
-  const [limite, setLimite] = useState(5);
+  const [limite] = useState(5);
 
   /**
    * Whether the posts are currently being loaded

@@ -156,6 +156,12 @@ const Post = ({ data, path, className }) => {
    */
   const [dislikeable, setDislikeable] = useState(true);
 
+  /**
+   * A useEffect hook that fetches the likes, dislikes and comments counters
+   *
+   * @function
+   * @returns {void}
+   */
   useEffect(() => {
     const unsub = async () => {
       setLikes(await getCountFromServer(queryLikes));
@@ -421,7 +427,7 @@ const Post = ({ data, path, className }) => {
                 <GoThumbsdown
                   className={`${
                     dislikeable ? "text-black" : "text-red-600"
-                  } absolute z-10 scale-150`}
+                  } absolute scale-150`}
                 />
                 {dislikes && dislikes.data().count + d}
               </div>

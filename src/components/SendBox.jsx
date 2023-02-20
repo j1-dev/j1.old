@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, Fragment } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import postServices from "../api/post.services";
 import { auth } from "../api/firebase-config";
 import { storage } from "../api/firebase-config";
@@ -9,12 +9,11 @@ import { CgImage } from "react-icons/cg";
 import { BsFillEmojiSmileFill } from "react-icons/bs";
 import { GrClose } from "react-icons/gr";
 import { Tooltip } from "@mui/material";
-import { Popover, Transition } from "@headlessui/react";
+import { Popover } from "@headlessui/react";
 import { usePopper } from "react-popper";
 import Picker from "emoji-picker-react";
 import { doc, collection } from "firebase/firestore";
 import { db } from "../api/firebase-config";
-import zIndex from "@mui/material/styles/zIndex";
 
 /**
  * @component
@@ -139,18 +138,6 @@ const SendBox = ({ className, path }) => {
   const [image, setImage] = useState(null);
 
   /**
-   * A boolean indicating whether or not to show the color picker.
-   * @type {boolean}
-   */
-  const [showPicker, setShowPicker] = useState(false);
-
-  /**
-   * A reference to the element that the color picker should be anchored to.
-   * @type {Element|null}
-   */
-  const [anchorEl, setAnchorEl] = useState(null);
-
-  /**
    * A boolean indicating whether or not an image is currently being dragged.
    * @type {boolean}
    */
@@ -218,22 +205,10 @@ const SendBox = ({ className, path }) => {
    * @param {Object} emojiObject - The object containing the selected emoji.
    * @returns {void}
    */
-  const onEmojiClick = (emojiObject) => {
-    setPost((post) => post + emojiObject.emoji);
-  };
-
-  /**
-   * Handler for opening and closing the emoji picker.
-   *
-   * @function
-   * @param {Object} e - The click event object.
-   * @returns {void}
-   */
-  const handleOpen = (e) => {
-    e.preventDefault();
-    console.log(showPicker);
-    setAnchorEl(anchorEl ? null : e.currentTarget);
-    setShowPicker(!showPicker);
+  const onEmojiClick = (event, emojiData) => {
+    event.preventDefault();
+    setPost((post) => post + emojiData.emoji);
+    console.log(emojiData);
   };
 
   /**

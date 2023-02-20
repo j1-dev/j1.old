@@ -44,7 +44,7 @@ const Posts = ({ path, className }) => {
    * The state variable that stores the number of posts to be fetched from the backend.
    * @type {number}
    */
-  const [limite, setLimite] = useState(5);
+  const [limite] = useState(5);
 
   /**
    * The state variable that stores a boolean flag to indicate whether posts are currently being loaded.
