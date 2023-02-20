@@ -125,7 +125,7 @@ const Navbar = () => {
               }
               to="/Home"
             >
-              <HiOutlineHome className="float-left " />{" "}
+              <HiOutlineHome className="float-left text-4xl" />{" "}
               {windowSize[0] <= 1024 ? (
                 <></>
               ) : (
@@ -156,19 +156,19 @@ const Navbar = () => {
               <NavLink
                 // className="button md:button-still active:button-active md:p-3 lg:p-4"
                 className={({ isActive }) =>
-                  isActive ? "button-active" : "button"
+                  isActive ? "button-active p-3" : "button p-3"
                 }
                 to={"/" + currentUser.displayName}
               >
                 <img
                   src={currentUser.photoURL}
                   alt="yo"
-                  className="float-left w-9 rounded-full"
+                  className="float-left w-11 rounded-full p-0"
                 />
                 {windowSize[0] <= 1024 ? (
                   <></>
                 ) : (
-                  <p className="float-left pl-4 text-3xl font-normal">
+                  <p className="float-left mt-1 pl-4 text-3xl font-normal">
                     {currentUser.displayName}
                   </p>
                 )}
@@ -184,7 +184,7 @@ const Navbar = () => {
               }
               to="/Shop"
             >
-              <HiOutlineShoppingCart className="float-left " />
+              <HiOutlineShoppingCart className="float-left text-4xl" />
               {windowSize[0] < 1024 ? (
                 <></>
               ) : (
@@ -200,7 +200,7 @@ const Navbar = () => {
               }
               to="/Ajustes"
             >
-              <HiOutlineCog className="float-left " />
+              <HiOutlineCog className="float-left text-4xl" />
               {windowSize[0] < 1024 ? (
                 <></>
               ) : (

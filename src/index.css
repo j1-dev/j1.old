@@ -39,7 +39,7 @@
 * Botón redondo blanco con borde 4px de ancho azul on hover
 */
 .button {
-  @apply rounded-full border-[4px] p-4 text-center text-3xl transition-all hover:translate-x-2 hover:border-blue-600 md:m-3 lg:m-4;
+  @apply m-4 rounded-full border-[4px] p-4 text-center text-3xl transition-all hover:translate-x-2 hover:border-blue-600;
 }
 
 .button-still {
