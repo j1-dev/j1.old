@@ -9,6 +9,7 @@ import {
   orderBy,
   onSnapshot,
   limit,
+  startAfter,
 } from "firebase/firestore";
 import { db } from "../api/firebase-config";
 import Post from "../components/Post";
@@ -90,6 +91,12 @@ const Perfil = () => {
   const [ready, setReady] = useState(false);
 
   /**
+   * The state variable that stores the last loaded post for cursor based pagination
+   * @type {DocumentSnapshot}
+   */
+  const [cursor, setCursor] = useState(null);
+
+  /**
    * Sets the user state variable to the user with a given nickname.
    * @function
    * @param {string} username - The user's nickname to search for.
@@ -133,6 +140,7 @@ const Perfil = () => {
           ...doc.data(),
           id: doc.id,
         }));
+        setCursor(snapshot.docs[4]);
         setPosts(data);
         setLoading(false);
       });
@@ -150,9 +158,28 @@ const Perfil = () => {
    */
   const handleLoadMore = useCallback(() => {
     setLoading(true);
-    setLimite(limite + 5);
+    const CommentCollectionRef = collection(db, "Posts");
+    const unsub = () => {
+      const q = query(
+        CommentCollectionRef,
+        orderBy("createdAt", "desc"),
+        where("uid", "==", user.uid),
+        limit(limite),
+        startAfter(cursor)
+      );
+      onSnapshot(q, (snapshot) => {
+        const data = snapshot.docs.map((doc) => ({
+          ...doc.data(),
+          id: doc.id,
+        }));
+        setCursor(snapshot.docs[4]);
+        setPosts((p) => p.concat(data));
+        setLoading(false);
+      });
+    };
+    unsub();
     setAtBottom(false);
-  }, [limite]);
+  }, [limite, cursor]);
 
   /**
    * Event handler for scrolling the page, checks whether the user has scrolled to the bottom
@@ -169,7 +196,7 @@ const Perfil = () => {
     ) {
       console.log("Scrolled to bottom!");
       setAtBottom(true);
-      handleLoadMore();
+      if (!loading) handleLoadMore();
     }
   }, [loading, atBottom, handleLoadMore]);
 

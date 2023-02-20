@@ -5,6 +5,7 @@ import {
   query,
   onSnapshot,
   limit,
+  startAfter,
 } from "firebase/firestore";
 import Post from "./Post";
 import React, { useEffect, useState, useCallback } from "react";
@@ -58,7 +59,14 @@ const Posts = ({ path, className }) => {
   const [atBottom, setAtBottom] = useState(false);
 
   /**
-   * Hook that fetches posts from the Firestore database when the component is mounted or when the "limite" state changes.
+   * The state variable that stores the last loaded post for cursor based pagination
+   * @type {DocumentSnapshot}
+   */
+  const [cursor, setCursor] = useState(null);
+
+  /**
+   * Hook that fetches posts from the Firestore database when the component is mounted.
+   * Sets cursor to the last post loaded for proper cursor pagination
    *
    * @function
    * @returns {function} A cleanup function to remove the Firestore listener.
@@ -76,26 +84,45 @@ const Posts = ({ path, className }) => {
           ...doc.data(),
           id: doc.id,
         }));
+        setCursor(snapshot.docs[4]);
         setPosts(data);
         setLoading(false);
       });
     };
 
-    return unsub();
+    unsub();
   }, [limite, path]);
 
   /**
    * Handles loading more posts when the "load more" button is clicked.
-   * Increases the limit for the number of posts to be shown by 5, sets loading state to true and sets atBottom to false.
+   * Calls a onSnapshot listener for the next 5 posts after the cursor.
    *
    * @callback
    * @returns {void}
    */
   const handleLoadMore = useCallback(() => {
     setLoading(true);
-    setLimite(limite + 5);
+    const CommentCollectionRef = collection(db, path);
+    const unsub = () => {
+      const q = query(
+        CommentCollectionRef,
+        orderBy("createdAt", "desc"),
+        limit(limite),
+        startAfter(cursor)
+      );
+      onSnapshot(q, (snapshot) => {
+        const data = snapshot.docs.map((doc) => ({
+          ...doc.data(),
+          id: doc.id,
+        }));
+        setCursor(snapshot.docs[4]);
+        setPosts((p) => p.concat(data));
+        setLoading(false);
+      });
+    };
+    unsub();
     setAtBottom(false);
-  }, [limite]);
+  }, [limite, cursor, path]);
 
   /**
    * Registers a scroll event listener on the window object to detect when the user
@@ -115,7 +142,7 @@ const Posts = ({ path, className }) => {
     ) {
       console.log("Scrolled to bottom!");
       setAtBottom(true);
-      handleLoadMore();
+      if (!loading) handleLoadMore();
     }
   }, [loading, atBottom, handleLoadMore]);
 

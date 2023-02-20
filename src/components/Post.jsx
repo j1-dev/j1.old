@@ -113,12 +113,35 @@ const Post = ({ data, path, className }) => {
   const queryComments = useMemo(() => query(commentsRef), [path, data.id]);
 
   /**
-   * @todo - document pls
+   * A state variable that holds the number of likes
+   * @type {Number}
    */
-  const [likes, setLikes] = useState(null);
-  const [dislikes, setDislikes] = useState(null);
-  const [comments, setComments] = useState(null);
+  const [likes, setLikes] = useState(0);
+
+  /**
+   * A state variable that holds the number of dislikes
+   * @type {Number}
+   */
+  const [dislikes, setDislikes] = useState(0);
+
+  /**
+   * A state variable that holds the number of comments
+   * @type {Number}
+   */
+  const [comments, setComments] = useState(0);
+
+  /**
+   * A state variable that updates the likes variable with +1 when a user
+   * clicks the like button or -1 when a user unlikes a post
+   * @type {Numer}
+   */
   const [l, setL] = useState(0);
+
+  /**
+   * A state variable that updates the likes variable with +1 when a user
+   * clicks the dislike button or -1 when a user undislikes a post
+   * @type {Number}
+   */
   const [d, setD] = useState(0);
 
   /**
@@ -223,18 +246,19 @@ const Post = ({ data, path, className }) => {
         setDislikeable(true);
         setLikeable(false);
 
-        // Add the user to the likes collection
+        // Set like update variable to +1
         setL(l + 1);
+        // Add the user to the likes collection
         await setDoc(likeRef, newUser);
 
-        // If the user has already disliked the post, remove the dislike
+        // If the user has already disliked the post, remove the dislike and set the dislike update variable
         if (!dislikeable) {
           setD(d - 1);
           await deleteDoc(doc(dislikesRef, user.uid));
         }
       } else {
         // If the post has already been liked by the user
-        // Set likeable to true and remove the user from the likes collection
+        // Set likeable to true and remove the user from the likes collection and set the like update variable
         setL(l - 1);
         setLikeable(true);
         await deleteDoc(likeRef);
@@ -267,18 +291,19 @@ const Post = ({ data, path, className }) => {
         setLikeable(true);
         setDislikeable(false);
 
-        // Add the user to the dislikes collection
+        // Set dislike update variable to +1
         setD(d + 1);
+        // Add the user to the dislikes collection
         await setDoc(dislikeRef, newUser);
 
-        // If the user has already liked the post, remove the like
+        // If the user has already liked the post, remove the like and set the like update variable
         if (!likeable) {
           setL(l - 1);
           await deleteDoc(doc(likesRef, user.uid));
         }
       } else {
         // If the post has already been disliked by the user
-        // Set dislikeable to true and remove the user from the dislikes collection
+        // Set dislikeable to true and remove the user from the dislikes collection and set the dislike update variable
         setD(d - 1);
         setDislikeable(true);
         await deleteDoc(dislikeRef);
