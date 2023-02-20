@@ -330,6 +330,42 @@ const Post = ({ data, path, className }) => {
     return t;
   }
 
+  function timeDiff(secs) {
+    let str = "";
+    let ms = Date.now();
+    let s = Math.floor(ms / 1000);
+    let sDiff = s - secs;
+    if (sDiff >= 0 && sDiff < 60) {
+      str += sDiff + "s ago";
+    } else if (sDiff >= 60 && sDiff < 3600) {
+      sDiff /= 60;
+      str += Math.round(sDiff) + "m ago";
+    } else if (sDiff >= 3600 && sDiff < 86400) {
+      sDiff /= 60;
+      sDiff /= 60;
+      str += Math.round(sDiff) + "h ago";
+    } else if ((sDiff >= 86400 && sDiff < 2, 628e6)) {
+      sDiff /= 60;
+      sDiff /= 60;
+      sDiff /= 24;
+      str += Math.round(sDiff) + "d ago";
+    } else if ((sDiff >= 2.628e6 && sDiff < 3, 154e7)) {
+      sDiff /= 60;
+      sDiff /= 60;
+      sDiff /= 24;
+      sDiff /= 30;
+      str += Math.round(sDiff) + "m ago";
+    } else {
+      sDiff /= 60;
+      sDiff /= 60;
+      sDiff /= 24;
+      sDiff /= 30;
+      sDiff /= 12;
+      str += Math.round(sDiff) + "y ago";
+    }
+    return str;
+  }
+
   /**
    * Matches a YouTube video URL and extracts the video ID.
    * @function
@@ -361,7 +397,7 @@ const Post = ({ data, path, className }) => {
           {loading && ""}
           {value?.docs.map((doc) => {
             const path = `/${doc.data().nickName}`;
-            const date = toDateTime(data.createdAt.seconds);
+            const date = timeDiff(data.createdAt.seconds);
             return (
               <div className="float-left w-11/12">
                 <p className="text-base">
@@ -374,9 +410,7 @@ const Post = ({ data, path, className }) => {
                     {doc.data().nickName}
                   </NavLink>
                 </p>
-                <div className="text-xs ">
-                  Posted at: {date.toLocaleString("es-EU")}
-                </div>
+                <div className="text-xs ">Posted {date}</div>
               </div>
             );
           })}
