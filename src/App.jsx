@@ -51,7 +51,10 @@ function App() {
             <Topbar />
           </div>
         ) : (
-          <Navbar />
+          <div>
+            <Topbar />
+            <Navbar />
+          </div>
         )}
 
         <div id="page-wrap">

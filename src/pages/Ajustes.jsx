@@ -251,7 +251,7 @@ const Settings = () => {
           </li>
         </ul>
       </div>
-      <div className="m-auto w-fit p-10 text-left text-lg">
+      <div className="m-auto h-screen w-fit border-r-2 border-l-2 border-gray-400 p-10 text-left text-lg">
         {renderSelected()}
       </div>
     </div>
