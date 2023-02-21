@@ -118,7 +118,7 @@ const SetDisplayName = () => {
             maxLength="10"
             className="border-b-2 border-black text-4xl outline-none"
           ></input>
-          <button onClick={handleNameChange} className="button">
+          <button onClick={handleNameChange} className="button-still">
             submit
           </button>
         </div>

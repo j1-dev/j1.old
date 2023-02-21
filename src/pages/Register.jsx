@@ -91,7 +91,7 @@ const Register = () => {
             onChange={handleChange}
           />
 
-          <button className="button" onClick={handleSubmit}>
+          <button className="button-still" onClick={handleSubmit}>
             Register
           </button>
           <LogInNavbar />

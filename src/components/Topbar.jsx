@@ -25,6 +25,12 @@ import { FiArrowLeft } from "react-icons/fi";
 
 const Topbar = () => {
   /**
+   * Gets the current user from the Firebase authentication service.
+   * @type {firebase.User}
+   */
+  const currentUser = auth.currentUser;
+
+  /**
    * A hook from a custom `useAuth` hook that provides loading status for authentication data.
    * @type {boolean}
    */
@@ -112,18 +118,22 @@ const Topbar = () => {
 
   return (
     <div className="h-20 ">
-      <div className="">
-        <div className="float-right w-1/3">
-          <img
-            src={logo}
-            alt="J1"
-            onClick={() => navigate("/Home")}
-            className="float-right h-20 p-2"
-          />
+      {!!currentUser && currentUser.displayName != null ? (
+        <div className="">
+          <div className="float-right w-1/3">
+            <img
+              src={logo}
+              alt="J1"
+              onClick={() => navigate("/Home")}
+              className="float-right h-20 p-2"
+            />
+          </div>
+          <div className="float-right w-1/3">{renderWindowTitle(path)}</div>
+          <div className="float-left w-1/3">{renderBackButton(path)}</div>
         </div>
-        <div className="float-right w-1/3">{renderWindowTitle(path)}</div>
-        <div className="float-left w-1/3">{renderBackButton(path)}</div>
-      </div>
+      ) : (
+        <></>
+      )}
     </div>
   );
 };
