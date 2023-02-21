@@ -227,48 +227,82 @@ const Settings = () => {
   return (
     <div>
       <hr />
-      <div className="relative float-right h-screen w-1/4 border-r-2 p-5 text-justify">
-        <ul className="absolute right-5 top-[200px] w-full origin-center text-3xl">
-          <li>
-            <button
-              onClick={handleSelected}
-              className="my-4 w-full rounded-full border border-gray-400 py-4 text-center transition-colors duration-75 hover:bg-gray-300"
-              id="informacion"
-            >
-              Información personal
-            </button>
-          </li>
-          <li>
-            <button
-              onClick={handleSelected}
-              className="my-4 w-full rounded-full border border-gray-400 py-4 text-center transition-colors duration-75 hover:bg-gray-300"
-              id="seguridad"
-            >
-              Seguridad
-            </button>
-          </li>
-          <li>
-            <button
-              onClick={handleSelected}
-              className="my-4 w-full rounded-full border border-gray-400 py-4 text-center transition-colors duration-75 hover:bg-gray-300"
-              id="???"
-            >
-              ???
-            </button>
-          </li>
-          <li>
-            <button
-              onClick={handleSelected}
-              className="my-4 w-full rounded-full border border-gray-400 py-4 text-center transition-colors duration-75 hover:bg-gray-300"
-              id="aspecto"
-            >
-              Aspecto
-            </button>
-          </li>
-        </ul>
-      </div>
-      <div className="m-auto h-screen w-5/12 border-r-2 border-l-2 border-gray-400 p-10 text-left text-lg">
-        {renderSelected()}
+      <div className="m-auto h-screen w-5/12 border-l-2 border-r-2 border-gray-400 p-5 text-left">
+        <h1 className="my-3 text-4xl font-bold">Informacion personal</h1>
+        <hr />
+        <div>
+          <div className="float-left my-3 w-2/3">
+            Nombre: {currentUser.displayName}
+          </div>
+          <button className="float-right my-3 w-1/3 ">Cambiar nombre</button>
+        </div>
+        <hr />
+        <div className="float-left my-3 w-2/3 ">
+          <div className="">Foto de usuario: </div>
+          <Avatar
+            className="m-3"
+            alt="lol"
+            src={profilePic}
+            sx={{ height: 100, width: 100 }}
+          />
+        </div>
+        {image == null && (
+          <button
+            className="float-right my-3 w-1/3 "
+            onClick={() => {
+              setOpen(!open);
+            }}
+          >
+            Cambiar foto
+          </button>
+        )}
+        {image != null && (
+          <button className="float-right w-1/3 " onClick={handleUpload}>
+            Subir foto
+          </button>
+        )}
+
+        <span className="float-left my-3 w-full ">
+          E-mail: {currentUser.email}
+        </span>
+
+        <Modal
+          open={open}
+          onClose={() => {
+            setOpen(!open);
+          }}
+        >
+          <Box className="mx-auto my-72 h-64 w-1/2 bg-white text-center ">
+            <input
+              type="file"
+              ref={imgRef}
+              className="h-full w-full"
+              onChange={(event) => {
+                setImage(event.target.files[0]);
+              }}
+            />
+          </Box>
+        </Modal>
+
+        <h1 className="my-3 mt-48 text-4xl font-bold">Seguridad</h1>
+        <hr />
+
+        <div>
+          <div className="float-left my-3 w-2/3">Cambiar contraseña.</div>
+          <input className="float-right my-3 w-1/3" />
+
+          <div className="float-left my-3 w-2/3">Verificar Correo.</div>
+          <div className="float-right my-3 w-1/3">
+            {currentUser.emailVerified ? (
+              <BsCheckLg />
+            ) : (
+              <GrAdd className="rotate-45 scale-150" />
+            )}
+          </div>
+
+          <div className="float-left my-3 w-2/3 ">Eliminar cuenta</div>
+          <button className="float-right my-3 w-1/3 text-red-500"> !!! </button>
+        </div>
       </div>
     </div>
   );
