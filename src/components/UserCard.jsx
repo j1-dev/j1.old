@@ -183,7 +183,6 @@ const UserCard = ({ user }) => {
   return (
     <div className="user-panel">
       <div className="user-panel-top"></div>
-
       <Avatar
         className="user-panel-avatar"
         alt="lol"

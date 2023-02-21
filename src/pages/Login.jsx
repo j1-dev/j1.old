@@ -90,7 +90,7 @@ const Login = () => {
             onChange={handleChange}
           />
 
-          <button className="button" onClick={handleSubmit}>
+          <button className="button-still" onClick={handleSubmit}>
             Login
           </button>
         </form>

@@ -21,8 +21,12 @@ const LogInNavbar = () => {
                       bg-white pt-96 transition-all"
     >
       <div className="inline-flex">
-        <NavLink to="/Login">Login</NavLink>
-        <NavLink to="/Register">Register</NavLink>
+        <NavLink className="button-still" to="/Login">
+          Login
+        </NavLink>
+        <NavLink className="button-still" to="/Register">
+          Register
+        </NavLink>
       </div>
     </nav>
   );
