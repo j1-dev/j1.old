@@ -140,94 +140,10 @@ const Settings = () => {
     setProfilePic(url);
   };
 
-  const renderSelected = () => {
-    switch (selected) {
-      case "informacion":
-        return (
-          <div className="text-left">
-            <div className="float-left w-2/3 ">
-              Nombre: {currentUser.displayName}
-            </div>
-            <button className="float-right w-1/3 ">Cambiar nombre</button>
-
-            <div className="float-left my-3 w-2/3 ">
-              <div className="">Foto de usuario: </div>
-              <Avatar
-                className=" ml-3"
-                alt="lol"
-                src={profilePic}
-                sx={{ height: 100, width: 100 }}
-              />
-            </div>
-            {image == null && (
-              <button
-                className="float-right my-3 w-1/3 "
-                onClick={() => {
-                  setOpen(!open);
-                }}
-              >
-                Cambiar foto
-              </button>
-            )}
-            {image != null && (
-              <button className="float-right w-1/3 " onClick={handleUpload}>
-                Subir foto
-              </button>
-            )}
-
-            <div className="float-left w-2/3 ">E-mail: {currentUser.email}</div>
-
-            <Modal
-              open={open}
-              onClose={() => {
-                setOpen(!open);
-              }}
-            >
-              <Box className="mx-auto my-72 h-64 w-1/2 bg-white text-center ">
-                <input
-                  type="file"
-                  ref={imgRef}
-                  className="h-full w-full"
-                  onChange={(event) => {
-                    setImage(event.target.files[0]);
-                  }}
-                />
-              </Box>
-            </Modal>
-          </div>
-        );
-      case "seguridad":
-        return (
-          <div>
-            <div className="float-left w-2/3 ">Cambiar contraseña.</div>
-            <input className="float-right w-1/3 " />
-
-            <div className="float-left w-2/3 ">Verificar Correo.</div>
-            <div className="float-right w-1/3">
-              {currentUser.emailVerified ? (
-                <BsCheckLg />
-              ) : (
-                <GrAdd className="rotate-45 scale-150" />
-              )}
-            </div>
-
-            <div className="float-left w-2/3 ">Eliminar cuenta</div>
-            <button className="float-right w-1/3 text-red-500"> !!! </button>
-          </div>
-        );
-      case "???":
-        return <div>jejejje</div>;
-      case "aspecto":
-        return <div>jijjiji</div>;
-      default:
-        setSelected("informacion");
-    }
-  };
-
   return (
     <div>
       <hr />
-      <div className="m-auto h-screen w-5/12 border-l-2 border-r-2 border-gray-400 p-5 text-left">
+      <div className="m-auto h-screen border-l-2 border-r-2 border-gray-400 p-5 text-left sm:w-11/12 md:w-2/3 lg:w-1/3">
         <h1 className="my-3 text-4xl font-bold">Informacion personal</h1>
         <hr />
         <div>

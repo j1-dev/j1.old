@@ -26,7 +26,7 @@
 }
 
 .nav-logo {
-  @apply transition-all sm:w-12 md:w-16 lg:w-24 lg:hover:w-32;
+  @apply transition-all sm:w-12 md:w-20 lg:w-24 lg:hover:w-32;
 }
 
 .nav-buttons {
