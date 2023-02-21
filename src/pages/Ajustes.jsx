@@ -227,31 +227,47 @@ const Settings = () => {
   return (
     <div>
       <hr />
-      <div className="float-right h-screen w-1/4 border-r-2 p-5 text-justify">
-        <ul className="text-3xl">
-          <li className="button py-2">
-            <button onClick={handleSelected} id="informacion">
+      <div className="relative float-right h-screen w-1/4 border-r-2 p-5 text-justify">
+        <ul className="absolute right-5 top-[200px] w-full origin-center text-3xl">
+          <li>
+            <button
+              onClick={handleSelected}
+              className="my-4 w-full rounded-full border border-gray-400 py-4 text-center transition-colors duration-75 hover:bg-gray-300"
+              id="informacion"
+            >
               Información personal
             </button>
           </li>
-          <li className="button py-2">
-            <button onClick={handleSelected} id="seguridad">
+          <li>
+            <button
+              onClick={handleSelected}
+              className="my-4 w-full rounded-full border border-gray-400 py-4 text-center transition-colors duration-75 hover:bg-gray-300"
+              id="seguridad"
+            >
               Seguridad
             </button>
           </li>
-          <li className="button py-2">
-            <button onClick={handleSelected} id="???">
-              ????
+          <li>
+            <button
+              onClick={handleSelected}
+              className="my-4 w-full rounded-full border border-gray-400 py-4 text-center transition-colors duration-75 hover:bg-gray-300"
+              id="???"
+            >
+              ???
             </button>
           </li>
-          <li className="button py-2">
-            <button onClick={handleSelected} id="aspecto">
+          <li>
+            <button
+              onClick={handleSelected}
+              className="my-4 w-full rounded-full border border-gray-400 py-4 text-center transition-colors duration-75 hover:bg-gray-300"
+              id="aspecto"
+            >
               Aspecto
             </button>
           </li>
         </ul>
       </div>
-      <div className="m-auto h-screen w-fit border-r-2 border-l-2 border-gray-400 p-10 text-left text-lg">
+      <div className="m-auto h-screen w-5/12 border-r-2 border-l-2 border-gray-400 p-10 text-left text-lg">
         {renderSelected()}
       </div>
     </div>
