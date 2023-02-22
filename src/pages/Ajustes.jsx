@@ -1,18 +1,18 @@
-import React, { useState, useRef } from "react";
-import { auth } from "../api/firebase-config";
-import { BsCheckLg } from "react-icons/bs";
-import { GrAdd } from "react-icons/gr";
 import { Avatar } from "@mui/material";
+import { updateProfile } from "firebase/auth";
 import {
+  deleteObject,
+  getDownloadURL,
   ref,
   uploadBytes,
-  getDownloadURL,
-  deleteObject,
 } from "firebase/storage";
-import { storage } from "../api/firebase-config";
+import React, { useRef, useState, useEffect } from "react";
+import { BsCheckLg } from "react-icons/bs";
+import { GrAdd } from "react-icons/gr";
 import { v4 } from "uuid";
-import { updateProfile } from "firebase/auth";
-import userServices from "../api/user.services";
+import { auth, storage } from "../api/firebase-config";
+import UserServices from "../api/user.services";
+import { useNavigate } from "react-router-dom";
 
 /**
  * @component
@@ -50,6 +50,8 @@ const Settings = () => {
    */
   const currentUser = auth.currentUser;
 
+  const [user, setUser] = useState(null);
+
   /**
    * The default URL for the profile picture.
    * @type {string}
@@ -58,10 +60,10 @@ const Settings = () => {
     "https://firebasestorage.googleapis.com/v0/b/j1web-7dc6e.appspot.com/o/profilePics%2Fdefault%2Fblank-profile-picture-973460_1280.webp?alt=media&token=4196e70b-dbb5-4ca6-8526-9169a854635a";
 
   /**
-   * The state of a component's modal.
+   * The state of the change username input.
    * @type {boolean}
    */
-  const [open, setOpen] = useState(false);
+  const [changing, isChanging] = useState(false);
 
   /**
    * The currently uploaded image.
@@ -70,16 +72,34 @@ const Settings = () => {
   const [image, setImage] = useState(null);
 
   /**
+   * Navigation hook
+   * @type {function}
+   */
+  const navigate = useNavigate();
+
+  /**
    * The profile picture of the current user.
    * @type {string}
    */
   const [profilePic, setProfilePic] = useState(currentUser.photoURL);
+
+  const [userName, setUserName] = useState(currentUser.displayName);
 
   /**
    * A ref object that refers to the file input field.
    * @type {React.MutableRefObject<null>}
    */
   const fileRef = useRef(null);
+
+  const nameRef = useRef(null);
+
+  useEffect(() => {
+    const set = () => setUser(UserServices.getUser(currentUser.uid));
+
+    return () => {
+      set();
+    };
+  }, [currentUser]);
 
   /**
    * Uploads an image and updates the current user's profile picture.
@@ -116,10 +136,9 @@ const Settings = () => {
       deleteObject(photoRef);
     }
     updateProfile(currentUser, { photoURL: url });
-    let user = userServices.getUser(currentUser.uid);
+    let user = UserServices.getUser(currentUser.uid);
     user = { ...user, photo: url };
-    console.log("polla: " + user);
-    userServices.updateUser(currentUser.uid, user);
+    UserServices.updateUser(currentUser.uid, user);
     setProfilePic(url);
   };
 
@@ -148,6 +167,26 @@ const Settings = () => {
     fileRef.current.click();
   };
 
+  /**
+   * Handler for changing the username
+   *
+   * @function
+   * @param {Object} e - The click event object.
+   * @returns {void}
+   */
+  const handleNameChange = (e) => {
+    const un = nameRef.current.value;
+    updateProfile(currentUser, { displayName: un }).then(async () => {
+      const newUser = {
+        ...user,
+        nickName: un,
+      };
+      await UserServices.updateUser(currentUser.uid, newUser);
+      console.log("displayName updated: " + un);
+    });
+    setUserName(nameRef.current.value);
+  };
+
   return (
     <div>
       <hr />
@@ -156,10 +195,41 @@ const Settings = () => {
         <hr />
         <div>
           <div className="float-left my-3 w-2/3">
-            Nombre: {currentUser.displayName}
+            <div className="float-left w-1/2">
+              Nombre:
+              <div className="float-right w-8/12">
+                {changing ? (
+                  <div>
+                    <input
+                      name="nameChange"
+                      id="1"
+                      cols="12"
+                      rows="1"
+                      className="resize-none border-b-[1px] border-black outline-none"
+                      maxLength="8"
+                      ref={nameRef}
+                    ></input>
+                  </div>
+                ) : (
+                  <div className="h-4">{userName}</div>
+                )}
+              </div>
+            </div>
           </div>
-          <button className="float-right my-3 w-1/3 text-center ">
-            Cambiar nombre
+          <button
+            onClick={() => {
+              if (changing && nameRef.current.value != "") {
+                handleNameChange();
+              }
+              isChanging(!changing);
+            }}
+            className="float-right my-3 w-1/3 text-center "
+          >
+            {changing ? (
+              <span>Guardar Nombre</span>
+            ) : (
+              <span>Cambiar Nombre</span>
+            )}
           </button>
         </div>
         <hr />
