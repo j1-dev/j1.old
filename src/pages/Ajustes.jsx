@@ -140,6 +140,7 @@ const Settings = () => {
     user = { ...user, photo: url };
     UserServices.updateUser(currentUser.uid, user);
     setProfilePic(url);
+    navigate(0);
   };
 
   /**
@@ -185,6 +186,7 @@ const Settings = () => {
       console.log("displayName updated: " + un);
     });
     setUserName(nameRef.current.value);
+    navigate(0);
   };
 
   return (
@@ -218,7 +220,7 @@ const Settings = () => {
           </div>
           <button
             onClick={() => {
-              if (changing && nameRef.current.value != "") {
+              if (changing && nameRef.current.value !== "") {
                 handleNameChange();
               }
               isChanging(!changing);
