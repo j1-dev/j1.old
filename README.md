@@ -16,5 +16,41 @@
   
   - Meet new people.
   
-  - F̷̤̰͚̎͋I̵͕̬̗̫̜̬̼̺̥̮̼͊͛́͒̏̉̆̈͑͛ͅN̷̹͕͔̯͔̼̳̲̳͓̈́̇͋͂̐̑͆̀͐̏ͅD̷̻͖̭̟̥̑͌̏̈́̓͊́̊̔͊̓͠ ̵̠̯̗̯͒̈̔̏͛͂́̿̊̀̄̎̓̕T̵̨̡̨͔͎͍̫͕̟̮̟͕̣͊͛͑̏̉́H̸̗̳̼̝͚̦̪̘́͑̅͑̓̓̄̏͐̑̄͌̕͝ͅͅÉ̴̥͍̬͛̑͋̓̋̐͒͋͑̚͝͝ ̵̧̧͔͕̩̰͔͇͖̠͍̜́̓͐̍͑̉͒̿̚ͅS̵̨̧̧̼̤͔͓̞̫̲̼͍̗͋̈̽͊̂̋̓̂̓̅̓͋Ḙ̶̛͇̰̞̯̰̮̈̃̍͋̾͛̋̀̒̔͐̓C̶̙̞̮̘̙̙̜̭̼͕͈̹͕̳̏̈́̅̈́͝R̶͎͓̯̗̯̞͊ͅͅÉ̸̥̔̂͠T̷̨̧̫͕̱̘̤͈̠͛̑̾͗S̵̢̡̼̼̓͆̊͌̏̐̀̂͛̀̓͘͘͠͠
+  - Disconnect from the real world.
 
+<br/>
+
+### On the technical side
+
+  - This Website uses firebase.
+
+  - As of 2/24/2023, the project is in pre-alpha.
+
+  - Implemented fetures: 
+    
+    - Real time feed.
+
+    - Fully functioning cursor pagination for blazingly fast reads.
+
+    - Likes, Dislikes and Comments on posts.
+
+    - Login / Register forms.
+
+    - 3 level of responsiveness: large, medium and small.
+
+    - Customizeable displayName and profile picture.
+ 
+ 
+ 
+  - To do list:
+
+    - Real Time notifications for dikes, (dislikes) and comments.
+
+    - Search bar to search for users and potentially posts.
+    
+    - Change entire database file structure.
+
+    - Add multiple language support.
+
+
+  - Currently accepting suggestions, just open an issue.
