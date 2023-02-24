@@ -4,6 +4,7 @@ import { useAuth } from "../api/authContext";
 import { auth } from "../api/firebase-config";
 import { useNavigate } from "react-router-dom";
 import { FiArrowLeft } from "react-icons/fi";
+import { Avatar } from "@mui/material";
 
 /**
  * @component
@@ -96,10 +97,11 @@ const Topbar = () => {
   const renderBackButton = (pathname) => {
     if (pathname === "/Home" || pathname === "/") {
       return (
-        <img
-          src={user.photoURL}
-          alt="."
-          className="h-[75px] cursor-pointer rounded-full p-3"
+        <Avatar
+          className="m-2"
+          alt="lol"
+          src={currentUser.photoURL}
+          sx={{ width: "65px", height: "65px" }}
         />
       );
     } else {
@@ -114,7 +116,7 @@ const Topbar = () => {
     }
   };
 
-  if (loading) return <></>;
+  if (!!currentUser) return <></>;
 
   return (
     <div className="h-20 ">

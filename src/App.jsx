@@ -52,7 +52,6 @@ function App() {
           </div>
         ) : (
           <div>
-            <Topbar />
             <Navbar />
           </div>
         )}

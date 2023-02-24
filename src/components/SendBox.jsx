@@ -14,6 +14,7 @@ import { usePopper } from "react-popper";
 import Picker from "emoji-picker-react";
 import { doc, collection } from "firebase/firestore";
 import { db } from "../api/firebase-config";
+import { Avatar } from "@mui/material";
 
 /**
  * @component
@@ -366,11 +367,17 @@ const SendBox = ({ className, path }) => {
   return (
     <div className={className} ref={drop}>
       {/* Profile pic */}
-      <img
+      {/* <img
         alt=""
         src={user.photoURL}
         className="float-left mt-5 ml-3 w-[69px] rounded-full"
-      ></img>
+      ></img> */}
+      <Avatar
+        className="float-left mt-5 ml-5 rounded-full"
+        alt="lol"
+        src={user.photoURL}
+        sx={{ width: "60px", height: "60px" }}
+      />
       {dragging && (
         // div and input elements that are active while draggaing
         // an image into this element
