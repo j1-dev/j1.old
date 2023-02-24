@@ -116,11 +116,11 @@ const Topbar = () => {
     }
   };
 
-  if (!!currentUser) return <></>;
+  if (loading) return null;
 
   return (
     <div className="h-20 ">
-      {!!currentUser && currentUser.displayName != null ? (
+      {!!currentUser && currentUser.displayName !== null ? (
         <div className="">
           <div className="float-right w-1/3">
             <img

@@ -14,7 +14,8 @@ import Perfil from "./pages/Perfil";
 import Ajustes from "./pages/Ajustes";
 import PostPage from "./pages/PostPage";
 import { Route, Routes } from "react-router-dom";
-import { AuthProvider } from "./api/authContext";
+import { AuthProvider, useAuth } from "./api/authContext";
+import { auth } from "./api/firebase-config";
 
 function App() {
   const [windowSize, setWindowSize] = useState([
