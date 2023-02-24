@@ -1,5 +1,5 @@
 import { Avatar } from "@mui/material";
-import { updateProfile } from "firebase/auth";
+import { updateProfile, sendEmailVerification } from "firebase/auth";
 import {
   deleteObject,
   getDownloadURL,
@@ -7,8 +7,7 @@ import {
   uploadBytes,
 } from "firebase/storage";
 import React, { useRef, useState, useEffect } from "react";
-import { BsCheckLg } from "react-icons/bs";
-import { GrAdd } from "react-icons/gr";
+import { RxCheck, RxCross1 } from "react-icons/rx";
 import { v4 } from "uuid";
 import { auth, storage } from "../api/firebase-config";
 import UserServices from "../api/user.services";
@@ -58,7 +57,6 @@ const Settings = () => {
    */
   const defaultProfilePicUrl =
     "https://firebasestorage.googleapis.com/v0/b/j1web-7dc6e.appspot.com/o/profilePics%2Fdefault%2Fblank-profile-picture-973460_1280.webp?alt=media&token=4196e70b-dbb5-4ca6-8526-9169a854635a";
-
   /**
    * The state of the change username input.
    * @type {boolean}
@@ -94,11 +92,10 @@ const Settings = () => {
   const nameRef = useRef(null);
 
   useEffect(() => {
-    const set = () => setUser(UserServices.getUser(currentUser.uid));
-
-    return () => {
-      set();
+    const sub = async () => {
+      setUser(await UserServices.getUser(currentUser.uid));
     };
+    sub();
   }, [currentUser]);
 
   /**
@@ -125,22 +122,22 @@ const Settings = () => {
 
   /**
    * Uploads a user's profile picture to Firebase storage and updates the user's document in Firestore.
-   * @function
    *
+   * @function
    * @param {Object} data - An object containing the URL of the uploaded image.
    * @returns {void}
    */
   const uploadProfilePic = ({ url }) => {
-    if (currentUser.photoURL !== defaultProfilePicUrl) {
+    if (user.data().photo !== defaultProfilePicUrl) {
       const photoRef = ref(storage, currentUser.photoURL);
       deleteObject(photoRef);
     }
-    updateProfile(currentUser, { photoURL: url });
-    let user = UserServices.getUser(currentUser.uid);
-    user = { ...user, photo: url };
-    UserServices.updateUser(currentUser.uid, user);
-    setProfilePic(url);
-    navigate(0);
+    updateProfile(currentUser, { photoURL: url }).then(async () => {
+      let user = UserServices.getUser(currentUser.uid);
+      user = { ...user, photo: url };
+      await UserServices.updateUser(currentUser.uid, user);
+      navigate(0);
+    });
   };
 
   /**
@@ -183,10 +180,26 @@ const Settings = () => {
         nickName: un,
       };
       await UserServices.updateUser(currentUser.uid, newUser);
-      console.log("displayName updated: " + un);
+      navigate(0);
     });
-    setUserName(nameRef.current.value);
-    navigate(0);
+  };
+
+  /**
+   * Handler for verifying the current user
+   *
+   * @function
+   * @param {Object} e- the click event object
+   * @returns {void}
+   */
+  const handleVerifyUser = (e) => {
+    if (!currentUser.emailVerified)
+      sendEmailVerification(currentUser)
+        .then(() => {
+          console.log("Verification sent");
+        })
+        .catch((err) => {
+          console.log(err);
+        });
   };
 
   return (
@@ -195,11 +208,11 @@ const Settings = () => {
       <div className="m-auto h-screen border-gray-400 p-5 text-left sm:w-full sm:border-l-0 sm:border-r-0 md:w-2/3 md:border-l-2 md:border-r-2 lg:w-1/3">
         <h1 className="my-3 text-4xl font-bold">Informacion personal</h1>
         <hr />
-        <div>
+        <div className="w-full">
           <div className="float-left my-3 w-2/3">
             <div className="float-left w-1/2">
-              Nombre:
-              <div className="float-right w-8/12">
+              <span className="w-min font-semibold">Nombre:</span>
+              <div>
                 {changing ? (
                   <div>
                     <input
@@ -228,58 +241,72 @@ const Settings = () => {
             className="float-right my-3 w-1/3 text-center "
           >
             {changing ? (
-              <span>Guardar Nombre</span>
+              <span className="hover:font-semibold">Guardar Nombre</span>
             ) : (
-              <span>Cambiar Nombre</span>
+              <span className="hover:font-semibold">Cambiar Nombre</span>
             )}
           </button>
         </div>
         <hr />
         <div className="float-left my-3 w-2/3 ">
-          <div className="">Foto de usuario: </div>
-          <Avatar
-            className="m-3"
-            alt="lol"
-            src={profilePic}
-            sx={{ height: 100, width: 100 }}
-          />
+          <div className="font-semibold">Foto de usuario: </div>
+          <div className="w-full">
+            <Avatar
+              className="m-3"
+              alt="lol"
+              src={profilePic}
+              sx={{ height: 100, width: 100 }}
+            />
+          </div>
         </div>
         <div className="float-right my-3 w-1/3 text-center">
           {image == null && (
-            <button onClick={handleImageButton}>Cambiar foto</button>
+            <button className="hover:font-semibold" onClick={handleImageButton}>
+              Cambiar foto
+            </button>
           )}
           {image != null && (
             <div>
-              <button onClick={handleUpload}>Subir foto</button>
-              <span> | </span>
-              <button onClick={handleImageButton}>Cambiar foto</button>
+              <button className="hover:font-semibold" onClick={handleUpload}>
+                Subir foto
+              </button>
+              <span className="font-semibold"> | </span>
+              <button
+                className="hover:font-semibold"
+                onClick={handleImageButton}
+              >
+                Cambiar foto
+              </button>
             </div>
           )}
         </div>
 
-        <span className="float-left my-3 w-full ">
-          E-mail: {currentUser.email}
-        </span>
+        <div className="w-full">
+          <div className="float-left my-4 w-2/3">
+            <span className=" w-full font-semibold">E-mail: </span>
 
-        <h1 className="my-3 mt-48 text-4xl font-bold">Seguridad</h1>
-        <hr />
-
-        <div>
-          <div className="float-left my-3 w-2/3">Cambiar contraseña.</div>
-          <input className="float-right my-3 w-1/3" />
-
-          <div className="float-left my-3 w-2/3">Verificar Correo.</div>
-          <div className="float-right my-3 w-1/3">
-            {currentUser.emailVerified ? (
-              <BsCheckLg />
-            ) : (
-              <GrAdd className="rotate-45 scale-150" />
-            )}
+            <div className="">
+              {currentUser.emailVerified ? (
+                <div className="inline-flex">
+                  {currentUser.email}
+                  <RxCheck className="mx-4 scale-150" />
+                </div>
+              ) : (
+                <div className="inline-flex">
+                  {currentUser.email}
+                  <RxCross1 />
+                </div>
+              )}
+            </div>
           </div>
-
-          <div className="float-left my-3 w-2/3 ">Eliminar cuenta</div>
-          <button className="float-right my-3 w-1/3 text-red-500"> !!! </button>
+          <div className="float-right my-5 w-1/3 text-center">
+            <button onClick={handleVerifyUser} className="hover:font-semibold">
+              Verificar usuario
+            </button>
+          </div>
         </div>
+        <h1 className="text-4xl font-bold"></h1>
+        <hr />
       </div>
       <input
         id="image"
