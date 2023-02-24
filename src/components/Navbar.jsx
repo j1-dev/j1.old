@@ -9,6 +9,7 @@ import {
   HiOutlineShoppingCart,
   HiOutlineCog,
 } from "react-icons/hi";
+import { Avatar } from "@mui/material";
 import { Tooltip } from "@mui/material";
 
 /**
@@ -160,10 +161,16 @@ const Navbar = () => {
                 }
                 to={"/" + currentUser.displayName}
               >
-                <img
+                {/* <img
                   src={currentUser.photoURL}
                   alt="yo"
                   className="float-left w-11 rounded-full p-0"
+                /> */}
+                <Avatar
+                  className="float-left w-11 p-0"
+                  alt="lol"
+                  src={currentUser.photoURL}
+                  sx={{ width: "44px", height: "44px" }}
                 />
                 {windowSize[0] <= 1024 ? (
                   <></>
