@@ -241,9 +241,25 @@ const Post = ({ data, path, className }) => {
       // Get a reference to the user's likes for the post
       const likeRef = doc(likesRef, user.uid);
 
+      // Reference to the notification subcollection in the User
+      const notificationRef = doc(
+        collection(db, `Users/${data.uid}/Notifications`),
+        data.id
+      );
+
+      // Timestamp in seconds
+      const ts = Date.now() / 1000;
+
       // Create a new user object with the user ID
       const newUser = {
         uid: user.uid,
+      };
+
+      // Create a new notification object with the notification info
+      const newNotification = {
+        uid: user.uid,
+        sentAt: ts,
+        type: "like",
       };
 
       // If the post has not been liked by the user yet
@@ -254,8 +270,9 @@ const Post = ({ data, path, className }) => {
 
         // Set like update variable to +1
         setL(l + 1);
-        // Add the user to the likes collection
+        // Add the user and notification to the likes collection
         await setDoc(likeRef, newUser);
+        await setDoc(notificationRef, newNotification);
 
         // If the user has already disliked the post, remove the dislike and set the dislike update variable
         if (!dislikeable) {
@@ -286,9 +303,25 @@ const Post = ({ data, path, className }) => {
       // Get a reference to the user's dislikes for the post
       const dislikeRef = doc(dislikesRef, user.uid);
 
+      // Reference to the notification subcollection in the User
+      const notificationRef = doc(
+        collection(db, `Users/${data.uid}/Notifications`),
+        data.id
+      );
+
+      // Timestamp in seconds
+      const ts = Date.now() / 1000;
+
       // Create a new user object with the user ID
       const newUser = {
         uid: user.uid,
+      };
+
+      // Create a new notification object with the notification info
+      const newNotification = {
+        uid: user.uid,
+        sentAt: ts,
+        type: "dislike",
       };
 
       // If the post has not been disliked by the user yet
@@ -301,6 +334,7 @@ const Post = ({ data, path, className }) => {
         setD(d + 1);
         // Add the user to the dislikes collection
         await setDoc(dislikeRef, newUser);
+        await setDoc(notificationRef, newNotification);
 
         // If the user has already liked the post, remove the like and set the like update variable
         if (!likeable) {
