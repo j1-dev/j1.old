@@ -12,7 +12,7 @@ import {
 import React, { useState, useMemo, useEffect, useCallback } from "react";
 import { auth, db } from "../api/firebase-config";
 import { UserCollectionRef } from "../api/user.services";
-import { useCollection } from "react-firebase-hooks/firestore";
+import { useDocument } from "react-firebase-hooks/firestore";
 import { NavLink, Link } from "react-router-dom";
 import YouTube from "react-youtube";
 import { GoThumbsdown, GoThumbsup } from "react-icons/go";
@@ -68,13 +68,14 @@ const Post = ({ data, path, className }) => {
    * A Firestore query object used to retrieve the user with matching uid
    * @type {Object}
    */
-  const q = query(UserCollectionRef, where("uid", "==", data.uid));
+  const q = doc(db, "users", data.uid);
 
   /**
    * An array of the user of the post and a loading state variable
+   * @todo change useCollection for useDocument
    * @type {array}
    */
-  const [value, loading] = useCollection(q);
+  const [value, loading] = useDocument(q);
 
   /**
    * A collection object used to perform CRUD operations on the Likes subcollection
@@ -363,17 +364,11 @@ const Post = ({ data, path, className }) => {
   );
 
   /**
-   * Converts a Unix timestamp (in seconds) to a JavaScript Date object.
+   * Converts a Unix timestamp (in seconds) to formatted time difference.
    * @function
    * @param {number} secs - The Unix timestamp to convert, in seconds.
    * @returns {Date} The corresponding Date object.
    */
-  function toDateTime(secs) {
-    var t = new Date(1970, 0, 1); // Epoch
-    t.setSeconds(secs);
-    return t;
-  }
-
   function timeDiff(secs) {
     let str = "";
     let ms = Date.now();
@@ -439,25 +434,24 @@ const Post = ({ data, path, className }) => {
         */}
         <div className="mb-10 w-full pb-7">
           {loading && ""}
-          {value?.docs.map((doc) => {
-            const path = `/${doc.data().displayName}`;
-            const date = timeDiff(data.createdAt);
-            return (
-              <div className="float-left w-11/12">
-                <p className="text-base">
-                  <Avatar
-                    alt={doc.data().displayName}
-                    src={doc.data().photo}
-                    className="float-left mr-3"
-                  />
-                  <NavLink to={path} className="underline hover:no-underline">
-                    {doc.data().displayName}
-                  </NavLink>
-                </p>
-                <div className="text-xs ">Posted {date}</div>
-              </div>
-            );
-          })}
+          {typeof value !== "undefined" ? (
+            <div className="float-left w-11/12">
+              <p className="text-base">
+                <Avatar
+                  alt={value.data().displayName}
+                  src={value.data().photo}
+                  className="float-left mr-3"
+                />
+                <NavLink
+                  to={`/${value.data().displayName}`}
+                  className="underline hover:no-underline"
+                >
+                  {value.data().displayName}
+                </NavLink>
+              </p>
+              <div className="text-xs ">Posted {timeDiff(data.createdAt)}</div>
+            </div>
+          ) : null}
         </div>
 
         {/* 

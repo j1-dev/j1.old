@@ -204,7 +204,6 @@ const SendBox = ({ className, path }) => {
       // console.log(docRef);
       getDoc(docRef)
         .then((snapshot) => {
-          // console.log(snapshot.data().id);
           setParentPostUid(snapshot.data().uid);
           setParentPostId(snapshot.data().id);
         })
@@ -398,7 +397,8 @@ const SendBox = ({ className, path }) => {
         type: "comment",
       };
 
-      await setDoc(notificationRef, newNotification);
+      if (user.uid !== parentPostUid)
+        await setDoc(notificationRef, newNotification);
     }
     postRef.current.value = "";
     setPost("");

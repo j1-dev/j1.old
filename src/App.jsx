@@ -16,6 +16,7 @@ import PostPage from "./pages/PostPage";
 import { Route, Routes } from "react-router-dom";
 import { AuthProvider, useAuth } from "./api/authContext";
 import { auth } from "./api/firebase-config";
+import Notifications from "./components/Notifications";
 
 function App() {
   const [windowSize, setWindowSize] = useState([
@@ -64,6 +65,7 @@ function App() {
               <Route path="/Perfil" element={<Perfil />} />
               <Route path="/Shop" element={<Shop />} />
               <Route path="/About" element={<About />} />
+              <Route path="/Notifications" element={<Notifications />} />
               <Route path="/:username" element={<Perfil />} />
               <Route exact path="/Post" element={<PostPage />} />
               <Route exact path="/Post/:id" element={<PostPage />} />

@@ -9,6 +9,7 @@ import {
   HiOutlineShoppingCart,
   HiOutlineCog,
 } from "react-icons/hi";
+import { RiNotification3Line } from "react-icons/ri";
 import { Avatar } from "@mui/material";
 import { Tooltip } from "@mui/material";
 
@@ -181,6 +182,24 @@ const Navbar = () => {
                 )}
               </NavLink>
             )}
+            {/* 
+              Notifications button
+            */}
+            <NavLink
+              className={({ isActive }) =>
+                isActive ? "button-active" : "button"
+              }
+              to="/Notifications"
+            >
+              <RiNotification3Line className="float-left text-4xl" />
+              {windowSize[0] < 1024 ? (
+                <></>
+              ) : (
+                <p className="float-left pl-4 text-3xl font-normal">
+                  Notificaciones
+                </p>
+              )}
+            </NavLink>
             {/* 
               Shop button
               @todo Turn it into a ko-fi donation button 

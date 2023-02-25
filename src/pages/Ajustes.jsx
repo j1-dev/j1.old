@@ -93,7 +93,9 @@ const Settings = () => {
 
   useEffect(() => {
     const sub = async () => {
-      setUser(await UserServices.getUser(currentUser.uid));
+      await UserServices.getUser(currentUser.uid).then((snapshot) => {
+        setUser(snapshot.data());
+      });
     };
     sub();
   }, [currentUser]);

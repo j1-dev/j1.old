@@ -78,7 +78,7 @@ const Topbar = () => {
         // Render the 'Ajustes' title for the settings page.
         return <p className="pt-5 text-3xl font-bold">Ajustes</p>;
       default:
-        if (pathname.includes("/Post"))
+        if (pathname.includes("/post"))
           // Render the 'Post' title for the post detail page.
           return <p className="pt-5 text-3xl font-bold">Post</p>;
         // Render the title based on the pathname, removing the leading forward slash.
