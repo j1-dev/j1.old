@@ -13,7 +13,7 @@ import {
 /**
  * User collection interface
  */
-export const UserCollectionRef = collection(db, "Users");
+export const UserCollectionRef = collection(db, "users");
 
 class UserService {
   addUser = async (uid, newUser) => {
@@ -22,12 +22,12 @@ class UserService {
   };
 
   updateUser = (id, updatedUser) => {
-    const UserDoc = doc(db, "Users", id);
+    const UserDoc = doc(db, "users", id);
     return updateDoc(UserDoc, updatedUser);
   };
 
   deleteUser = (id) => {
-    const UserDoc = doc(db, "Users", id);
+    const UserDoc = doc(db, "users", id);
     return deleteDoc(UserDoc);
   };
 

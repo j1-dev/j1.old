@@ -55,28 +55,30 @@ export function AuthProvider({ children }) {
    * @param {String} password
    */
   const signup = async (email, password) => {
-    const now = new Date();
-    const time = {
-      seconds: Math.round(now.getTime() / 1000),
-    };
+    const ts = Date.now() / 1000;
     await createUserWithEmailAndPassword(auth, email, password)
       .then(async (userCredential) => {
         userCredential.user.photoURL = defaultProfilePicUrl;
         const user = userCredential.user;
         console.log(user.email, " signed up");
         const newUser = {
-          uid: user.uid, // uid
-          photo: defaultProfilePicUrl, // imagen de perfil
-          phone: user.phoneNumber, // número de teléfono
-          verified: user.emailVerified, // correo verificado
-          nickName: user.displayName, // nickName (Change to displayName b4 1/3)
-          email: user.email, // email
-          bio: "", // biografía
-          joined: time.seconds, // hora de registro
-          followers: 0, // personas que te siguen
-          follows: 0, // personas a las que sigues
-          likes: 0, // likes recibidos
-          dislikes: 0, // dislikes recibidos
+          uid: user.uid,
+          displayName: user.displayName,
+          userName: user.displayName,
+          prevDisplayName: null,
+          prevUserName: null,
+          lastDisplayNameChange: null,
+          lastUserNameChange: null,
+          joined: ts,
+          email: user.email,
+          bio: "",
+          badge: null,
+          verified: user.emailVerified,
+          photo: defaultProfilePicUrl,
+          likesCounter: 0,
+          dislikesCounter: 0,
+          followersCounter: 0,
+          followsCounter: 0,
         };
         //add new user to user collection in firestore
         console.log("new user = ", newUser);

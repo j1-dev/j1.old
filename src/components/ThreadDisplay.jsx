@@ -160,9 +160,9 @@ const ThreadDisplay = ({ users }) => {
   return (
     <div>
       <div className="w-screen">
-        <SendBox className="post-input z-10 -translate-x-1.5" path="Posts" />
+        <SendBox className="post-input z-10 -translate-x-1.5" path="posts" />
       </div>
-      <Posts path="Posts" className="panel-post" />;
+      <Posts path="posts" className="panel-post" />;
     </div>
   );
 };

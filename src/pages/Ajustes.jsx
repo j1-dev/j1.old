@@ -175,9 +175,11 @@ const Settings = () => {
   const handleNameChange = (e) => {
     const un = nameRef.current.value;
     updateProfile(currentUser, { displayName: un }).then(async () => {
-      let user = UserServices.getUser(currentUser.uid);
-      user = { ...user, nickName: un };
-      await UserServices.updateUser(currentUser.uid, user);
+      const newUser = {
+        ...user,
+        displayName: un,
+      };
+      await UserServices.updateUser(currentUser.uid, newUser);
       navigate(0);
     });
   };
