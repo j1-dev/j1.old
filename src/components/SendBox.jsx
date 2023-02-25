@@ -160,7 +160,7 @@ const SendBox = ({ className, path }) => {
    * Neares Parent Post id
    * @type {String}
    */
-  const [parentPostId, setParentpostId] = useState(null);
+  const [parentPostId, setParentPostId] = useState(null);
 
   /**
    * Set up drag and drop event listeners for the file input
@@ -186,17 +186,33 @@ const SendBox = ({ className, path }) => {
    * @return {void}
    */
   useEffect(() => {
-    // const sub = () => {
-    //   const pathSegs = path.split("/");
-    //   const parentPostId = pathSegs[pathSegs.length - 2];
-    //   setParentpostId(parentPostId);
-    //   getDoc(parentPostId)
-    //     .then((snapshot) => {
-    //       setParentPostUid(snapshot.data().uid);
-    //     })
-    //     .catch((err) => console.log(err));
-    // };
-    // return sub();
+    const pathSegs = path.split("/");
+    const len = pathSegs.length;
+    // console.log(pathSegs.slice(1, len - 2));
+    const newPathSegs = pathSegs.slice(1, len - 2);
+    let newPath = "/";
+    newPathSegs.map((seg) => {
+      newPath += seg + "/";
+    });
+    newPath = newPath.substring(0, newPath.length - 1);
+
+    // console.log(newPath);
+    const sub = () => {
+      // console.log(pathSegs[len - 2]);
+      const parentPost = pathSegs[len - 2];
+      const docRef = doc(db, newPath, parentPost);
+      // console.log(docRef);
+      getDoc(docRef)
+        .then((snapshot) => {
+          // console.log(snapshot.data().id);
+          setParentPostUid(snapshot.data().uid);
+          setParentPostId(snapshot.data().id);
+        })
+        .catch((err) => console.log(err));
+    };
+    if (len >= 4) {
+      sub();
+    }
   }, [path]);
 
   /**
@@ -331,30 +347,13 @@ const SendBox = ({ className, path }) => {
    * @returns {void}
    */
   const uploadPost = async ({ url }) => {
-    // Reference to the notification subcollection in the User
-    const notificationRef = doc(
-      collection(db, `users/${parentPostId}/notifications`),
-      parentPostId
-    );
-
-    const time = Date.now() / 1000;
-
     if (post === "" && image === null) {
       return;
     }
 
-    // Create a new notification object with the notification info
-    const newNotification = {
-      id: parentPostId,
-      from: user.uid,
-      to: parentPostUid,
-      message: "Alguien ha respondido a tu post",
-      sentAt: time,
-      type: "comment",
-    };
+    const time = Date.now() / 1000;
 
     let newPost;
-    console.log(path);
     const docRef = doc(collection(db, path));
     if (typeof url !== "undefined") {
       newPost = {
@@ -382,7 +381,25 @@ const SendBox = ({ className, path }) => {
 
     setChars(200);
     await setDoc(docRef, newPost);
-    await setDoc(notificationRef, newNotification);
+    if (parentPostId !== null) {
+      // Reference to the notification subcollection in the User
+      const notificationRef = doc(
+        collection(db, `users/${parentPostUid}/notifications`),
+        parentPostId
+      );
+
+      // Create a new notification object with the notification info
+      const newNotification = {
+        id: parentPostId,
+        from: user.uid,
+        to: parentPostUid,
+        message: "Alguien ha respondido a tu post",
+        sentAt: time,
+        type: "comment",
+      };
+
+      await setDoc(notificationRef, newNotification);
+    }
     postRef.current.value = "";
     setPost("");
     setImage(null);

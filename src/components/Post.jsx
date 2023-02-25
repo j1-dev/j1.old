@@ -275,7 +275,8 @@ const Post = ({ data, path, className }) => {
         setL(l + 1);
         // Add the user and notification to the likes collection
         await setDoc(likeRef, newUser);
-        await setDoc(notificationRef, newNotification);
+        if (user.uid !== data.uid)
+          await setDoc(notificationRef, newNotification);
 
         // If the user has already disliked the post, remove the dislike and set the dislike update variable
         if (!dislikeable) {
@@ -288,6 +289,7 @@ const Post = ({ data, path, className }) => {
         setL(l - 1);
         setLikeable(true);
         await deleteDoc(likeRef);
+        await deleteDoc(notificationRef);
       }
     },
     [likeable, dislikesRef, likesRef, user.uid]
@@ -340,7 +342,8 @@ const Post = ({ data, path, className }) => {
         setD(d + 1);
         // Add the user to the dislikes collection
         await setDoc(dislikeRef, newUser);
-        await setDoc(notificationRef, newNotification);
+        if (user.uid !== data.uid)
+          await setDoc(notificationRef, newNotification);
 
         // If the user has already liked the post, remove the like and set the like update variable
         if (!likeable) {
@@ -353,6 +356,7 @@ const Post = ({ data, path, className }) => {
         setD(d - 1);
         setDislikeable(true);
         await deleteDoc(dislikeRef);
+        await deleteDoc(notificationRef);
       }
     },
     [dislikeable, likesRef, dislikesRef, user.uid]
@@ -376,7 +380,7 @@ const Post = ({ data, path, className }) => {
     let s = Math.floor(ms / 1000);
     let sDiff = s - secs;
     if (sDiff >= 0 && sDiff < 60) {
-      str += sDiff + "s ago";
+      str += Math.round(sDiff) + "s ago";
     } else if (sDiff >= 60 && sDiff < 3600) {
       sDiff /= 60;
       str += Math.round(sDiff) + "m ago";
@@ -384,12 +388,12 @@ const Post = ({ data, path, className }) => {
       sDiff /= 60;
       sDiff /= 60;
       str += Math.round(sDiff) + "h ago";
-    } else if ((sDiff >= 86400 && sDiff < 2, 628e6)) {
+    } else if (sDiff >= 86400 && sDiff < 2.628e6) {
       sDiff /= 60;
       sDiff /= 60;
       sDiff /= 24;
       str += Math.round(sDiff) + "d ago";
-    } else if ((sDiff >= 2.628e6 && sDiff < 3, 154e7)) {
+    } else if (sDiff >= 2.628e6 && sDiff < 3.154e7) {
       sDiff /= 60;
       sDiff /= 60;
       sDiff /= 24;
@@ -437,7 +441,7 @@ const Post = ({ data, path, className }) => {
           {loading && ""}
           {value?.docs.map((doc) => {
             const path = `/${doc.data().displayName}`;
-            const date = timeDiff(data.createdAt.seconds);
+            const date = timeDiff(data.createdAt);
             return (
               <div className="float-left w-11/12">
                 <p className="text-base">

@@ -7,6 +7,7 @@ import {
   collection,
   deleteDoc,
   query,
+  getCountFromServer,
 } from "firebase/firestore";
 import { Avatar } from "@mui/material";
 import { useCollection } from "react-firebase-hooks/firestore";
@@ -79,16 +80,31 @@ const UserCard = ({ user }) => {
   const queryFollows = query(followsRef);
 
   /**
-   * The result of a Firestore query to retrieve the current user's followers.
-   * @type {Array<Object>|null}
+   * Follows counter
+   * @type {Integer}
    */
-  const [value, loading] = useCollection(queryFollowers);
+  const [follows, setFollows] = useState(0);
 
   /**
-   * The result of a Firestore query to retrieve the users that the current user follows.
-   * @type {Array<Object>|null}
+   * Followers counter
+   * @type {Integer}
    */
-  const [value2, loading2] = useCollection(queryFollows);
+  const [followers, setFollowers] = useState(0);
+
+  /**
+   * A useEffect hook that fetches follows and followers counters
+   *
+   * @function
+   * @returns {void}
+   */
+  useEffect(() => {
+    const unsub = async () => {
+      setFollows(await getCountFromServer(queryFollows));
+      setFollowers(await getCountFromServer(queryFollowers));
+    };
+
+    unsub();
+  }, [queryFollows, queryFollowers]);
 
   /**
    * Handles the action of following a user, updating both the current user's followers collection and the target user's follows collection.
@@ -120,7 +136,21 @@ const UserCard = ({ user }) => {
         uid: user.uid,
       };
 
+      const time = Date.now() / 1000;
+
+      const notificationRef = collection(db, `users/${user.uid}/notifications`);
+      const followNotificationRef = doc(notificationRef, user.uid);
+      const newNotification = {
+        id: currentUser.uid,
+        from: currentUser.uid,
+        to: user.uid,
+        message: "Alguien te ha seguido!",
+        sentAt: time,
+        type: "follow",
+      };
+
       await setDoc(userFollowRef, newFollow); // add the target user to the current user's follows collection
+      await setDoc(followNotificationRef, newNotification);
     } else {
       return console.log("You are already a follower"); // if the user is already following them, log a message and do nothing
     }
@@ -148,7 +178,11 @@ const UserCard = ({ user }) => {
       const followRef = collection(db, `users/${currentUser.uid}/follows`);
       const userFollowRef = doc(followRef, user.uid);
 
+      const notificationRef = collection(db, `users/${user.uid}/notifications`);
+      const followNotificationRef = doc(notificationRef, user.uid);
+
       await deleteDoc(userFollowRef); // remove the target user from the current user's follows collection
+      await deleteDoc(followNotificationRef);
     } else {
       return console.log("You are not following this user"); // if the user is not following them, log a message and do nothing
     }
@@ -162,7 +196,7 @@ const UserCard = ({ user }) => {
    */
   useEffect(() => {
     const unsub = async () => {
-      const usersRef = collection(db, `Users/${user.uid}/Followers`);
+      const usersRef = collection(db, `users/${user.uid}/followers`);
       const userRef = doc(usersRef, currentUser.uid);
       const userSnap = await getDoc(userRef);
       console.log(userSnap.data());
@@ -211,8 +245,8 @@ const UserCard = ({ user }) => {
       )}
 
       <div className="user-panel-followers">
-        {!loading && <div>{value.size} Followers</div>}
-        {!loading2 && <div>{value2.size} Follows</div>}
+        {followers && <div>{followers.data().count} Followers</div>}
+        {follows && <div>{follows.data().count} Follows</div>}
       </div>
     </div>
   );
