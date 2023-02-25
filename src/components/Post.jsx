@@ -80,19 +80,19 @@ const Post = ({ data, path, className }) => {
    * A collection object used to perform CRUD operations on the Likes subcollection
    * @type {Object}
    */
-  const likesRef = collection(db, `${path}/${data.id}/Likes`);
+  const likesRef = collection(db, `${path}/${data.id}/likes`);
 
   /**
    * A collection object used to perform CRUD operations on the Dislikes subcollection
    * @type {Object}
    */
-  const dislikesRef = collection(db, `${path}/${data.id}/Dislikes`);
+  const dislikesRef = collection(db, `${path}/${data.id}/lislikes`);
 
   /**
    * A collection object used to perform CRUD operations on the Posts subcollection
    * @type {Object}
    */
-  const commentsRef = collection(db, `${path}/${data.id}/Posts`);
+  const commentsRef = collection(db, `${path}/${data.id}/posts`);
 
   /**
    * A Firestore query object used to retrieve the Likes subcollection
@@ -243,7 +243,7 @@ const Post = ({ data, path, className }) => {
 
       // Reference to the notification subcollection in the User
       const notificationRef = doc(
-        collection(db, `Users/${data.uid}/Notifications`),
+        collection(db, `users/${data.uid}/notifications`),
         data.id
       );
 
@@ -257,7 +257,10 @@ const Post = ({ data, path, className }) => {
 
       // Create a new notification object with the notification info
       const newNotification = {
-        uid: user.uid,
+        id: data.id,
+        from: user.uid,
+        to: data.uid,
+        message: "Tu post ha recibido un like!",
         sentAt: ts,
         type: "like",
       };
@@ -305,7 +308,7 @@ const Post = ({ data, path, className }) => {
 
       // Reference to the notification subcollection in the User
       const notificationRef = doc(
-        collection(db, `Users/${data.uid}/Notifications`),
+        collection(db, `users/${data.uid}/notifications`),
         data.id
       );
 
@@ -319,9 +322,12 @@ const Post = ({ data, path, className }) => {
 
       // Create a new notification object with the notification info
       const newNotification = {
-        uid: user.uid,
+        id: data.id,
+        from: user.uid,
+        to: data.uid,
+        message: "Tu post ha recibido un dislike!",
         sentAt: ts,
-        type: "dislike",
+        type: "like",
       };
 
       // If the post has not been disliked by the user yet
@@ -421,7 +427,7 @@ const Post = ({ data, path, className }) => {
         This Link wraps around the entire post so that when it is clicked, it navigates the user to the Post page
         that shows the other Posts that this post is a response to and also shows responses to this post.
       */}
-      <Link to={`/Post/${data.id}`}>
+      <Link to={`/post/${data.id}`}>
         {/* 
           This post renders information about the user that has posted this post, like the avatar, the display name and 
           also the time when this post was posted
@@ -430,18 +436,18 @@ const Post = ({ data, path, className }) => {
         <div className="mb-10 w-full pb-7">
           {loading && ""}
           {value?.docs.map((doc) => {
-            const path = `/${doc.data().nickName}`;
+            const path = `/${doc.data().displayName}`;
             const date = timeDiff(data.createdAt.seconds);
             return (
               <div className="float-left w-11/12">
                 <p className="text-base">
                   <Avatar
-                    alt={doc.data().nickName}
+                    alt={doc.data().displayName}
                     src={doc.data().photo}
                     className="float-left mr-3"
                   />
                   <NavLink to={path} className="underline hover:no-underline">
-                    {doc.data().nickName}
+                    {doc.data().displayName}
                   </NavLink>
                 </p>
                 <div className="text-xs ">Posted {date}</div>

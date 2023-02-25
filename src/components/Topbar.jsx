@@ -116,7 +116,7 @@ const Topbar = () => {
     }
   };
 
-  if (!!currentUser) return <></>;
+  if (loading) return null;
 
   return (
     <div className="h-20 ">

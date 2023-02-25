@@ -58,13 +58,13 @@ const UserCard = ({ user }) => {
    * Firestore reference to the current user's followers collection.
    * @type {Object}
    */
-  const followersRef = collection(db, `Users/${user.uid}/Followers`);
+  const followersRef = collection(db, `users/${user.uid}/followers`);
 
   /**
    * Firestore reference to the current user's follows collection.
    * @type {Object}
    */
-  const followsRef = collection(db, `Users/${user.uid}/Follows`);
+  const followsRef = collection(db, `users/${user.uid}/follows`);
 
   /**
    * A Firestore query to retrieve the current user's followers.
@@ -104,19 +104,19 @@ const UserCard = ({ user }) => {
 
     // If the user is followeable, i.e. not already following them
     if (followeable) {
-      const followerRef = collection(db, `Users/${user.uid}/Followers`);
+      const followerRef = collection(db, `users/${user.uid}/followers`);
       const userRef = doc(followerRef, currentUser.uid);
       const newFollower = {
-        nickName: currentUser.displayName,
+        displayName: currentUser.displayName,
         uid: currentUser.uid,
       };
 
       await setDoc(userRef, newFollower); // add the current user to the target user's followers collection
 
-      const followRef = collection(db, `Users/${currentUser.uid}/Follows`);
+      const followRef = collection(db, `users/${currentUser.uid}/follows`);
       const userFollowRef = doc(followRef, user.uid);
       const newFollow = {
-        nickName: user.nickName,
+        displayName: user.displayName,
         uid: user.uid,
       };
 
@@ -140,12 +140,12 @@ const UserCard = ({ user }) => {
 
     // If the user is not followeable, i.e. already following them
     if (!followeable) {
-      const followerRef = collection(db, `Users/${user.uid}/Followers`);
+      const followerRef = collection(db, `users/${user.uid}/followers`);
       const userRef = doc(followerRef, currentUser.uid);
 
       await deleteDoc(userRef); // remove the current user from the target user's followers collection
 
-      const followRef = collection(db, `Users/${currentUser.uid}/Follows`);
+      const followRef = collection(db, `users/${currentUser.uid}/follows`);
       const userFollowRef = doc(followRef, user.uid);
 
       await deleteDoc(userFollowRef); // remove the target user from the current user's follows collection
@@ -190,7 +190,7 @@ const UserCard = ({ user }) => {
         sx={{ height: 100, width: 100 }}
       />
       <div className="user-panel-data">
-        <div className="font-bold">@{user.nickName}</div>
+        <div className="font-bold">@{user.displayName}</div>
       </div>
 
       {currentUser.uid !== user.uid ? (

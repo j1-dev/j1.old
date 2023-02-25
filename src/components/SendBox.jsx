@@ -12,7 +12,7 @@ import { Tooltip } from "@mui/material";
 import { Popover } from "@headlessui/react";
 import { usePopper } from "react-popper";
 import Picker from "emoji-picker-react";
-import { doc, collection } from "firebase/firestore";
+import { doc, collection, setDoc, getDoc } from "firebase/firestore";
 import { db } from "../api/firebase-config";
 import { Avatar } from "@mui/material";
 
@@ -151,6 +151,18 @@ const SendBox = ({ className, path }) => {
   const [focused, setFocused] = useState(false);
 
   /**
+   * Nearest Parent Post user
+   * @type {String}
+   */
+  const [parentPostUid, setParentPostUid] = useState(null);
+
+  /**
+   * Neares Parent Post id
+   * @type {String}
+   */
+  const [parentPostId, setParentpostId] = useState(null);
+
+  /**
    * Set up drag and drop event listeners for the file input
    *
    * @function
@@ -166,6 +178,26 @@ const SendBox = ({ className, path }) => {
       drop.current?.removeEventListener("dragleave", handleDragLeave);
     };
   }, []);
+
+  /**
+   * Hook to set the parentPost object state variable
+   *
+   * @function
+   * @return {void}
+   */
+  useEffect(() => {
+    // const sub = () => {
+    //   const pathSegs = path.split("/");
+    //   const parentPostId = pathSegs[pathSegs.length - 2];
+    //   setParentpostId(parentPostId);
+    //   getDoc(parentPostId)
+    //     .then((snapshot) => {
+    //       setParentPostUid(snapshot.data().uid);
+    //     })
+    //     .catch((err) => console.log(err));
+    // };
+    // return sub();
+  }, [path]);
 
   /**
    * Handle drag enter event.
@@ -299,41 +331,58 @@ const SendBox = ({ className, path }) => {
    * @returns {void}
    */
   const uploadPost = async ({ url }) => {
-    const now = new Date();
-    const time = {
-      seconds: Math.round(now.getTime() / 1000),
-    };
+    // Reference to the notification subcollection in the User
+    const notificationRef = doc(
+      collection(db, `users/${parentPostId}/notifications`),
+      parentPostId
+    );
+
+    const time = Date.now() / 1000;
 
     if (post === "" && image === null) {
       return;
     }
 
+    // Create a new notification object with the notification info
+    const newNotification = {
+      id: parentPostId,
+      from: user.uid,
+      to: parentPostUid,
+      message: "Alguien ha respondido a tu post",
+      sentAt: time,
+      type: "comment",
+    };
+
     let newPost;
-    const newDocRef = doc(collection(db, path));
+    console.log(path);
+    const docRef = doc(collection(db, path));
     if (typeof url !== "undefined") {
       newPost = {
+        id: docRef.id,
+        uid: user.uid,
         post: post,
         createdAt: time,
-        uid: user.uid,
+        hasPicture: true,
         photoURL: url,
-        id: newDocRef.id,
-        likes: 0,
-        dislikes: 0,
+        likesCounter: 0,
+        dislikesCounter: 0,
       };
     } else {
       newPost = {
+        id: docRef.id,
+        uid: user.uid,
         post: post,
         createdAt: time,
-        uid: user.uid,
+        hastPicture: false,
         photoURL: "",
-        id: newDocRef.id,
-        likes: 0,
-        dislikes: 0,
+        likesCounter: 0,
+        dislikesCounter: 0,
       };
     }
 
     setChars(200);
-    await postServices.setPosts(newDocRef, newPost);
+    await setDoc(docRef, newPost);
+    await setDoc(notificationRef, newNotification);
     postRef.current.value = "";
     setPost("");
     setImage(null);

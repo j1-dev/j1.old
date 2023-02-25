@@ -14,7 +14,7 @@ import {
 /**
  * Post collection interface
  */
-export const PostCollectionRef = collection(db, "Posts");
+export const PostCollectionRef = collection(db, "posts");
 
 class PostService {
   addPosts = (newPost) => {
@@ -26,12 +26,12 @@ class PostService {
   };
 
   updatePost = (id, updatedPost) => {
-    const PostDoc = doc(db, "Posts", id);
+    const PostDoc = doc(db, "posts", id);
     return updateDoc(PostDoc, updatedPost);
   };
 
   deletePost = (id) => {
-    const PostDoc = doc(db, "Posts", id);
+    const PostDoc = doc(db, "posts", id);
     return deleteDoc(PostDoc);
   };
 
@@ -40,7 +40,7 @@ class PostService {
   };
 
   getPost = (id) => {
-    const PostDoc = doc(db, "Posts", id);
+    const PostDoc = doc(db, "posts", id);
     return getDoc(PostDoc);
   };
 }

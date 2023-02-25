@@ -104,8 +104,8 @@ const Perfil = () => {
    */
   useEffect(() => {
     const unsub = () => {
-      const ref = collection(db, "Users");
-      const refQuery = query(ref, where("nickName", "==", username));
+      const ref = collection(db, "users");
+      const refQuery = query(ref, where("displayName", "==", username));
 
       onSnapshot(refQuery, (snapshot) => {
         const data = snapshot.docs.map((doc) => ({
@@ -128,7 +128,7 @@ const Perfil = () => {
    */
   useEffect(() => {
     const unsub = () => {
-      const ref = collectionGroup(db, "Posts");
+      const ref = collectionGroup(db, "posts");
       const refQuery = query(
         ref,
         orderBy("createdAt", "desc"),
@@ -158,7 +158,7 @@ const Perfil = () => {
    */
   const handleLoadMore = useCallback(() => {
     setLoading(true);
-    const CommentCollectionRef = collection(db, "Posts");
+    const CommentCollectionRef = collection(db, "posts");
     const unsub = () => {
       const q = query(
         CommentCollectionRef,
@@ -240,7 +240,7 @@ const Perfil = () => {
             return (
               <Post
                 data={doc}
-                path={"Posts"}
+                path={"posts"}
                 key={doc.id}
                 className="panel-post mx-auto sm:w-11/12 md:w-2/3 lg:w-1/3"
               />

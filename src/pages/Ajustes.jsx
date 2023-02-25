@@ -177,7 +177,7 @@ const Settings = () => {
     updateProfile(currentUser, { displayName: un }).then(async () => {
       const newUser = {
         ...user,
-        nickName: un,
+        displayName: un,
       };
       await UserServices.updateUser(currentUser.uid, newUser);
       navigate(0);

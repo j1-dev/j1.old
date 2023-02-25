@@ -89,18 +89,19 @@ const SetDisplayName = () => {
    */
   const handleNameChange = (e) => {
     e.preventDefault();
-    navigate(0);
     updateProfile(currentUser, { displayName: refName.current.value }).then(
       async () => {
         const newUser = {
           ...user,
-          nickName: refName.current.value,
+          displayName: refName.current.value,
+          userName: refName.current.value,
         };
-        await UserServices.updateUser(currentUser.uid, newUser);
+        await UserServices.updateUser(currentUser.uid, newUser).then(
+          navigate("/")
+        );
         console.log("displayName updated");
 
         refName.current.value = "";
-        navigate("/");
       }
     );
   };
