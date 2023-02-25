@@ -72,7 +72,7 @@ const MenuS = ({ pageWrapId, outerContainerId }) => {
 
   return (
     <div>
-      {!!user && user.displayName != null ? (
+      {!!user && user.displayName !== null ? (
         <div>
           <div
             {...handlers}

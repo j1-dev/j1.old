@@ -203,7 +203,7 @@ const Settings = () => {
   };
 
   return (
-    <div>
+    <div className="text-lg">
       <hr />
       <div className="m-auto h-screen border-gray-400 p-5 text-left sm:w-full sm:border-l-0 sm:border-r-0 md:w-2/3 md:border-l-2 md:border-r-2 lg:w-1/3">
         <h1 className="my-3 text-4xl font-bold">Informacion personal</h1>
@@ -255,7 +255,7 @@ const Settings = () => {
               className="m-3"
               alt="lol"
               src={profilePic}
-              sx={{ height: 100, width: 100 }}
+              sx={{ height: 150, width: 150 }}
             />
           </div>
         </div>
@@ -289,12 +289,12 @@ const Settings = () => {
               {currentUser.emailVerified ? (
                 <div className="inline-flex">
                   {currentUser.email}
-                  <RxCheck className="mx-4 scale-150" />
+                  <RxCheck className="ml-8 -translate-y-4 text-4xl font-bold text-green-500" />
                 </div>
               ) : (
                 <div className="inline-flex">
                   {currentUser.email}
-                  <RxCross1 />
+                  <RxCross1 className="ml-8 -translate-y-4 text-4xl font-bold text-red-500 " />
                 </div>
               )}
             </div>
