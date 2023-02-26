@@ -1,7 +1,6 @@
 import { doc } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { useDocument } from "react-firebase-hooks/firestore";
-import { Link } from "react-router-dom";
 import { db } from "../api/firebase-config";
 
 const Notification = ({ data, key }) => {

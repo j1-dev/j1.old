@@ -10,12 +10,11 @@ import Home from "./pages/Home";
 import Shop from "./pages/Shop";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import Perfil from "./pages/Perfil";
-import Ajustes from "./pages/Ajustes";
+import Profile from "./pages/Profile";
+import Settings from "./pages/Settings";
 import PostPage from "./pages/PostPage";
 import { Route, Routes } from "react-router-dom";
-import { AuthProvider, useAuth } from "./api/authContext";
-import { auth } from "./api/firebase-config";
+import { AuthProvider } from "./api/authContext";
 import Notifications from "./components/Notifications";
 
 function App() {
@@ -62,14 +61,13 @@ function App() {
           <Routes>
             <Route element={<PrivateRoutes />}>
               <Route path="/Home" element={<Home />} />
-              <Route path="/Perfil" element={<Perfil />} />
               <Route path="/Shop" element={<Shop />} />
               <Route path="/About" element={<About />} />
               <Route path="/Notifications" element={<Notifications />} />
-              <Route path="/:username" element={<Perfil />} />
+              <Route path="/:username" element={<Profile />} />
               <Route exact path="/Post" element={<PostPage />} />
               <Route exact path="/Post/:id" element={<PostPage />} />
-              <Route path="/Ajustes" element={<Ajustes />} />
+              <Route path="/Settings" element={<Settings />} />
               <Route path="/" element={<Home />} />
             </Route>
 

@@ -155,6 +155,7 @@ function Notifications() {
       setAtBottom(false);
     }
   }, [loading, atBottom]);
+
   return (
     <div className="notification-feed text-center">
       {notifications.map((doc) => {

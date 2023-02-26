@@ -23,7 +23,7 @@ import { useParams } from "react-router-dom";
  * @function
  * @name Perfil
  *
- * @return {JSX.Element} JSX element representing the Perfil component.
+ * @return {JSX.Element} JSX element representing the Profile component.
  *
  * @requires React from react
  * @requires SetDisplayName from ./SetDisplayName
@@ -41,7 +41,7 @@ import { useParams } from "react-router-dom";
  * @requires useParams from react-router-dom
  */
 
-const Perfil = () => {
+const Profile = () => {
   /**
    * The username extracted from the URL parameters
    * @type {string}
@@ -98,6 +98,7 @@ const Perfil = () => {
 
   /**
    * Sets the user state variable to the user with a given nickname.
+   *
    * @function
    * @param {string} username - The user's nickname to search for.
    * @returns {function} - Unsubscribes the listener for the username.
@@ -123,6 +124,7 @@ const Perfil = () => {
 
   /**
    * Sets the posts state variable to a list of posts from the user, in descending order of creation time.
+   *
    * @function
    * @returns {function} - Unsubscribes the listener for the user's posts.
    */
@@ -227,8 +229,6 @@ const Perfil = () => {
 
   return (
     <div>
-      {/* Si el usuario actual no tiene nombre de usuario, mostrar página para actualizar nombre 
-          de usuario. Si no, mostrar todos los posts guardados en la variable de estado posts */}
       {currentUser.displayName == null ? (
         <SetDisplayName />
       ) : (
@@ -252,4 +252,4 @@ const Perfil = () => {
   );
 };
 
-export default Perfil;
+export default Profile;

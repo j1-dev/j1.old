@@ -1,5 +1,4 @@
 import React, { useState, useRef, useEffect } from "react";
-import postServices from "../api/post.services";
 import { auth } from "../api/firebase-config";
 import { storage } from "../api/firebase-config";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";

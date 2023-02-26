@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import Post from "./Post";
+import React from "react";
+// import Post from "./Post";
 import Posts from "./Posts";
 // import { collection, query, where, onSnapshot } from "firebase/firestore";
 // import { db } from "../api/firebase-config";
