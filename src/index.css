@@ -42,11 +42,11 @@
 * Botón redondo blanco con borde 4px de ancho azul on hover
 */
 .button {
-  @apply m-4 rounded-full border-[4px] p-4 text-center text-3xl transition-all hover:translate-x-2 hover:border-blue-600;
+  @apply m-4 rounded-full p-4 text-center text-3xl transition-all hover:translate-x-2 hover:border-b-[3px] hover:border-blue-600;
 }
 
 .button-still {
-  @apply m-4 rounded-full border-[4px] p-4 text-center text-3xl transition-all hover:border-blue-600;
+  @apply m-4 rounded-full p-4 text-center text-3xl transition-all hover:border-b-[3px] hover:border-blue-600;
 }
 
 .sendbox-button {
@@ -57,7 +57,7 @@
 * Copia de .button pero con el borde siempre azul
 */
 .button-active {
-  @apply m-4  translate-x-2 rounded-full border-[4px] border-blue-600 p-4 text-center text-3xl font-semibold text-blue-600;
+  @apply m-4  translate-x-2 rounded-full border-b-[3px] border-blue-600 p-4 text-center text-3xl font-semibold text-blue-600;
 }
 
 /*** TEXT PANEL CSS ***/

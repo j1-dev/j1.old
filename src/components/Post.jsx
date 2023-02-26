@@ -2,7 +2,6 @@ import {
   collection,
   query,
   setDoc,
-  where,
   doc,
   deleteDoc,
   getDoc,
@@ -11,7 +10,6 @@ import {
 } from "firebase/firestore";
 import React, { useState, useMemo, useEffect, useCallback } from "react";
 import { auth, db } from "../api/firebase-config";
-import { UserCollectionRef } from "../api/user.services";
 import { useDocument } from "react-firebase-hooks/firestore";
 import { NavLink, Link } from "react-router-dom";
 import YouTube from "react-youtube";

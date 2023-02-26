@@ -94,7 +94,7 @@ const Settings = () => {
   useEffect(() => {
     const sub = async () => {
       await UserServices.getUser(currentUser.uid).then((snapshot) => {
-        setUser(snapshot.data());
+        setUser(snapshot);
       });
     };
     sub();
@@ -177,11 +177,9 @@ const Settings = () => {
   const handleNameChange = (e) => {
     const un = nameRef.current.value;
     updateProfile(currentUser, { displayName: un }).then(async () => {
-      const newUser = {
-        ...user,
-        displayName: un,
-      };
-      await UserServices.updateUser(currentUser.uid, newUser);
+      let user = UserServices.getUser(currentUser.uid);
+      user = { ...user, displayName: un };
+      await UserServices.updateUser(currentUser.uid, user);
       navigate(0);
     });
   };
@@ -205,7 +203,7 @@ const Settings = () => {
   };
 
   return (
-    <div className="text-lg">
+    <div>
       <hr />
       <div className="m-auto h-screen border-gray-400 p-5 text-left sm:w-full sm:border-l-0 sm:border-r-0 md:w-2/3 md:border-l-2 md:border-r-2 lg:w-1/3">
         <h1 className="my-3 text-4xl font-bold">Informacion personal</h1>
@@ -250,41 +248,46 @@ const Settings = () => {
           </button>
         </div>
         <hr />
-        <div className="float-left my-3 w-2/3 ">
-          <div className="font-semibold">Foto de usuario: </div>
-          <div className="w-full">
-            <Avatar
-              className="m-3"
-              alt="lol"
-              src={profilePic}
-              sx={{ height: 150, width: 150 }}
-            />
+        <div className="relative w-full">
+          <div className="absolute top-12 left-0 my-7 w-2/3 ">
+            <div className="font-semibold ">Foto de usuario: </div>
+            <div className="w-full">
+              <Avatar
+                className="m-5 mt-9"
+                alt="lol"
+                src={profilePic}
+                sx={{ height: 150, width: 150 }}
+              />
+            </div>
           </div>
-        </div>
-        <div className="float-right my-3 w-1/3 text-center">
-          {image == null && (
-            <button className="hover:font-semibold" onClick={handleImageButton}>
-              Cambiar foto
-            </button>
-          )}
-          {image != null && (
-            <div>
-              <button className="hover:font-semibold" onClick={handleUpload}>
-                Subir foto
-              </button>
-              <span className="font-semibold"> | </span>
+          <div className="absolute right-0 top-12 my-7 w-1/3 text-center">
+            {image == null && (
               <button
                 className="hover:font-semibold"
                 onClick={handleImageButton}
               >
                 Cambiar foto
               </button>
-            </div>
-          )}
+            )}
+            {image != null && (
+              <div>
+                <button className="hover:font-semibold" onClick={handleUpload}>
+                  Subir foto
+                </button>
+                <span className="font-semibold"> | </span>
+                <button
+                  className="hover:font-semibold"
+                  onClick={handleImageButton}
+                >
+                  Cambiar foto
+                </button>
+              </div>
+            )}
+          </div>
         </div>
 
-        <div className="w-full">
-          <div className="float-left my-4 w-2/3">
+        <div className="relative w-full">
+          <div className="absolute top-80 my-4 w-2/3">
             <span className=" w-full font-semibold">E-mail: </span>
 
             <div className="">
@@ -301,7 +304,7 @@ const Settings = () => {
               )}
             </div>
           </div>
-          <div className="float-right my-5 w-1/3 text-center">
+          <div className="absolute top-80 right-0 my-5 w-1/3 text-center">
             <button onClick={handleVerifyUser} className="hover:font-semibold">
               Verificar usuario
             </button>
