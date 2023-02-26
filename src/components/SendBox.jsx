@@ -11,7 +11,7 @@ import { GrClose } from "react-icons/gr";
 import { Tooltip } from "@mui/material";
 import { Popover } from "@headlessui/react";
 import { usePopper } from "react-popper";
-import Picker from "emoji-picker-react";
+import EmojiPicker from "emoji-picker-react";
 import { doc, collection, setDoc, getDoc } from "firebase/firestore";
 import { db } from "../api/firebase-config";
 import { Avatar } from "@mui/material";
@@ -253,10 +253,8 @@ const SendBox = ({ className, path }) => {
    * @param {Object} emojiObject - The object containing the selected emoji.
    * @returns {void}
    */
-  const onEmojiClick = (event, emojiData) => {
-    event.preventDefault();
-    setPost((post) => post + emojiData.emoji);
-    console.log(emojiData);
+  const onEmojiClick = (emojiObject) => {
+    setPost((post) => post + emojiObject.emoji);
   };
 
   /**
@@ -417,7 +415,6 @@ const SendBox = ({ className, path }) => {
   const previewImage = (e) => {
     e.preventDefault();
     var file = e.target.files[0];
-    console.log(file);
     setImageURL(URL.createObjectURL(file));
   };
 
@@ -573,7 +570,7 @@ const SendBox = ({ className, path }) => {
               style={styles.popper}
               {...attributes.popper}
             >
-              <Picker
+              <EmojiPicker
                 onEmojiClick={onEmojiClick}
                 pickerStyle={{ zIndex: 5000 }}
               />
