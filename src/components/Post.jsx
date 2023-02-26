@@ -243,7 +243,7 @@ const Post = ({ data, path, className }) => {
       // Reference to the notification subcollection in the User
       const notificationRef = doc(
         collection(db, `users/${data.uid}/notifications`),
-        data.id
+        data.id + user.uid
       );
 
       // Timestamp in seconds
@@ -256,7 +256,7 @@ const Post = ({ data, path, className }) => {
 
       // Create a new notification object with the notification info
       const newNotification = {
-        id: data.id,
+        id: notificationRef.id,
         from: user.uid,
         to: data.uid,
         message: "Tu post ha recibido un like!",
@@ -310,7 +310,7 @@ const Post = ({ data, path, className }) => {
       // Reference to the notification subcollection in the User
       const notificationRef = doc(
         collection(db, `users/${data.uid}/notifications`),
-        data.id
+        data.id + user.uid
       );
 
       // Timestamp in seconds
@@ -323,12 +323,12 @@ const Post = ({ data, path, className }) => {
 
       // Create a new notification object with the notification info
       const newNotification = {
-        id: data.id,
+        id: notificationRef.id,
         from: user.uid,
         to: data.uid,
         message: "Tu post ha recibido un dislike!",
         sentAt: ts,
-        type: "like",
+        type: "dislike",
       };
 
       // If the post has not been disliked by the user yet

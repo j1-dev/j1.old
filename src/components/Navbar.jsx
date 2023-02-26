@@ -224,7 +224,7 @@ const Navbar = () => {
               className={({ isActive }) =>
                 isActive ? "button-active" : "button"
               }
-              to="/Ajustes"
+              to="/Settings"
             >
               <HiOutlineCog className="float-left text-4xl" />
               {windowSize[0] < 1024 ? (

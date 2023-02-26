@@ -381,12 +381,12 @@ const SendBox = ({ className, path }) => {
       // Reference to the notification subcollection in the User
       const notificationRef = doc(
         collection(db, `users/${parentPostUid}/notifications`),
-        parentPostId
+        parentPostId + user.uid + "c"
       );
 
       // Create a new notification object with the notification info
       const newNotification = {
-        id: parentPostId,
+        id: notificationRef.id,
         from: user.uid,
         to: parentPostUid,
         message: "Alguien ha respondido a tu post",
