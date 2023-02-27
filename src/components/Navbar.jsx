@@ -9,6 +9,8 @@ import {
   HiOutlineShoppingCart,
   HiOutlineCog,
 } from "react-icons/hi";
+import { RiNotification3Line } from "react-icons/ri";
+import { Avatar } from "@mui/material";
 import { Tooltip } from "@mui/material";
 
 /**
@@ -160,10 +162,16 @@ const Navbar = () => {
                 }
                 to={"/" + currentUser.displayName}
               >
-                <img
+                {/* <img
                   src={currentUser.photoURL}
                   alt="yo"
                   className="float-left w-11 rounded-full p-0"
+                /> */}
+                <Avatar
+                  className="float-left w-11 p-0"
+                  alt="lol"
+                  src={currentUser.photoURL}
+                  sx={{ width: "44px", height: "44px" }}
                 />
                 {windowSize[0] <= 1024 ? (
                   <></>
@@ -174,6 +182,24 @@ const Navbar = () => {
                 )}
               </NavLink>
             )}
+            {/* 
+              Notifications button
+            */}
+            <NavLink
+              className={({ isActive }) =>
+                isActive ? "button-active" : "button"
+              }
+              to="/Notifications"
+            >
+              <RiNotification3Line className="float-left text-4xl" />
+              {windowSize[0] < 1024 ? (
+                <></>
+              ) : (
+                <p className="float-left pl-4 text-3xl font-normal">
+                  Notificaciones
+                </p>
+              )}
+            </NavLink>
             {/* 
               Shop button
               @todo Turn it into a ko-fi donation button 
@@ -198,7 +224,7 @@ const Navbar = () => {
               className={({ isActive }) =>
                 isActive ? "button-active" : "button"
               }
-              to="/Ajustes"
+              to="/Settings"
             >
               <HiOutlineCog className="float-left text-4xl" />
               {windowSize[0] < 1024 ? (

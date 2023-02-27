@@ -104,7 +104,7 @@ const PostPage = () => {
     setPathComments(null);
 
     // Create a reference to the collection "Posts"
-    const postRef = collectionGroup(db, "Posts");
+    const postRef = collectionGroup(db, "posts");
 
     // Create a query for the post with the given ID
     const queryPost = query(postRef, where("id", "==", id));
@@ -132,7 +132,7 @@ const PostPage = () => {
         newSegments.map((segment) => {
           return (commentPath += segment + "/");
         });
-        commentPath += "Posts";
+        commentPath += "posts";
         console.log(commentPath);
 
         // Update state variables with the path to the comments for the current post

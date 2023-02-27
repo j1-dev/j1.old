@@ -2,7 +2,6 @@ import {
   collection,
   query,
   setDoc,
-  where,
   doc,
   deleteDoc,
   getDoc,
@@ -11,8 +10,7 @@ import {
 } from "firebase/firestore";
 import React, { useState, useMemo, useEffect, useCallback } from "react";
 import { auth, db } from "../api/firebase-config";
-import { UserCollectionRef } from "../api/user.services";
-import { useCollection } from "react-firebase-hooks/firestore";
+import { useDocument } from "react-firebase-hooks/firestore";
 import { NavLink, Link } from "react-router-dom";
 import YouTube from "react-youtube";
 import { GoThumbsdown, GoThumbsup } from "react-icons/go";
@@ -68,31 +66,32 @@ const Post = ({ data, path, className }) => {
    * A Firestore query object used to retrieve the user with matching uid
    * @type {Object}
    */
-  const q = query(UserCollectionRef, where("uid", "==", data.uid));
+  const q = doc(db, "users", data.uid);
 
   /**
    * An array of the user of the post and a loading state variable
+   * @todo change useCollection for useDocument
    * @type {array}
    */
-  const [value, loading] = useCollection(q);
+  const [value, loading] = useDocument(q);
 
   /**
    * A collection object used to perform CRUD operations on the Likes subcollection
    * @type {Object}
    */
-  const likesRef = collection(db, `${path}/${data.id}/Likes`);
+  const likesRef = collection(db, `${path}/${data.id}/likes`);
 
   /**
    * A collection object used to perform CRUD operations on the Dislikes subcollection
    * @type {Object}
    */
-  const dislikesRef = collection(db, `${path}/${data.id}/Dislikes`);
+  const dislikesRef = collection(db, `${path}/${data.id}/lislikes`);
 
   /**
    * A collection object used to perform CRUD operations on the Posts subcollection
    * @type {Object}
    */
-  const commentsRef = collection(db, `${path}/${data.id}/Posts`);
+  const commentsRef = collection(db, `${path}/${data.id}/posts`);
 
   /**
    * A Firestore query object used to retrieve the Likes subcollection
@@ -241,9 +240,28 @@ const Post = ({ data, path, className }) => {
       // Get a reference to the user's likes for the post
       const likeRef = doc(likesRef, user.uid);
 
+      // Reference to the notification subcollection in the User
+      const notificationRef = doc(
+        collection(db, `users/${data.uid}/notifications`),
+        data.id + user.uid
+      );
+
+      // Timestamp in seconds
+      const ts = Date.now() / 1000;
+
       // Create a new user object with the user ID
       const newUser = {
         uid: user.uid,
+      };
+
+      // Create a new notification object with the notification info
+      const newNotification = {
+        id: notificationRef.id,
+        from: user.uid,
+        to: data.uid,
+        message: "Tu post ha recibido un like!",
+        sentAt: ts,
+        type: "like",
       };
 
       // If the post has not been liked by the user yet
@@ -254,8 +272,10 @@ const Post = ({ data, path, className }) => {
 
         // Set like update variable to +1
         setL(l + 1);
-        // Add the user to the likes collection
+        // Add the user and notification to the likes collection
         await setDoc(likeRef, newUser);
+        if (user.uid !== data.uid)
+          await setDoc(notificationRef, newNotification);
 
         // If the user has already disliked the post, remove the dislike and set the dislike update variable
         if (!dislikeable) {
@@ -268,6 +288,7 @@ const Post = ({ data, path, className }) => {
         setL(l - 1);
         setLikeable(true);
         await deleteDoc(likeRef);
+        await deleteDoc(notificationRef);
       }
     },
     [likeable, dislikesRef, likesRef, user.uid]
@@ -286,9 +307,28 @@ const Post = ({ data, path, className }) => {
       // Get a reference to the user's dislikes for the post
       const dislikeRef = doc(dislikesRef, user.uid);
 
+      // Reference to the notification subcollection in the User
+      const notificationRef = doc(
+        collection(db, `users/${data.uid}/notifications`),
+        data.id + user.uid
+      );
+
+      // Timestamp in seconds
+      const ts = Date.now() / 1000;
+
       // Create a new user object with the user ID
       const newUser = {
         uid: user.uid,
+      };
+
+      // Create a new notification object with the notification info
+      const newNotification = {
+        id: notificationRef.id,
+        from: user.uid,
+        to: data.uid,
+        message: "Tu post ha recibido un dislike!",
+        sentAt: ts,
+        type: "dislike",
       };
 
       // If the post has not been disliked by the user yet
@@ -301,6 +341,8 @@ const Post = ({ data, path, className }) => {
         setD(d + 1);
         // Add the user to the dislikes collection
         await setDoc(dislikeRef, newUser);
+        if (user.uid !== data.uid)
+          await setDoc(notificationRef, newNotification);
 
         // If the user has already liked the post, remove the like and set the like update variable
         if (!likeable) {
@@ -313,30 +355,25 @@ const Post = ({ data, path, className }) => {
         setD(d - 1);
         setDislikeable(true);
         await deleteDoc(dislikeRef);
+        await deleteDoc(notificationRef);
       }
     },
     [dislikeable, likesRef, dislikesRef, user.uid]
   );
 
   /**
-   * Converts a Unix timestamp (in seconds) to a JavaScript Date object.
+   * Converts a Unix timestamp (in seconds) to formatted time difference.
    * @function
    * @param {number} secs - The Unix timestamp to convert, in seconds.
    * @returns {Date} The corresponding Date object.
    */
-  function toDateTime(secs) {
-    var t = new Date(1970, 0, 1); // Epoch
-    t.setSeconds(secs);
-    return t;
-  }
-
   function timeDiff(secs) {
     let str = "";
     let ms = Date.now();
     let s = Math.floor(ms / 1000);
     let sDiff = s - secs;
     if (sDiff >= 0 && sDiff < 60) {
-      str += sDiff + "s ago";
+      str += Math.round(sDiff) + "s ago";
     } else if (sDiff >= 60 && sDiff < 3600) {
       sDiff /= 60;
       str += Math.round(sDiff) + "m ago";
@@ -344,12 +381,12 @@ const Post = ({ data, path, className }) => {
       sDiff /= 60;
       sDiff /= 60;
       str += Math.round(sDiff) + "h ago";
-    } else if ((sDiff >= 86400 && sDiff < 2, 628e6)) {
+    } else if (sDiff >= 86400 && sDiff < 2.628e6) {
       sDiff /= 60;
       sDiff /= 60;
       sDiff /= 24;
       str += Math.round(sDiff) + "d ago";
-    } else if ((sDiff >= 2.628e6 && sDiff < 3, 154e7)) {
+    } else if (sDiff >= 2.628e6 && sDiff < 3.154e7) {
       sDiff /= 60;
       sDiff /= 60;
       sDiff /= 24;
@@ -387,7 +424,7 @@ const Post = ({ data, path, className }) => {
         This Link wraps around the entire post so that when it is clicked, it navigates the user to the Post page
         that shows the other Posts that this post is a response to and also shows responses to this post.
       */}
-      <Link to={`/Post/${data.id}`}>
+      <Link to={`/post/${data.id}`}>
         {/* 
           This post renders information about the user that has posted this post, like the avatar, the display name and 
           also the time when this post was posted
@@ -395,25 +432,24 @@ const Post = ({ data, path, className }) => {
         */}
         <div className="mb-10 w-full pb-7">
           {loading && ""}
-          {value?.docs.map((doc) => {
-            const path = `/${doc.data().nickName}`;
-            const date = timeDiff(data.createdAt.seconds);
-            return (
-              <div className="float-left w-11/12">
-                <p className="text-base">
-                  <Avatar
-                    alt={doc.data().nickName}
-                    src={doc.data().photo}
-                    className="float-left mr-3"
-                  />
-                  <NavLink to={path} className="underline hover:no-underline">
-                    {doc.data().nickName}
-                  </NavLink>
-                </p>
-                <div className="text-xs ">Posted {date}</div>
-              </div>
-            );
-          })}
+          {typeof value !== "undefined" ? (
+            <div className="float-left w-11/12">
+              <p className="text-base">
+                <Avatar
+                  alt={value.data().displayName}
+                  src={value.data().photo}
+                  className="float-left mr-3"
+                />
+                <NavLink
+                  to={`/${value.data().displayName}`}
+                  className="underline hover:no-underline"
+                >
+                  {value.data().displayName}
+                </NavLink>
+              </p>
+              <div className="text-xs ">Posted {timeDiff(data.createdAt)}</div>
+            </div>
+          ) : null}
         </div>
 
         {/* 

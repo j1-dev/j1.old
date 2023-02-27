@@ -89,8 +89,6 @@ const Home = ({}) => {
 
   return (
     <div>
-      {/* Si el usuario actual no tiene nombre de usuario, mostrar página para actualizar nombre 
-          de usuario. Si no, mostrar el componente ThreadDisplay con prop users */}
       {currentUser.displayName == null ? (
         <SetDisplayName />
       ) : (

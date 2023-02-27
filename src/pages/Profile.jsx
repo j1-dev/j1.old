@@ -23,7 +23,7 @@ import { useParams } from "react-router-dom";
  * @function
  * @name Perfil
  *
- * @return {JSX.Element} JSX element representing the Perfil component.
+ * @return {JSX.Element} JSX element representing the Profile component.
  *
  * @requires React from react
  * @requires SetDisplayName from ./SetDisplayName
@@ -41,7 +41,7 @@ import { useParams } from "react-router-dom";
  * @requires useParams from react-router-dom
  */
 
-const Perfil = () => {
+const Profile = () => {
   /**
    * The username extracted from the URL parameters
    * @type {string}
@@ -98,14 +98,15 @@ const Perfil = () => {
 
   /**
    * Sets the user state variable to the user with a given nickname.
+   *
    * @function
    * @param {string} username - The user's nickname to search for.
    * @returns {function} - Unsubscribes the listener for the username.
    */
   useEffect(() => {
     const unsub = () => {
-      const ref = collection(db, "Users");
-      const refQuery = query(ref, where("nickName", "==", username));
+      const ref = collection(db, "users");
+      const refQuery = query(ref, where("displayName", "==", username));
 
       onSnapshot(refQuery, (snapshot) => {
         const data = snapshot.docs.map((doc) => ({
@@ -123,12 +124,13 @@ const Perfil = () => {
 
   /**
    * Sets the posts state variable to a list of posts from the user, in descending order of creation time.
+   *
    * @function
    * @returns {function} - Unsubscribes the listener for the user's posts.
    */
   useEffect(() => {
     const unsub = () => {
-      const ref = collectionGroup(db, "Posts");
+      const ref = collectionGroup(db, "posts");
       const refQuery = query(
         ref,
         orderBy("createdAt", "desc"),
@@ -158,7 +160,7 @@ const Perfil = () => {
    */
   const handleLoadMore = useCallback(() => {
     setLoading(true);
-    const CommentCollectionRef = collection(db, "Posts");
+    const CommentCollectionRef = collection(db, "posts");
     const unsub = () => {
       const q = query(
         CommentCollectionRef,
@@ -227,8 +229,6 @@ const Perfil = () => {
 
   return (
     <div>
-      {/* Si el usuario actual no tiene nombre de usuario, mostrar página para actualizar nombre 
-          de usuario. Si no, mostrar todos los posts guardados en la variable de estado posts */}
       {currentUser.displayName == null ? (
         <SetDisplayName />
       ) : (
@@ -240,7 +240,7 @@ const Perfil = () => {
             return (
               <Post
                 data={doc}
-                path={"Posts"}
+                path={"posts"}
                 key={doc.id}
                 className="panel-post mx-auto sm:w-11/12 md:w-2/3 lg:w-1/3"
               />
@@ -252,4 +252,4 @@ const Perfil = () => {
   );
 };
 
-export default Perfil;
+export default Profile;

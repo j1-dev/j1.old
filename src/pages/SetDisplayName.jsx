@@ -1,11 +1,10 @@
-import React, { useRef, useState, useEffect } from "react";
-import { auth } from "../api/firebase-config";
 import { updateProfile } from "firebase/auth";
+import { collection, onSnapshot, query, where } from "firebase/firestore";
+import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import UserServices from "../api/user.services";
-import { query, where, collection, onSnapshot } from "firebase/firestore";
-import { db } from "../api/firebase-config";
+import { auth, db } from "../api/firebase-config";
 import { Tilt } from "../api/TiltApi";
+import UserServices from "../api/user.services";
 
 /**
  * @component
@@ -90,18 +89,19 @@ const SetDisplayName = () => {
    */
   const handleNameChange = (e) => {
     e.preventDefault();
-    navigate(0);
     updateProfile(currentUser, { displayName: refName.current.value }).then(
       async () => {
         const newUser = {
           ...user,
-          nickName: refName.current.value,
+          displayName: refName.current.value,
+          userName: refName.current.value,
         };
-        await UserServices.updateUser(currentUser.uid, newUser);
+        await UserServices.updateUser(currentUser.uid, newUser).then(
+          navigate("/")
+        );
         console.log("displayName updated");
 
         refName.current.value = "";
-        navigate("/");
       }
     );
   };
@@ -115,7 +115,7 @@ const SetDisplayName = () => {
           </Tilt>
           <input
             ref={refName}
-            maxLength="10"
+            maxLength="8"
             className="border-b-2 border-black text-4xl outline-none"
           ></input>
           <button onClick={handleNameChange} className="button-still">

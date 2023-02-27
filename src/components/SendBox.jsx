@@ -1,5 +1,4 @@
 import React, { useState, useRef, useEffect } from "react";
-import postServices from "../api/post.services";
 import { auth } from "../api/firebase-config";
 import { storage } from "../api/firebase-config";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
@@ -11,9 +10,10 @@ import { GrClose } from "react-icons/gr";
 import { Tooltip } from "@mui/material";
 import { Popover } from "@headlessui/react";
 import { usePopper } from "react-popper";
-import Picker from "emoji-picker-react";
-import { doc, collection } from "firebase/firestore";
+import EmojiPicker from "emoji-picker-react";
+import { doc, collection, setDoc, getDoc } from "firebase/firestore";
 import { db } from "../api/firebase-config";
+import { Avatar } from "@mui/material";
 
 /**
  * @component
@@ -150,6 +150,18 @@ const SendBox = ({ className, path }) => {
   const [focused, setFocused] = useState(false);
 
   /**
+   * Nearest Parent Post user
+   * @type {String}
+   */
+  const [parentPostUid, setParentPostUid] = useState(null);
+
+  /**
+   * Neares Parent Post id
+   * @type {String}
+   */
+  const [parentPostId, setParentPostId] = useState(null);
+
+  /**
    * Set up drag and drop event listeners for the file input
    *
    * @function
@@ -165,6 +177,41 @@ const SendBox = ({ className, path }) => {
       drop.current?.removeEventListener("dragleave", handleDragLeave);
     };
   }, []);
+
+  /**
+   * Hook to set the parentPost object state variable
+   *
+   * @function
+   * @return {void}
+   */
+  useEffect(() => {
+    const pathSegs = path.split("/");
+    const len = pathSegs.length;
+    // console.log(pathSegs.slice(1, len - 2));
+    const newPathSegs = pathSegs.slice(1, len - 2);
+    let newPath = "/";
+    newPathSegs.map((seg) => {
+      newPath += seg + "/";
+    });
+    newPath = newPath.substring(0, newPath.length - 1);
+
+    // console.log(newPath);
+    const sub = () => {
+      // console.log(pathSegs[len - 2]);
+      const parentPost = pathSegs[len - 2];
+      const docRef = doc(db, newPath, parentPost);
+      // console.log(docRef);
+      getDoc(docRef)
+        .then((snapshot) => {
+          setParentPostUid(snapshot.data().uid);
+          setParentPostId(snapshot.data().id);
+        })
+        .catch((err) => console.log(err));
+    };
+    if (len >= 4) {
+      sub();
+    }
+  }, [path]);
 
   /**
    * Handle drag enter event.
@@ -205,10 +252,8 @@ const SendBox = ({ className, path }) => {
    * @param {Object} emojiObject - The object containing the selected emoji.
    * @returns {void}
    */
-  const onEmojiClick = (event, emojiData) => {
-    event.preventDefault();
-    setPost((post) => post + emojiData.emoji);
-    console.log(emojiData);
+  const onEmojiClick = (emojiObject) => {
+    setPost((post) => post + emojiObject.emoji);
   };
 
   /**
@@ -298,41 +343,60 @@ const SendBox = ({ className, path }) => {
    * @returns {void}
    */
   const uploadPost = async ({ url }) => {
-    const now = new Date();
-    const time = {
-      seconds: Math.round(now.getTime() / 1000),
-    };
-
     if (post === "" && image === null) {
       return;
     }
 
+    const time = Date.now() / 1000;
+
     let newPost;
-    const newDocRef = doc(collection(db, path));
+    const docRef = doc(collection(db, path));
     if (typeof url !== "undefined") {
       newPost = {
+        id: docRef.id,
+        uid: user.uid,
         post: post,
         createdAt: time,
-        uid: user.uid,
+        hasPicture: true,
         photoURL: url,
-        id: newDocRef.id,
-        likes: 0,
-        dislikes: 0,
+        likesCounter: 0,
+        dislikesCounter: 0,
       };
     } else {
       newPost = {
+        id: docRef.id,
+        uid: user.uid,
         post: post,
         createdAt: time,
-        uid: user.uid,
+        hastPicture: false,
         photoURL: "",
-        id: newDocRef.id,
-        likes: 0,
-        dislikes: 0,
+        likesCounter: 0,
+        dislikesCounter: 0,
       };
     }
 
     setChars(200);
-    await postServices.setPosts(newDocRef, newPost);
+    await setDoc(docRef, newPost);
+    if (parentPostId !== null) {
+      // Reference to the notification subcollection in the User
+      const notificationRef = doc(
+        collection(db, `users/${parentPostUid}/notifications`),
+        parentPostId + user.uid + "c"
+      );
+
+      // Create a new notification object with the notification info
+      const newNotification = {
+        id: notificationRef.id,
+        from: user.uid,
+        to: parentPostUid,
+        message: "Alguien ha respondido a tu post",
+        sentAt: time,
+        type: "comment",
+      };
+
+      if (user.uid !== parentPostUid)
+        await setDoc(notificationRef, newNotification);
+    }
     postRef.current.value = "";
     setPost("");
     setImage(null);
@@ -350,7 +414,6 @@ const SendBox = ({ className, path }) => {
   const previewImage = (e) => {
     e.preventDefault();
     var file = e.target.files[0];
-    console.log(file);
     setImageURL(URL.createObjectURL(file));
   };
 
@@ -366,11 +429,17 @@ const SendBox = ({ className, path }) => {
   return (
     <div className={className} ref={drop}>
       {/* Profile pic */}
-      <img
+      {/* <img
         alt=""
         src={user.photoURL}
         className="float-left mt-5 ml-3 w-[69px] rounded-full"
-      ></img>
+      ></img> */}
+      <Avatar
+        className="float-left mt-5 ml-5 rounded-full"
+        alt="lol"
+        src={user.photoURL}
+        sx={{ width: "60px", height: "60px" }}
+      />
       {dragging && (
         // div and input elements that are active while draggaing
         // an image into this element
@@ -500,7 +569,7 @@ const SendBox = ({ className, path }) => {
               style={styles.popper}
               {...attributes.popper}
             >
-              <Picker
+              <EmojiPicker
                 onEmojiClick={onEmojiClick}
                 pickerStyle={{ zIndex: 5000 }}
               />
