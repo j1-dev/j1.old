@@ -10,7 +10,6 @@ import {
   getCountFromServer,
 } from "firebase/firestore";
 import { Avatar } from "@mui/material";
-import { useCollection } from "react-firebase-hooks/firestore";
 
 /**
  * @component

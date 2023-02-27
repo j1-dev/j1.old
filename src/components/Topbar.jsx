@@ -5,7 +5,7 @@ import { auth } from "../api/firebase-config";
 import { Link, useNavigate } from "react-router-dom";
 import { FiArrowLeft } from "react-icons/fi";
 import { Avatar } from "@mui/material";
-import { push as Menu } from "react-burger-menu";
+import { slide as Menu } from "react-burger-menu";
 import { NavLink } from "react-router-dom";
 import { RiNotification3Line } from "react-icons/ri";
 import {
@@ -91,7 +91,7 @@ const Topbar = ({ pageWrapId, outerContainerId }) => {
         return <p className="pt-5 text-3xl font-bold">Ajustes</p>;
       case "/Notifications":
         // Render the 'Ajustes' title for the Notifications page.
-        return <p className="pt-5 text-3xl font-bold">Notificaciones</p>;
+        return <p className="pt-5 text-2xl font-bold">Notificaciones</p>;
       default:
         if (pathname.includes("/post"))
           // Render the 'Post' title for the post detail page.
@@ -233,14 +233,14 @@ const Topbar = ({ pageWrapId, outerContainerId }) => {
                 onClick={() => setOpen(false)}
                 className="my-9 transition-colors hover:text-blue-500"
               >
-                <NavLink to="/Ajustes">
+                <NavLink to="/Settings">
                   <HiOutlineCog className="float-left text-3xl" />
                   <p className="pl-5 text-3xl font-normal">Ajustes</p>
                 </NavLink>
               </li>
               <li
                 onClick={() => setOpen(false)}
-                className="my-9 mt-60 transition-colors hover:text-blue-500"
+                className="my-9  transition-colors hover:text-blue-500"
               >
                 <NavLink onClick={handleLogout}>
                   <HiLogout className="float-left text-3xl" />
