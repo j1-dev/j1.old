@@ -1,10 +1,20 @@
-import React from "react";
+import React, { useState } from "react";
 import logo from "../logo.png";
 import { useAuth } from "../api/authContext";
 import { auth } from "../api/firebase-config";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FiArrowLeft } from "react-icons/fi";
 import { Avatar } from "@mui/material";
+import { push as Menu } from "react-burger-menu";
+import { NavLink } from "react-router-dom";
+import { RiNotification3Line } from "react-icons/ri";
+import {
+  HiLogout,
+  HiOutlineHome,
+  HiOutlineUserCircle,
+  HiOutlineShoppingCart,
+  HiOutlineCog,
+} from "react-icons/hi";
 
 /**
  * @component
@@ -24,7 +34,7 @@ import { Avatar } from "@mui/material";
  *
  */
 
-const Topbar = () => {
+const Topbar = ({ pageWrapId, outerContainerId }) => {
   /**
    * Gets the current user from the Firebase authentication service.
    * @type {firebase.User}
@@ -55,6 +65,8 @@ const Topbar = () => {
    */
   const path = window.location.pathname;
 
+  const [isOpen, setOpen] = useState(false);
+
   /**
    * Renders a window title based on the current pathname.
    *
@@ -77,6 +89,9 @@ const Topbar = () => {
       case "/Ajustes":
         // Render the 'Ajustes' title for the settings page.
         return <p className="pt-5 text-3xl font-bold">Ajustes</p>;
+      case "/Notifications":
+        // Render the 'Ajustes' title for the Notifications page.
+        return <p className="pt-5 text-3xl font-bold">Notificaciones</p>;
       default:
         if (pathname.includes("/post"))
           // Render the 'Post' title for the post detail page.
@@ -85,6 +100,21 @@ const Topbar = () => {
         else
           return <p className="pt-5 text-3xl font-bold">{pathname.slice(1)}</p>;
     }
+  };
+
+  /**
+   * Handles the logout button click event by signing out the user and redirecting to the login page.
+   *
+   * @function
+   * @param {object} e The click event object.
+   * @returns {undefined}
+   */
+  const handleLogout = (e) => {
+    e.preventDefault();
+    auth.signOut().then(() => {
+      console.log("user logged out");
+      navigate("/Login");
+    });
   };
 
   /**
@@ -98,10 +128,13 @@ const Topbar = () => {
     if (pathname === "/Home" || pathname === "/") {
       return (
         <Avatar
-          className="m-2"
+          className="m-3"
           alt="lol"
           src={currentUser.photoURL}
-          sx={{ width: "65px", height: "65px" }}
+          sx={{ width: "55px", height: "55px" }}
+          onClick={() => {
+            setOpen(!isOpen);
+          }}
         />
       );
     } else {
@@ -132,6 +165,90 @@ const Topbar = () => {
           </div>
           <div className="float-right w-1/3">{renderWindowTitle(path)}</div>
           <div className="float-left w-1/3">{renderBackButton(path)}</div>
+          <Menu
+            isOpen={isOpen}
+            onStateChange={(s) => setOpen(s.isOpen)}
+            pageWrapId={pageWrapId}
+            outerContainerId={outerContainerId}
+            className="overflow-visible bg-white shadow-lg"
+            width={"350px"}
+            burgerButtonClassName={"hidden"}
+            bodyClassName={"overflow-visible"}
+            htmlClassName={"overflow-visible"}
+          >
+            <div className="relative">
+              <Avatar
+                src={loading ? null : currentUser.photoURL}
+                alt="loading..."
+                className="absolute top-8 left-8"
+                sx={{ width: "100px", height: "100px" }}
+              />
+
+              <Link
+                to={`/${currentUser.displayName}`}
+                className="absolute top-16 left-40 text-4xl font-semibold hover:underline"
+              >
+                {currentUser.displayName}
+              </Link>
+            </div>
+            <hr className="mt-20" />
+            <ul className="navbar left-5 top-60 w-[310px]">
+              <li
+                onClick={() => setOpen(false)}
+                className="my-9 transition-colors hover:text-blue-500"
+              >
+                <NavLink to="/Home">
+                  <HiOutlineHome className="float-left text-3xl" />
+                  <p className="pl-5 text-3xl font-normal">Home</p>
+                </NavLink>
+              </li>
+              <li
+                onClick={() => setOpen(false)}
+                className="my-9 transition-colors hover:text-blue-500"
+              >
+                <NavLink to={"/" + user.displayName}>
+                  <HiOutlineUserCircle className="float-left text-3xl " />
+                  <p className="pl-5 text-3xl font-normal">Perfil</p>
+                </NavLink>
+              </li>
+              <li
+                onClick={() => setOpen(false)}
+                className="my-9 transition-colors hover:text-blue-500"
+              >
+                <NavLink to="/Notifications">
+                  <RiNotification3Line className="float-left text-3xl " />
+                  <p className="pl-5 text-3xl font-normal">Notificaciones</p>
+                </NavLink>
+              </li>
+              <li
+                onClick={() => setOpen(false)}
+                className="my-9 transition-colors hover:text-blue-500"
+              >
+                <NavLink to="/Shop">
+                  <HiOutlineShoppingCart className="float-left text-3xl" />
+                  <p className="pl-5 text-3xl font-normal">Tienda</p>
+                </NavLink>
+              </li>
+              <li
+                onClick={() => setOpen(false)}
+                className="my-9 transition-colors hover:text-blue-500"
+              >
+                <NavLink to="/Ajustes">
+                  <HiOutlineCog className="float-left text-3xl" />
+                  <p className="pl-5 text-3xl font-normal">Ajustes</p>
+                </NavLink>
+              </li>
+              <li
+                onClick={() => setOpen(false)}
+                className="my-9 mt-60 transition-colors hover:text-blue-500"
+              >
+                <NavLink onClick={handleLogout}>
+                  <HiLogout className="float-left text-3xl" />
+                  <p className="pl-5 text-3xl font-normal">Logout</p>
+                </NavLink>
+              </li>
+            </ul>
+          </Menu>
         </div>
       ) : (
         <></>

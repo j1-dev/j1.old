@@ -1,0 +1,22 @@
+[debug] [2023-02-27T13:27:09.566Z] ----------------------------------------------------------------------
+[debug] [2023-02-27T13:27:09.567Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\j\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js deploy
+[debug] [2023-02-27T13:27:09.567Z] CLI Version:   11.24.0
+[debug] [2023-02-27T13:27:09.567Z] Platform:      win32
+[debug] [2023-02-27T13:27:09.567Z] Node Version:  v16.17.1
+[debug] [2023-02-27T13:27:09.568Z] Time:          Mon Feb 27 2023 14:27:09 GMT+0100 (Central European Standard Time)
+[debug] [2023-02-27T13:27:09.568Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2023-02-27T13:27:09.571Z] >>> [apiv2][query] GET https://firebase-public.firebaseio.com/cli.json [none]
+[debug] [2023-02-27T13:27:09.628Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2023-02-27T13:27:09.628Z] > authorizing via signed-in user (aephyxen@gmail.com)
+[debug] [2023-02-27T13:27:09.628Z] [iam] checking project j1web-7dc6e for permissions ["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","datastore.indexes.create","datastore.indexes.delete","datastore.indexes.list","datastore.indexes.update","firebase.projects.get","firebasehosting.sites.update","firebaserules.releases.create","firebaserules.releases.update","firebaserules.rulesets.create"]
+[debug] [2023-02-27T13:27:09.629Z] > refreshing access token with scopes: []
+[debug] [2023-02-27T13:27:09.629Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2023-02-27T13:27:09.630Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2023-02-27T13:27:09.777Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2023-02-27T13:27:09.777Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2023-02-27T13:27:09.783Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/j1web-7dc6e:testIamPermissions [none]
+[debug] [2023-02-27T13:27:09.783Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/j1web-7dc6e:testIamPermissions x-goog-quota-user=projects/j1web-7dc6e
+[debug] [2023-02-27T13:27:09.783Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/j1web-7dc6e:testIamPermissions {"permissions":["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","datastore.indexes.create","datastore.indexes.delete","datastore.indexes.list","datastore.indexes.update","firebase.projects.get","firebasehosting.sites.update","firebaserules.releases.create","firebaserules.releases.update","firebaserules.rulesets.create"]}
+[debug] [2023-02-27T13:27:09.883Z] <<< [apiv2][status] GET https://firebase-public.firebaseio.com/cli.json 200
+[debug] [2023-02-27T13:27:09.883Z] <<< [apiv2][body] GET https://firebase-public.firebaseio.com/cli.json {"cloudBuildErrorAfter":1594252800000,"cloudBuildWarnAfter":1590019200000,"defaultNode10After":1594252800000,"minVersion":"3.0.5","node8DeploysDisabledAfter":1613390400000,"node8RuntimeDisabledAfter":1615809600000,"node8WarnAfter":1600128000000}

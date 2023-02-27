@@ -139,7 +139,7 @@ const UserCard = ({ user }) => {
       const time = Date.now() / 1000;
 
       const notificationRef = collection(db, `users/${user.uid}/notifications`);
-      const followNotificationRef = doc(notificationRef, user.uid);
+      const followNotificationRef = doc(notificationRef, currentUser.uid);
       const newNotification = {
         id: currentUser.uid,
         from: currentUser.uid,
@@ -224,7 +224,7 @@ const UserCard = ({ user }) => {
         sx={{ height: 100, width: 100 }}
       />
       <div className="user-panel-data">
-        <div className="font-bold">@{user.displayName}</div>
+        <div className="font-bold">~{user.displayName}</div>
       </div>
 
       {currentUser.uid !== user.uid ? (

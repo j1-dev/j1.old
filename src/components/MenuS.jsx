@@ -1,6 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { push as Menu } from "react-burger-menu";
-import { useSwipeable } from "react-swipeable";
 import { NavLink } from "react-router-dom";
 import { auth } from "../api/firebase-config";
 import { useAuth } from "../api/authContext";
@@ -17,6 +16,7 @@ import {
  * React component for rendering a sidebar menu using react-burger-menu and react-swipeable.
 
  * @function
+ * @deprecated
  * @name MenuS
 
  * @param {string} pageWrapId - The ID of the page wrap element.
@@ -32,7 +32,7 @@ import {
  * @requires useAuth from ../api/authContext
  */
 
-const MenuS = ({ pageWrapId, outerContainerId }) => {
+const MenuS = ({ open, pageWrapId, outerContainerId }) => {
   /**
    * A hook from a custom `useAuth` hook that provides loading status for authentication data.
    * @type {boolean}
@@ -44,7 +44,7 @@ const MenuS = ({ pageWrapId, outerContainerId }) => {
    *
    * @type {boolean|null}
    */
-  const [isOpen, setOpen] = useState(null);
+  const [isOpen, setOpen] = useState(open);
 
   /**
    * Represents the current authenticated user.
@@ -53,20 +53,9 @@ const MenuS = ({ pageWrapId, outerContainerId }) => {
    */
   const user = auth.currentUser;
 
-  /**
-   * An object containing the swipe event handlers to be assigned to the element.
-   *
-   * @type {Object}
-   * @property {Function} onSwipedRight - A function that is called when the user swipes right on the element.
-   * @property {boolean} trackMouse - A boolean value indicating whether to track mouse events in addition to touch events.
-   */
-  const handlers = useSwipeable({
-    trackMouse: true,
-    onSwipedRight: () => {
-      setOpen(true);
-      console.log(isOpen);
-    },
-  });
+  useEffect(() => {
+    setOpen(open);
+  }, [open]);
 
   if (loading) return null;
 
@@ -74,10 +63,6 @@ const MenuS = ({ pageWrapId, outerContainerId }) => {
     <div>
       {!!user && user.displayName !== null ? (
         <div>
-          <div
-            {...handlers}
-            className="fixed bottom-0 z-50 float-left h-[92%] w-[10%] "
-          />
           <Menu
             isOpen={isOpen}
             onStateChange={(s) => setOpen(s.isOpen)}

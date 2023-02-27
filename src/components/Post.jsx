@@ -262,6 +262,7 @@ const Post = ({ data, path, className }) => {
         message: "Tu post ha recibido un like!",
         sentAt: ts,
         type: "like",
+        postId: data.id,
       };
 
       // If the post has not been liked by the user yet
@@ -329,6 +330,7 @@ const Post = ({ data, path, className }) => {
         message: "Tu post ha recibido un dislike!",
         sentAt: ts,
         type: "dislike",
+        postId: data.id,
       };
 
       // If the post has not been disliked by the user yet

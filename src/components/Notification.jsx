@@ -1,20 +1,126 @@
-import { doc } from "firebase/firestore";
+import { deleteDoc, doc } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { useDocument } from "react-firebase-hooks/firestore";
+import { Link } from "react-router-dom";
 import { db } from "../api/firebase-config";
+import { Avatar } from "@mui/material";
+import { RxCross1 } from "react-icons/rx";
 
 const Notification = ({ data, key }) => {
   const type = data.type;
-  const senderUid = data.uid;
   const time = data.sentAt;
   const senderQ = doc(db, "users", data.from);
   const [value, loading] = useDocument(senderQ);
+  const [classname, setClassname] = useState("notification-panel");
 
   useEffect(() => {
-    console.log(data.type);
+    console.log(typeof type);
+    switch (type) {
+      case "like":
+        setClassname("notification-like");
+        console.log("a");
+        break;
+      case "dislike":
+        setClassname("notification-dislike");
+        console.log("b");
+        break;
+      case "comment":
+        setClassname("notification-comment");
+        console.log("c");
+        break;
+      case "follow":
+        setClassname("notification-follow");
+        console.log("d");
+        break;
+      default:
+        throw new Error("not a classname");
+    }
   }, [data]);
 
-  function timeDiff(secs) {
+  const handleDelete = () => {
+    deleteDoc(doc(db, `users/${data.to}/notifications/`, data.id));
+  };
+
+  const renderNotificationMessage = () => {
+    if (!loading) {
+      switch (type) {
+        case "like":
+          return (
+            <span className="absolute top-7 left-[80px]">
+              A{" "}
+              <Link
+                className="font-semibold hover:underline"
+                to={`/${value.data().displayName}`}
+              >
+                ~{value.data().displayName}
+              </Link>{" "}
+              le gusta tu{" "}
+              <Link
+                className="font-semibold hover:underline"
+                to={`/post/${data.postId}`}
+              >
+                post
+              </Link>
+              .
+            </span>
+          );
+        case "dislike":
+          return (
+            <span className="absolute top-7 left-[80px]">
+              A{" "}
+              <Link
+                className="font-semibold hover:underline"
+                to={`/${value.data().displayName}`}
+              >
+                ~{value.data().displayName}
+              </Link>{" "}
+              no le gusta tu{" "}
+              <Link
+                className="font-semibold hover:underline"
+                to={`/post/${data.postId}`}
+              >
+                post
+              </Link>
+              .
+            </span>
+          );
+        case "comment":
+          return (
+            <span className="absolute top-7 left-[80px]">
+              <Link
+                className="font-semibold hover:underline"
+                to={`/${value.data().displayName}`}
+              >
+                ~{value.data().displayName}
+              </Link>{" "}
+              ha comentado en tu{" "}
+              <Link
+                className="font-semibold hover:underline"
+                to={`/post/${data.postId}`}
+              >
+                post
+              </Link>
+              .
+            </span>
+          );
+        case "follow":
+          return (
+            <span className="absolute top-7 left-[80px]">
+              <Link
+                className="font-semibold hover:underline"
+                to={`/${value.data().displayName}`}
+              >
+                ~{value.data().displayName}
+              </Link>{" "}
+              te está siguiendo.
+            </span>
+          );
+        default:
+      }
+    }
+  };
+
+  const timeDiff = (secs) => {
     let str = "";
     let ms = Date.now();
     let s = Math.floor(ms / 1000);
@@ -38,7 +144,7 @@ const Notification = ({ data, key }) => {
       sDiff /= 60;
       sDiff /= 24;
       sDiff /= 30;
-      str += Math.round(sDiff) + "m ago";
+      str += Math.round(sDiff) + "M ago";
     } else {
       sDiff /= 60;
       sDiff /= 60;
@@ -48,17 +154,23 @@ const Notification = ({ data, key }) => {
       str += Math.round(sDiff) + "y ago";
     }
     return str;
-  }
+  };
 
   return (
-    <div key={key} className="notification-panel">
-      <hr />
-      <p>{type}</p>
-      <p>
-        From: {loading ? <p>loading...</p> : <p>{value.data().displayName}</p>}
-      </p>
-      <p>{timeDiff(time)}</p>
-      <hr />
+    <div key={key} className={classname}>
+      <Avatar
+        src={loading ? null : value.data().photo}
+        alt="loading..."
+        className="top-0 left-0"
+      />
+      {renderNotificationMessage()}
+      <p className="mt-3 text-sm text-gray-700">{timeDiff(time)}</p>
+      <button
+        onClick={handleDelete}
+        className="absolute right-7 top-8 hover:text-red-600"
+      >
+        <RxCross1 />
+      </button>
     </div>
   );
 };
