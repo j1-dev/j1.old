@@ -22,7 +22,7 @@ function Notifications() {
    * The state variable that stores the number of notifications to be fetched from the backend.
    * @type {number}
    */
-  const [limite] = useState(5);
+  const [limite] = useState(7);
 
   /**
    * The state variable that stores a boolean flag to indicate whether notifications are currently being loaded.
@@ -65,7 +65,7 @@ function Notifications() {
           ...doc.data(),
           id: doc.id,
         }));
-        setCursor(snapshot.docs[4]);
+        setCursor(snapshot.docs[6]);
         setNotifications(data);
         setLoading(false);
       });
@@ -99,7 +99,7 @@ function Notifications() {
           ...doc.data(),
           id: doc.id,
         }));
-        setCursor(snapshot.docs[4]);
+        setCursor(snapshot.docs[6]);
         setNotifications((p) => p.concat(data));
         setLoading(false);
       });

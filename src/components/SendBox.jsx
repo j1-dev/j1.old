@@ -392,6 +392,7 @@ const SendBox = ({ className, path }) => {
         message: "Alguien ha respondido a tu post",
         sentAt: time,
         type: "comment",
+        postId: parentPostId,
       };
 
       if (user.uid !== parentPostUid)

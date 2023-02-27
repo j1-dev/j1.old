@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import "./App.css";
 //import Header from './components/Header';
 import Navbar from "./components/Navbar";
-import MenuS from "./components/MenuS";
 import PrivateRoutes from "./components/PrivateRoute";
 import Topbar from "./components/Topbar";
 import About from "./pages/About";
@@ -48,8 +47,7 @@ function App() {
       <div className="App overflow-visible" id="App">
         {windowSize[0] < 762 ? (
           <div className="sticky top-0 z-50 bg-white shadow-md shadow-purple-100 transition-all">
-            <MenuS pageWrapId="page-wrap" outerContainerId="App" />
-            <Topbar />
+            <Topbar pageWrapId="page-wrap" outerContainerId="App" />
           </div>
         ) : (
           <div>
