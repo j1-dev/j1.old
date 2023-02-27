@@ -18,13 +18,23 @@ const LogInNavbar = () => {
   return (
     <nav
       className=" z-50 mx-0 list-none  overflow-hidden
-                      bg-white pt-96 transition-all"
+                      bg-white pt-20 transition-all"
     >
       <div className="inline-flex">
-        <NavLink className="button-still" to="/Login">
+        <NavLink
+          className={({ isActive }) =>
+            isActive ? "button-active" : "button-still"
+          }
+          to="/Login"
+        >
           Login
         </NavLink>
-        <NavLink className="button-still" to="/Register">
+        <NavLink
+          className={({ isActive }) =>
+            isActive ? "button-active" : "button-still"
+          }
+          to="/Register"
+        >
           Register
         </NavLink>
       </div>

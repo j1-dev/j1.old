@@ -46,9 +46,7 @@ function App() {
     <AuthProvider>
       <div className="App overflow-visible" id="App">
         {windowSize[0] < 762 ? (
-          <div className="sticky top-0 z-50 bg-white shadow-md shadow-purple-100 transition-all">
-            <Topbar pageWrapId="page-wrap" outerContainerId="App" />
-          </div>
+          <Topbar pageWrapId="page-wrap" outerContainerId="App" />
         ) : (
           <div>
             <Navbar />

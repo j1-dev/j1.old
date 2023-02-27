@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useAuth } from "../api/authContext";
 import LogInNavbar from "../components/LogInNavbar";
 import { Tilt } from "../api/TiltApi";
+import banner from "../banner.gif";
 
 /**
  * @component
@@ -59,15 +60,20 @@ const Login = () => {
   };
 
   return (
-    <div>
-      <div className="float-left h-screen w-1/2 border-r-2 border-black">
+    <div className="px-14 md:p-0">
+      <div className="float-left hidden h-screen w-1/2 border-r-2 border-black md:block">
         <Tilt className="mt-80 w-full font-bold sm:text-5xl md:text-7xl lg:text-9xl">
           Log-in
         </Tilt>
       </div>
-      <div className="float-left w-1/2">
-        <form className="pt-60">
-          <label htmlFor="email" className="p-3">
+      <img
+        src={banner}
+        alt="yes"
+        className="z-50 block w-full -translate-y-24 md:hidden"
+      />
+      <div className="float-left w-full md:w-1/2">
+        <form className="md:pt-64">
+          <label htmlFor="email" className="p-3 text-2xl">
             Email
           </label>
           <input
@@ -75,26 +81,27 @@ const Login = () => {
             placeholder="ejemplo@gmail.com"
             name="email"
             id="email"
-            className="border border-black p-3"
+            className=" w-full border-b-2 border-black p-3 md:m-0 md:w-auto"
             onChange={handleChange}
           />
 
-          <label htmlFor="password" className="p-3">
+          <label htmlFor="password" className="p-3 text-2xl">
             Password
           </label>
           <input
             type="password"
+            placeholder="password"
             name="password"
             id="password"
-            className="border border-black p-3"
+            className="w-full border-b-2 border-black p-3 md:w-auto"
             onChange={handleChange}
           />
 
-          <button className="button-still" onClick={handleSubmit}>
+          <button className="button-still rounded-none" onClick={handleSubmit}>
             Login
           </button>
+          <LogInNavbar />
         </form>
-        <LogInNavbar />
       </div>
     </div>
   );
