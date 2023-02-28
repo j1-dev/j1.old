@@ -77,6 +77,7 @@ export function AuthProvider({ children }) {
           photo: defaultProfilePicUrl,
           likesCounter: 0,
           dislikesCounter: 0,
+          score: 0,
           followersCounter: 0,
           followsCounter: 0,
         };

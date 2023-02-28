@@ -11,7 +11,14 @@ import { Tooltip } from "@mui/material";
 import { Popover } from "@headlessui/react";
 import { usePopper } from "react-popper";
 import EmojiPicker from "emoji-picker-react";
-import { doc, collection, setDoc, getDoc } from "firebase/firestore";
+import {
+  doc,
+  collection,
+  setDoc,
+  getDoc,
+  updateDoc,
+  increment,
+} from "firebase/firestore";
 import { db } from "../api/firebase-config";
 import { Avatar } from "@mui/material";
 
@@ -161,6 +168,10 @@ const SendBox = ({ className, path }) => {
    */
   const [parentPostId, setParentPostId] = useState(null);
 
+  const [p, setP] = useState(null);
+
+  const [u, setU] = useState(null);
+
   /**
    * Set up drag and drop event listeners for the file input
    *
@@ -205,6 +216,8 @@ const SendBox = ({ className, path }) => {
         .then((snapshot) => {
           setParentPostUid(snapshot.data().uid);
           setParentPostId(snapshot.data().id);
+          setU(doc(db, "users", snapshot.data().uid));
+          setP(doc(db, newPath, snapshot.data().id));
         })
         .catch((err) => console.log(err));
     };
@@ -351,6 +364,10 @@ const SendBox = ({ className, path }) => {
 
     let newPost;
     const docRef = doc(collection(db, path));
+    const redundantRef = doc(
+      collection(db, `/users/${user.uid}/postsId`),
+      docRef.id
+    );
     if (typeof url !== "undefined") {
       newPost = {
         id: docRef.id,
@@ -361,6 +378,7 @@ const SendBox = ({ className, path }) => {
         photoURL: url,
         likesCounter: 0,
         dislikesCounter: 0,
+        score: 0,
       };
     } else {
       newPost = {
@@ -372,10 +390,17 @@ const SendBox = ({ className, path }) => {
         photoURL: "",
         likesCounter: 0,
         dislikesCounter: 0,
+        score: 0,
       };
     }
 
+    const newRedundantPost = {
+      id: docRef.id,
+      createdAt: time,
+    };
+
     setChars(200);
+    await setDoc(redundantRef, newRedundantPost);
     await setDoc(docRef, newPost);
     if (parentPostId !== null) {
       // Reference to the notification subcollection in the User
@@ -394,6 +419,13 @@ const SendBox = ({ className, path }) => {
         type: "comment",
         postId: parentPostId,
       };
+
+      await updateDoc(p, {
+        score: increment(+1),
+      });
+      await updateDoc(u, {
+        score: increment(+1),
+      });
 
       if (user.uid !== parentPostUid)
         await setDoc(notificationRef, newNotification);

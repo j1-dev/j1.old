@@ -6,6 +6,8 @@ import {
   deleteDoc,
   getDoc,
   getCountFromServer,
+  updateDoc,
+  increment,
   // updateDoc,
 } from "firebase/firestore";
 import React, { useState, useMemo, useEffect, useCallback } from "react";
@@ -66,14 +68,16 @@ const Post = ({ data, path, className }) => {
    * A Firestore query object used to retrieve the user with matching uid
    * @type {Object}
    */
-  const q = doc(db, "users", data.uid);
+  const userRef = doc(db, "users", data.uid);
+
+  const postRef = doc(db, path, data.id);
 
   /**
    * An array of the user of the post and a loading state variable
    * @todo change useCollection for useDocument
    * @type {array}
    */
-  const [value, loading] = useDocument(q);
+  const [value, loading] = useDocument(userRef);
 
   /**
    * A collection object used to perform CRUD operations on the Likes subcollection
@@ -278,10 +282,27 @@ const Post = ({ data, path, className }) => {
         if (user.uid !== data.uid)
           await setDoc(notificationRef, newNotification);
 
+        await updateDoc(postRef, {
+          score: increment(1),
+          likesCounter: increment(1),
+        });
+        await updateDoc(userRef, {
+          score: increment(1),
+          likesCounter: increment(1),
+        });
+
         // If the user has already disliked the post, remove the dislike and set the dislike update variable
         if (!dislikeable) {
           setD(d - 1);
           await deleteDoc(doc(dislikesRef, user.uid));
+          await updateDoc(postRef, {
+            score: increment(+1),
+            dislikesCounter: increment(-1),
+          });
+          await updateDoc(userRef, {
+            score: increment(+1),
+            dislikesCounter: increment(-1),
+          });
         }
       } else {
         // If the post has already been liked by the user
@@ -290,6 +311,14 @@ const Post = ({ data, path, className }) => {
         setLikeable(true);
         await deleteDoc(likeRef);
         await deleteDoc(notificationRef);
+        await updateDoc(postRef, {
+          score: increment(-1),
+          likesCounter: increment(-1),
+        });
+        await updateDoc(userRef, {
+          score: increment(-1),
+          likesCounter: increment(-1),
+        });
       }
     },
     [likeable, dislikesRef, likesRef, user.uid]
@@ -346,10 +375,27 @@ const Post = ({ data, path, className }) => {
         if (user.uid !== data.uid)
           await setDoc(notificationRef, newNotification);
 
+        await updateDoc(postRef, {
+          score: increment(-1),
+          dislikesCounter: increment(+1),
+        });
+        await updateDoc(userRef, {
+          score: increment(-1),
+          dislikesCounter: increment(+1),
+        });
+
         // If the user has already liked the post, remove the like and set the like update variable
         if (!likeable) {
           setL(l - 1);
           await deleteDoc(doc(likesRef, user.uid));
+          await updateDoc(postRef, {
+            score: increment(-1),
+            likesCounter: increment(-1),
+          });
+          await updateDoc(userRef, {
+            score: increment(-1),
+            likesCounter: increment(-1),
+          });
         }
       } else {
         // If the post has already been disliked by the user
@@ -358,6 +404,14 @@ const Post = ({ data, path, className }) => {
         setDislikeable(true);
         await deleteDoc(dislikeRef);
         await deleteDoc(notificationRef);
+        await updateDoc(postRef, {
+          score: increment(+1),
+          dislikesCounter: increment(-1),
+        });
+        await updateDoc(userRef, {
+          score: increment(+1),
+          dislikesCounter: increment(-1),
+        });
       }
     },
     [dislikeable, likesRef, dislikesRef, user.uid]
@@ -412,10 +466,10 @@ const Post = ({ data, path, className }) => {
    * @returns {string|false} The video ID if a match is found, or false otherwise.
    */
   function matchYoutubeUrl(url) {
-    var p =
+    var regex =
       /^(?:https?:\/\/)?(?:m\.|www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})(?:\S+)?$/;
-    if (url.match(p)) {
-      return url.match(p)[1];
+    if (url.match(regex)) {
+      return url.match(regex)[1];
     }
     return false;
   }

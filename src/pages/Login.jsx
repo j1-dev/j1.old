@@ -3,6 +3,7 @@ import { useAuth } from "../api/authContext";
 import LogInNavbar from "../components/LogInNavbar";
 import { Tilt } from "../api/TiltApi";
 import banner from "../banner.gif";
+import { TbSend } from "react-icons/tb";
 
 /**
  * @component
@@ -73,7 +74,7 @@ const Login = () => {
       />
       <div className="float-left w-full md:w-1/2">
         <form className="md:pt-64">
-          <label htmlFor="email" className="p-3 text-2xl">
+          <label htmlFor="email" className="p-3 text-xl">
             Email
           </label>
           <input
@@ -85,7 +86,7 @@ const Login = () => {
             onChange={handleChange}
           />
 
-          <label htmlFor="password" className="p-3 text-2xl">
+          <label htmlFor="password" className="p-3 text-xl">
             Password
           </label>
           <input
@@ -97,8 +98,11 @@ const Login = () => {
             onChange={handleChange}
           />
 
-          <button className="button-still rounded-none" onClick={handleSubmit}>
-            Login
+          <button
+            className="button-still translate-x-3 translate-y-2 rounded-none p-2"
+            onClick={handleSubmit}
+          >
+            <TbSend />
           </button>
           <LogInNavbar />
         </form>

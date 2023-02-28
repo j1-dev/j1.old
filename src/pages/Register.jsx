@@ -3,6 +3,7 @@ import { useAuth } from "../api/authContext";
 import LogInNavbar from "../components/LogInNavbar";
 import { Tilt } from "../api/TiltApi";
 import banner from "../banner.gif";
+import { TbSend } from "react-icons/tb";
 
 /**
  * @component
@@ -97,8 +98,11 @@ const Register = () => {
             onChange={handleChange}
           />
 
-          <button className="button-still" onClick={handleSubmit}>
-            Register
+          <button
+            className="button-still translate-x-3 translate-y-2 rounded-none p-2"
+            onClick={handleSubmit}
+          >
+            <TbSend />
           </button>
           <LogInNavbar />
         </form>

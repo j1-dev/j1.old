@@ -8,6 +8,8 @@ import {
   deleteDoc,
   query,
   getCountFromServer,
+  updateDoc,
+  increment,
 } from "firebase/firestore";
 import { Avatar } from "@mui/material";
 
@@ -47,6 +49,8 @@ const UserCard = ({ user }) => {
    * @type {Object}
    */
   const currentUser = auth.currentUser;
+
+  const u = doc(db, "users", user.uid);
 
   /**
    * Boolean state to determine whether the current user can be followed.
@@ -150,6 +154,9 @@ const UserCard = ({ user }) => {
 
       await setDoc(userFollowRef, newFollow); // add the target user to the current user's follows collection
       await setDoc(followNotificationRef, newNotification);
+      await updateDoc(u, {
+        score: increment(+3),
+      });
     } else {
       return console.log("You are already a follower"); // if the user is already following them, log a message and do nothing
     }
@@ -182,6 +189,9 @@ const UserCard = ({ user }) => {
 
       await deleteDoc(userFollowRef); // remove the target user from the current user's follows collection
       await deleteDoc(followNotificationRef);
+      await updateDoc(u, {
+        score: increment(-3),
+      });
     } else {
       return console.log("You are not following this user"); // if the user is not following them, log a message and do nothing
     }
