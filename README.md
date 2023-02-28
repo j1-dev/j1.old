@@ -44,11 +44,11 @@
  
   - To do list:
 
-    - Real Time notifications for dikes, (dislikes) and comments.
+    - Real Time notifications for dikes, (dislikes) and comments : done
 
-    - Search bar to search for users and potentially posts.
+    - Search bar to search for users and potentially posts. 
     
-    - Change entire database file structure.
+    - Change entire database file structure : done
 
     - Add multiple language support.
 
