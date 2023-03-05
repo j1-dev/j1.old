@@ -9,9 +9,16 @@ import {
 import React, { useRef, useState, useEffect } from "react";
 import { RxCheck, RxCross1 } from "react-icons/rx";
 import { v4 } from "uuid";
-import { auth, storage } from "../api/firebase-config";
+import { auth, db, storage } from "../api/firebase-config";
 import UserServices from "../api/user.services";
 import { useNavigate } from "react-router-dom";
+import {
+  deleteDoc,
+  doc,
+  getDoc,
+  serverTimestamp,
+  setDoc,
+} from "firebase/firestore";
 
 /**
  * @component
@@ -167,6 +174,22 @@ const Settings = () => {
     fileRef.current.click();
   };
 
+  const checkUserNameAvailable = async (userName) => {
+    const userNameRef = doc(db, "displaynames", userName);
+    let value;
+    await getDoc(userNameRef).then((snapshot) => {
+      const snapshotDocument = snapshot._document;
+      // console.log(snapshotDocument !== null);
+      if (snapshotDocument !== null) {
+        value = false;
+      } else {
+        value = true;
+      }
+    });
+    // console.log(value);
+    return value;
+  };
+
   /**
    * Handler for changing the username
    *
@@ -174,14 +197,31 @@ const Settings = () => {
    * @param {Object} e - The click event object.
    * @returns {void}
    */
-  const handleNameChange = (e) => {
+  const handleNameChange = async (e) => {
     const un = nameRef.current.value;
-    updateProfile(currentUser, { displayName: un }).then(async () => {
-      let user = UserServices.getUser(currentUser.uid);
-      user = { ...user, displayName: un };
-      await UserServices.updateUser(currentUser.uid, user);
-      navigate(0);
-    });
+    const oldName = currentUser.displayName;
+    let check;
+    await checkUserNameAvailable(un).then((res) => (check = res));
+    if (check === true) {
+      updateProfile(currentUser, { displayName: un }).then(async () => {
+        let user = UserServices.getUser(currentUser.uid);
+        user = { ...user, displayName: un };
+        const newUserName = {
+          uid: currentUser.uid,
+          prevDisplayName: oldName,
+          lastChange: serverTimestamp(),
+        };
+        const userNameRef = doc(db, "displaynames", un);
+        const oldUserNameRef = doc(db, "displaynames", oldName);
+        await deleteDoc(oldUserNameRef);
+        await setDoc(userNameRef, newUserName);
+        await UserServices.updateUser(currentUser.uid, user);
+        navigate(0);
+      });
+    } else {
+      throw new Error("username not available");
+      // console.log("display name not available");
+    }
   };
 
   /**

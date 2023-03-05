@@ -1,5 +1,14 @@
 import { updateProfile } from "firebase/auth";
-import { collection, onSnapshot, query, where } from "firebase/firestore";
+import {
+  collection,
+  onSnapshot,
+  query,
+  where,
+  doc,
+  getDoc,
+  setDoc,
+  serverTimestamp,
+} from "firebase/firestore";
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { auth, db } from "../api/firebase-config";
@@ -48,7 +57,7 @@ const SetDisplayName = () => {
    * Reference for the display name input element
    * @type {object}
    */
-  const refName = useRef();
+  const nameRef = useRef();
 
   /**
    * Navigation hook
@@ -82,28 +91,60 @@ const SetDisplayName = () => {
     };
   }, [currentUser]);
 
+  const checkUserNameAvailable = async (userName) => {
+    const userNameRef = doc(db, "displaynames", userName);
+    let value;
+    await getDoc(userNameRef).then((snapshot) => {
+      const snapshotDocument = snapshot._document;
+      // console.log(snapshotDocument !== null);
+      if (snapshotDocument !== null) {
+        value = false;
+      } else {
+        value = true;
+      }
+    });
+    // console.log(value);
+    return value;
+  };
+
   /**
    * Event handler for changing the display name
    * @function
    * @param {Object} e - Event object
    */
-  const handleNameChange = (e) => {
+  const handleNameChange = async (e) => {
     e.preventDefault();
-    updateProfile(currentUser, { displayName: refName.current.value }).then(
-      async () => {
-        const newUser = {
-          ...user,
-          displayName: refName.current.value,
-          userName: refName.current.value,
-        };
-        await UserServices.updateUser(currentUser.uid, newUser).then(
-          navigate("/")
-        );
-        console.log("displayName updated");
+    const un = nameRef.current.value;
+    let check;
+    await checkUserNameAvailable(un).then((res) => {
+      check = res;
+    });
+    if (check === true) {
+      updateProfile(currentUser, { displayName: nameRef.current.value }).then(
+        async () => {
+          const newUser = {
+            ...user,
+            displayName: nameRef.current.value,
+            userName: nameRef.current.value,
+          };
+          const newUserName = {
+            uid: currentUser.displayName,
+            prevDisplayName: "",
+            lastChange: serverTimestamp(),
+          };
+          const userNameRef = doc(db, "displaynames", nameRef.current.value);
+          await setDoc(userNameRef, newUserName);
+          await UserServices.updateUser(currentUser.uid, newUser).then(
+            navigate("/")
+          );
+          console.log("displayName updated");
 
-        refName.current.value = "";
-      }
-    );
+          nameRef.current.value = "";
+        }
+      );
+    } else {
+      console.log("display name not available");
+    }
   };
 
   return (
@@ -114,7 +155,7 @@ const SetDisplayName = () => {
             Elija Nombre de Usuario
           </Tilt>
           <input
-            ref={refName}
+            ref={nameRef}
             maxLength="8"
             className="border-b-2 border-black text-4xl outline-none"
           ></input>
