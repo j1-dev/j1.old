@@ -50,9 +50,7 @@ function App() {
         {windowSize[0] < 762 ? (
           <Topbar pageWrapId="page-wrap" outerContainerId="App" />
         ) : (
-          <div>
-            <Navbar />
-          </div>
+          <Navbar />
         )}
         <ToastContainer />
         <div id="page-wrap">

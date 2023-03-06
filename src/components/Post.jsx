@@ -166,13 +166,13 @@ const Post = ({ data, path, className }) => {
    * @returns {void}
    */
   useEffect(() => {
-    const unsub = async () => {
+    const sub = async () => {
       setLikes(await getCountFromServer(queryLikes));
       setDislikes(await getCountFromServer(queryDislikes));
       setComments(await getCountFromServer(queryComments));
     };
 
-    unsub();
+    sub();
   }, [queryLikes, queryDislikes, queryComments]);
 
   /**

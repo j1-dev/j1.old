@@ -10,8 +10,9 @@ import {
   HiOutlineCog,
 } from "react-icons/hi";
 import { RiNotification3Line } from "react-icons/ri";
-import { Avatar } from "@mui/material";
-import { Tooltip } from "@mui/material";
+import { Avatar, Tooltip, Badge } from "@mui/material";
+import { db } from "../api/firebase-config";
+import { collection, getCountFromServer, query } from "firebase/firestore";
 
 /**
  * @component
@@ -58,6 +59,10 @@ const Navbar = () => {
     window.innerHeight,
   ]);
 
+  const [notif, setNotif] = useState(0);
+
+  const [uid, setUid] = useState(null);
+
   /**
    * A hook from React that sets up a callback for when the window is resized.
    *
@@ -80,6 +85,20 @@ const Navbar = () => {
       window.removeEventListener("resize", handleWindowResize);
     };
   }, []);
+
+  useEffect(() => {
+    if (!loading) setUid(currentUser.uid);
+  }, [loading, currentUser]);
+
+  useEffect(() => {
+    const notifRef = collection(db, `users/${uid}/notifications`);
+    const q = query(notifRef);
+    const sub = async () => {
+      setNotif(await getCountFromServer(q));
+    };
+    console.log(notif);
+    sub();
+  }, [uid]);
 
   /**
    * Handles the logout button click event by signing out the user and redirecting to the login page.
@@ -191,11 +210,18 @@ const Navbar = () => {
               }
               to="/Notifications"
             >
-              <RiNotification3Line className="float-left text-4xl" />
+              {notif === 0 ? (
+                <RiNotification3Line className="float-left text-4xl" />
+              ) : (
+                <Badge badgeContent={notif.data().count} color="primary">
+                  <RiNotification3Line className="float-left text-4xl" />
+                </Badge>
+              )}
+
               {windowSize[0] < 1024 ? (
                 <></>
               ) : (
-                <p className="float-left pl-4 text-3xl font-normal">
+                <p className="float-right pl-4 text-3xl font-normal">
                   Notificaciones
                 </p>
               )}
