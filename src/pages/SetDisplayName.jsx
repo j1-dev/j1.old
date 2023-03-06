@@ -14,6 +14,7 @@ import { useNavigate } from "react-router-dom";
 import { auth, db } from "../api/firebase-config";
 import { Tilt } from "../api/TiltApi";
 import UserServices from "../api/user.services";
+import { toast } from "react-toastify";
 
 /**
  * @component
@@ -68,6 +69,7 @@ const SetDisplayName = () => {
   /**
    * Updates the user state with the current user's data
    * @function
+   * @todo no need to use a collection query, just use getDoc or userService.getUser
    * @param {object} currentUser - Current user object
    * @returns {function} unsub - cleanup function for the onSnapshot listener
    */
