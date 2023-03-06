@@ -4,6 +4,7 @@ import "./App.css";
 import Navbar from "./components/Navbar";
 import PrivateRoutes from "./components/PrivateRoute";
 import Topbar from "./components/Topbar";
+import Notifications from "./components/Notifications";
 import About from "./pages/About";
 import Home from "./pages/Home";
 import Shop from "./pages/Shop";
@@ -14,7 +15,8 @@ import Settings from "./pages/Settings";
 import PostPage from "./pages/PostPage";
 import { Route, Routes } from "react-router-dom";
 import { AuthProvider } from "./api/authContext";
-import Notifications from "./components/Notifications";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   const [windowSize, setWindowSize] = useState([
@@ -52,7 +54,7 @@ function App() {
             <Navbar />
           </div>
         )}
-
+        <ToastContainer />
         <div id="page-wrap">
           <Routes>
             <Route element={<PrivateRoutes />}>

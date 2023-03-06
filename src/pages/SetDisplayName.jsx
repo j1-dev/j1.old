@@ -145,7 +145,8 @@ const SetDisplayName = () => {
         }
       );
     } else {
-      console.log("display name not available");
+      // console.log("display name not available");
+      toast.error("Display name not available");
     }
   };
 

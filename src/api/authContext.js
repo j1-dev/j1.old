@@ -4,6 +4,7 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../api/firebase-config";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import UserService from "./user.services";
 
 export const authContext = createContext();
@@ -88,7 +89,8 @@ export function AuthProvider({ children }) {
         login(email, password);
       })
       .catch((error) => {
-        console.log(error.message);
+        // console.log(error.message);
+        toast.error(error.message);
       });
   };
 
@@ -111,7 +113,8 @@ export function AuthProvider({ children }) {
         navigate("/Home");
       })
       .catch((error) => {
-        console.log(error.message);
+        // console.log(error.message);
+        toast.error(error.message);
       });
   };
 

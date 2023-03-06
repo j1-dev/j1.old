@@ -19,6 +19,7 @@ import {
   serverTimestamp,
   setDoc,
 } from "firebase/firestore";
+import { toast } from "react-toastify";
 
 /**
  * @component
@@ -219,8 +220,8 @@ const Settings = () => {
         navigate(0);
       });
     } else {
-      throw new Error("username not available");
       // console.log("display name not available");
+      toast.error("Display name not available");
     }
   };
 
