@@ -2,7 +2,7 @@
 
 module.exports = {
   mode: 'jit',
-
+  plugins: [require('daisyui')],
   content: ['./src/**/*.{js,jsx,ts,tsx}'],
   theme: {
     extend: {

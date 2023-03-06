@@ -210,18 +210,20 @@ const Navbar = () => {
               }
               to="/Notifications"
             >
-              {notif === null ? (
+              <RiNotification3Line className="float-left text-4xl" />
+
+              {/* {notif === null ? (
                 <RiNotification3Line className="float-left text-4xl" />
               ) : (
                 <Badge badgeContent={notif.data().count} color="primary">
                   <RiNotification3Line className="float-left text-4xl" />
                 </Badge>
-              )}
+              )} */}
 
               {windowSize[0] < 1024 ? (
                 <></>
               ) : (
-                <p className="float-right pl-4 text-3xl font-normal">
+                <p className="float-left pl-4 text-3xl font-normal">
                   Notificaciones
                 </p>
               )}
@@ -263,7 +265,7 @@ const Navbar = () => {
           {/* 
             Log out button
           */}
-          <div className="fixed bottom-0">
+          <div className="fixed bottom-2 left-0">
             <Tooltip title="Log-out">
               <button className="button " onClick={handleLogout}>
                 <HiLogout />
