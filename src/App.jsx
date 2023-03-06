@@ -55,7 +55,7 @@ function App() {
         <ToastContainer />
         <div id="page-wrap">
           <Routes>
-            <Route element={<PrivateRoutes />}>
+            <Route path="/" element={<PrivateRoutes />}>
               <Route path="/Home" element={<Home />} />
               <Route path="/Shop" element={<Shop />} />
               <Route path="/About" element={<About />} />

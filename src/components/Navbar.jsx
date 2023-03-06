@@ -59,7 +59,7 @@ const Navbar = () => {
     window.innerHeight,
   ]);
 
-  const [notif, setNotif] = useState(0);
+  const [notif, setNotif] = useState(null);
 
   const [uid, setUid] = useState(null);
 
@@ -87,7 +87,7 @@ const Navbar = () => {
   }, []);
 
   useEffect(() => {
-    if (!loading) setUid(currentUser.uid);
+    if (!loading && !!currentUser) setUid(currentUser.uid);
   }, [loading, currentUser]);
 
   useEffect(() => {
@@ -210,7 +210,7 @@ const Navbar = () => {
               }
               to="/Notifications"
             >
-              {notif === 0 ? (
+              {notif === null ? (
                 <RiNotification3Line className="float-left text-4xl" />
               ) : (
                 <Badge badgeContent={notif.data().count} color="primary">
