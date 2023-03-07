@@ -149,9 +149,21 @@ const Navbar = () => {
               Home button
             */}
             <NavLink
-              className={({ isActive }) =>
-                isActive ? "button-active" : "button"
-              }
+              className={({ isActive }) => {
+                if (isActive) {
+                  if (windowSize[0] <= 1024) {
+                    return "button-active";
+                  } else {
+                    return "button-active w-full";
+                  }
+                } else {
+                  if (windowSize[0] <= 1024) {
+                    return "button";
+                  } else {
+                    return "button w-full";
+                  }
+                }
+              }}
               to="/Home"
             >
               <HiOutlineHome className="float-left text-4xl" />{" "}
@@ -169,9 +181,21 @@ const Navbar = () => {
               <NavLink
                 to={"/" + currentUser.displayName}
                 // className="button md:button-still active:button-active"
-                className={({ isActive }) =>
-                  isActive ? "button-active" : "button"
-                }
+                className={({ isActive }) => {
+                  if (isActive) {
+                    if (windowSize[0] <= 1024) {
+                      return "button-active";
+                    } else {
+                      return "button-active w-full";
+                    }
+                  } else {
+                    if (windowSize[0] <= 1024) {
+                      return "button";
+                    } else {
+                      return "button w-full";
+                    }
+                  }
+                }}
               >
                 {windowSize[0] >= 1024 ? (
                   <p className="float-left pl-4 text-3xl font-normal">
@@ -184,9 +208,21 @@ const Navbar = () => {
             ) : (
               <NavLink
                 // className="button md:button-still active:button-active md:p-3 lg:p-4"
-                className={({ isActive }) =>
-                  isActive ? "button-active p-3" : "button p-3"
-                }
+                className={({ isActive }) => {
+                  if (isActive) {
+                    if (windowSize[0] <= 1024) {
+                      return "button-active";
+                    } else {
+                      return "button-active w-full";
+                    }
+                  } else {
+                    if (windowSize[0] <= 1024) {
+                      return "button";
+                    } else {
+                      return "button w-full";
+                    }
+                  }
+                }}
                 to={"/" + currentUser.displayName}
               >
                 {/* <img
@@ -195,7 +231,7 @@ const Navbar = () => {
                   className="float-left w-11 rounded-full p-0"
                 /> */}
                 <Avatar
-                  className="float-left w-11 p-0"
+                  className="float-left"
                   alt="lol"
                   src={currentUser.photoURL}
                   sx={{ width: "44px", height: "44px" }}
@@ -213,25 +249,38 @@ const Navbar = () => {
               Notifications button
             */}
             <NavLink
-              className={({ isActive }) =>
-                isActive ? "button-active" : "button"
-              }
+              className={({ isActive }) => {
+                if (isActive) {
+                  if (windowSize[0] <= 1024) {
+                    return "button-active";
+                  } else {
+                    return "button-active w-full";
+                  }
+                } else {
+                  if (windowSize[0] <= 1024) {
+                    return "button";
+                  } else {
+                    return "button w-full";
+                  }
+                }
+              }}
               to="/Notifications"
             >
-              {/* <RiNotification3Line className="float-left text-4xl" /> */}
-
-              {notif === null ? (
+              {notif === 0 || notif === null ? (
                 <RiNotification3Line className="float-left text-4xl" />
               ) : (
-                <Badge badgeContent={notif} color="primary" className="m-0 p-0">
+                <div className="indicator float-left">
                   <RiNotification3Line className="float-left text-4xl" />
-                </Badge>
+                  <div className="badge-primary badge badge-lg indicator-item">
+                    {notif}
+                  </div>
+                </div>
               )}
 
               {windowSize[0] < 1024 ? (
                 <></>
               ) : (
-                <p className="float-right pl-4 text-3xl font-normal">
+                <p className="float-left pl-4 text-3xl font-normal">
                   Notificaciones
                 </p>
               )}
@@ -241,9 +290,21 @@ const Navbar = () => {
               @todo Turn it into a ko-fi donation button 
             */}
             <NavLink
-              className={({ isActive }) =>
-                isActive ? "button-active" : "button"
-              }
+              className={({ isActive }) => {
+                if (isActive) {
+                  if (windowSize[0] <= 1024) {
+                    return "button-active";
+                  } else {
+                    return "button-active w-full";
+                  }
+                } else {
+                  if (windowSize[0] <= 1024) {
+                    return "button";
+                  } else {
+                    return "button w-full";
+                  }
+                }
+              }}
               to="/Shop"
             >
               <HiOutlineShoppingCart className="float-left text-4xl" />
@@ -257,9 +318,21 @@ const Navbar = () => {
               Settings button
             */}
             <NavLink
-              className={({ isActive }) =>
-                isActive ? "button-active" : "button"
-              }
+              className={({ isActive }) => {
+                if (isActive) {
+                  if (windowSize[0] <= 1024) {
+                    return "button-active";
+                  } else {
+                    return "button-active w-full";
+                  }
+                } else {
+                  if (windowSize[0] <= 1024) {
+                    return "button";
+                  } else {
+                    return "button w-full";
+                  }
+                }
+              }}
               to="/Settings"
             >
               <HiOutlineCog className="float-left text-4xl" />

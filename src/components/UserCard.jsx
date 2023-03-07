@@ -238,12 +238,12 @@ const UserCard = ({ user }) => {
 
       {currentUser.uid !== user.uid ? (
         followeable ? (
-          <button className="user-panel-button text-lg" onClick={handleFollow}>
+          <button className="user-panel-button text-xl" onClick={handleFollow}>
             Follow
           </button>
         ) : (
           <button
-            className="user-panel-button text-lg"
+            className="user-panel-button text-xl"
             onClick={handleUnfollow}
           >
             Unfollow
