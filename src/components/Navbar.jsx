@@ -12,7 +12,12 @@ import {
 import { RiNotification3Line } from "react-icons/ri";
 import { Avatar, Tooltip, Badge } from "@mui/material";
 import { db } from "../api/firebase-config";
-import { collection, getCountFromServer, query } from "firebase/firestore";
+import {
+  collection,
+  // getCountFromServer,
+  onSnapshot,
+  query,
+} from "firebase/firestore";
 
 /**
  * @component
@@ -93,11 +98,14 @@ const Navbar = () => {
   useEffect(() => {
     const notifRef = collection(db, `users/${uid}/notifications`);
     const q = query(notifRef);
-    const sub = async () => {
-      setNotif(await getCountFromServer(q));
-    };
-    console.log(notif);
-    sub();
+    // const sub = async () => {
+    //   setNotif(await getCountFromServer(q));
+    // };
+    // sub();
+    onSnapshot(q, (snapshot) => {
+      setNotif(snapshot.size);
+      // console.log(notif);
+    });
   }, [uid]);
 
   /**
@@ -210,20 +218,20 @@ const Navbar = () => {
               }
               to="/Notifications"
             >
-              <RiNotification3Line className="float-left text-4xl" />
+              {/* <RiNotification3Line className="float-left text-4xl" /> */}
 
-              {/* {notif === null ? (
+              {notif === null ? (
                 <RiNotification3Line className="float-left text-4xl" />
               ) : (
-                <Badge badgeContent={notif.data().count} color="primary">
+                <Badge badgeContent={notif} color="primary" className="m-0 p-0">
                   <RiNotification3Line className="float-left text-4xl" />
                 </Badge>
-              )} */}
+              )}
 
               {windowSize[0] < 1024 ? (
                 <></>
               ) : (
-                <p className="float-left pl-4 text-3xl font-normal">
+                <p className="float-right pl-4 text-3xl font-normal">
                   Notificaciones
                 </p>
               )}
