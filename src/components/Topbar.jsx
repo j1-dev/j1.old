@@ -177,13 +177,11 @@ const Topbar = ({ pageWrapId, outerContainerId }) => {
             htmlClassName={"overflow-visible"}
           >
             <div className="relative">
-              <Avatar
-                src={loading ? null : currentUser.photoURL}
-                alt="loading..."
-                className="absolute top-8 left-8"
-                sx={{ width: "100px", height: "100px" }}
-              />
-
+              <div className="avatar absolute top-8 left-8">
+                <div className="w-24 rounded-full">
+                  <img src={user.photoURL} alt="loading..." />
+                </div>
+              </div>
               <Link
                 to={`/${currentUser.displayName}`}
                 className="absolute top-16 left-40 text-4xl font-semibold hover:underline"

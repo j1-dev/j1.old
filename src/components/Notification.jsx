@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import { useDocument } from "react-firebase-hooks/firestore";
 import { Link } from "react-router-dom";
 import { db } from "../api/firebase-config";
-import { Avatar } from "@mui/material";
 import { RxCross1 } from "react-icons/rx";
 
 const Notification = ({ data, key }) => {
@@ -158,11 +157,11 @@ const Notification = ({ data, key }) => {
 
   return (
     <div key={key} className={classname}>
-      <Avatar
-        src={loading ? null : value.data().photo}
-        alt="loading..."
-        className="top-0 left-0"
-      />
+      <div className="avatar top-0 left-0">
+        <div className="w-10 rounded-full">
+          <img src={loading ? null : value.data().photo} alt="loading..." />
+        </div>
+      </div>
       {renderNotificationMessage()}
       <p className="mt-3 text-sm text-gray-700">{timeDiff(time)}</p>
       <button

@@ -226,12 +226,12 @@ const UserCard = ({ user }) => {
   return (
     <div className="user-panel">
       <div className="user-panel-top"></div>
-      <Avatar
-        className="user-panel-avatar"
-        alt="lol"
-        src={user.photo}
-        sx={{ height: 100, width: 100 }}
-      />
+
+      <div className="avatar ">
+        <div className="w-24 rounded-full">
+          <img src={user.photo} alt="loading..." />
+        </div>
+      </div>
       <div className="user-panel-data">
         <div className="font-bold">~{user.displayName}</div>
       </div>

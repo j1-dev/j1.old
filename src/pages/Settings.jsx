@@ -293,12 +293,11 @@ const Settings = () => {
           <div className="absolute top-12 left-0 my-7 w-2/3 ">
             <div className="font-semibold ">Foto de usuario: </div>
             <div className="w-full">
-              <Avatar
-                className="m-5 mt-9"
-                alt="lol"
-                src={profilePic}
-                sx={{ height: 150, width: 150 }}
-              />
+              <div className="avatar m-5 mt-9">
+                <div className="w-44 rounded-full">
+                  <img src={profilePic} alt="loading..." />
+                </div>
+              </div>
             </div>
           </div>
           <div className="absolute right-0 top-12 my-7 w-1/3 text-center">

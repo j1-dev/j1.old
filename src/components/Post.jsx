@@ -17,7 +17,6 @@ import { NavLink, Link } from "react-router-dom";
 import YouTube from "react-youtube";
 import { GoThumbsdown, GoThumbsup } from "react-icons/go";
 import { TbMessage } from "react-icons/tb";
-import { Avatar } from "@mui/material";
 
 /**
  * @component
@@ -491,11 +490,14 @@ const Post = ({ data, path, className }) => {
           {typeof value !== "undefined" ? (
             <div className="float-left w-11/12">
               <p className="text-base">
-                <Avatar
-                  alt={value.data().displayName}
-                  src={value.data().photo}
-                  className="float-left mr-3"
-                />
+                <div className="avatar float-left mr-3">
+                  <div className="w-10 rounded-full">
+                    <img
+                      src={loading ? null : value.data().photo}
+                      alt="loading..."
+                    />
+                  </div>
+                </div>
                 <NavLink
                   to={`/${value.data().displayName}`}
                   className="underline hover:no-underline"

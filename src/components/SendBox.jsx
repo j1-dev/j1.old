@@ -20,7 +20,6 @@ import {
   increment,
 } from "firebase/firestore";
 import { db } from "../api/firebase-config";
-import { Avatar } from "@mui/material";
 
 /**
  * @component
@@ -467,12 +466,12 @@ const SendBox = ({ className, path }) => {
         src={user.photoURL}
         className="float-left mt-5 ml-3 w-[69px] rounded-full"
       ></img> */}
-      <Avatar
-        className="float-left mt-5 ml-5 rounded-full"
-        alt="lol"
-        src={user.photoURL}
-        sx={{ width: "60px", height: "60px" }}
-      />
+
+      <div className="avatar float-left mt-5 ml-5">
+        <div className="w-16 rounded-full">
+          <img src={user.photoURL} alt="loading..." />
+        </div>
+      </div>
       {dragging && (
         // div and input elements that are active while draggaing
         // an image into this element

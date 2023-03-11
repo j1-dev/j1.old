@@ -35,6 +35,7 @@ import {
 const MenuS = ({ open, pageWrapId, outerContainerId }) => {
   /**
    * A hook from a custom `useAuth` hook that provides loading status for authentication data.
+   *
    * @type {boolean}
    */
   const { loading } = useAuth();

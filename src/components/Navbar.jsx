@@ -10,7 +10,6 @@ import {
   HiOutlineCog,
 } from "react-icons/hi";
 import { RiNotification3Line } from "react-icons/ri";
-import { Avatar, Tooltip, Badge } from "@mui/material";
 import { db } from "../api/firebase-config";
 import {
   collection,
@@ -30,7 +29,6 @@ import {
  *
  * @requires react
  * @requires react-router-dom
- * @requires @mui/material
  * @requires ../api/firebase-config
  * @requires ../api/authContext
  * @requires ../logo.png
@@ -225,17 +223,12 @@ const Navbar = () => {
                 }}
                 to={"/" + currentUser.displayName}
               >
-                {/* <img
-                  src={currentUser.photoURL}
-                  alt="yo"
-                  className="float-left w-11 rounded-full p-0"
-                /> */}
-                <Avatar
-                  className="float-left"
-                  alt="lol"
-                  src={currentUser.photoURL}
-                  sx={{ width: "44px", height: "44px" }}
-                />
+                <div className="avatar float-left">
+                  <div className="w-10 rounded-full">
+                    <img src={currentUser.photoURL} />
+                  </div>
+                </div>
+
                 {windowSize[0] <= 1024 ? (
                   <></>
                 ) : (
@@ -347,11 +340,13 @@ const Navbar = () => {
             Log out button
           */}
           <div className="fixed bottom-2 left-0">
-            <Tooltip title="Log-out">
-              <button className="button " onClick={handleLogout}>
-                <HiLogout />
-              </button>
-            </Tooltip>
+            <button
+              className="button tooltip"
+              data-tip="log-out"
+              onClick={handleLogout}
+            >
+              <HiLogout />
+            </button>
           </div>
         </nav>
       ) : (
