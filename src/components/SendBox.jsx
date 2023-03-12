@@ -7,7 +7,6 @@ import { TbSend } from "react-icons/tb";
 import { CgImage } from "react-icons/cg";
 import { BsFillEmojiSmileFill } from "react-icons/bs";
 import { GrClose } from "react-icons/gr";
-import { Tooltip } from "@mui/material";
 import { Popover } from "@headlessui/react";
 import { usePopper } from "react-popper";
 import EmojiPicker from "emoji-picker-react";
@@ -532,7 +531,7 @@ const SendBox = ({ className, path }) => {
         Show the characters thata are left in the post until 200
         when it reaches 50, it changes to red
       */}
-      <Tooltip title="Carácteres restantes">
+      <div className="tootip" data-tip="Carácteres restantes">
         <div
           className={
             chars >= 50 || chars === null
@@ -546,7 +545,7 @@ const SendBox = ({ className, path }) => {
         >
           {chars === null ? "200" : chars}
         </div>
-      </Tooltip>
+      </div>
 
       {/* 
         This div encapsulates the emoji, image and send buttons
@@ -555,19 +554,20 @@ const SendBox = ({ className, path }) => {
         {/* 
           Send Button
         */}
-        <Tooltip title="Enviar">
+        <div className="tootip" data-tip="Enviar">
           <button
             onClick={handlePost}
             className="button-still float-right mb-3 p-3 text-2xl hover:translate-x-0 hover:border-red-400"
           >
             <TbSend />
           </button>
-        </Tooltip>
+        </div>
         {/* 
           Image button
         */}
-        <Tooltip
-          title={
+        <div
+          className="tootip"
+          data-tip={
             imageURL === null
               ? "Imagen no adjuntada"
               : "Imagen adjuntada con exito"
@@ -583,11 +583,11 @@ const SendBox = ({ className, path }) => {
           >
             <CgImage />
           </button>
-        </Tooltip>
+        </div>
         {/* 
           Emoji button - fucking broken
         */}
-        <Tooltip title="Emojis">
+        <div className="tootip" data-tip="Emojis">
           <Popover className="relative">
             <Popover.Button
               ref={setReferenceElement}
@@ -607,7 +607,7 @@ const SendBox = ({ className, path }) => {
               />
             </Popover.Panel>
           </Popover>
-        </Tooltip>
+        </div>
       </div>
       {/* 
         This image input is invisible and is linke to the image button

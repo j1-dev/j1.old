@@ -11,7 +11,6 @@ import {
   updateDoc,
   increment,
 } from "firebase/firestore";
-import { Avatar } from "@mui/material";
 
 /**
  * @component

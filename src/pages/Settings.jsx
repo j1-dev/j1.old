@@ -1,4 +1,3 @@
-import { Avatar } from "@mui/material";
 import { updateProfile, sendEmailVerification } from "firebase/auth";
 import {
   deleteObject,
@@ -329,8 +328,7 @@ const Settings = () => {
         <div className="relative w-full">
           <div className="absolute top-80 my-4 w-2/3">
             <span className=" w-full font-semibold">E-mail: </span>
-
-            <div className="">
+            <div>
               {currentUser.emailVerified ? (
                 <div className="inline-flex">
                   {currentUser.email}
@@ -350,7 +348,7 @@ const Settings = () => {
             </button>
           </div>
         </div>
-        <h1 className="text-4xl font-bold"></h1>
+
         <hr />
       </div>
       <input

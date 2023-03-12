@@ -4,7 +4,6 @@ import { useAuth } from "../api/authContext";
 import { auth } from "../api/firebase-config";
 import { Link, useNavigate } from "react-router-dom";
 import { FiArrowLeft } from "react-icons/fi";
-import { Avatar } from "@mui/material";
 import { slide as Menu } from "react-burger-menu";
 import { NavLink } from "react-router-dom";
 import { RiNotification3Line } from "react-icons/ri";
@@ -127,15 +126,16 @@ const Topbar = ({ pageWrapId, outerContainerId }) => {
   const renderBackButton = (pathname) => {
     if (pathname === "/Home" || pathname === "/") {
       return (
-        <Avatar
-          className="m-3"
-          alt="lol"
-          src={currentUser.photoURL}
-          sx={{ width: "55px", height: "55px" }}
+        <div
+          className="avatar m-3"
           onClick={() => {
             setOpen(!isOpen);
           }}
-        />
+        >
+          <div className="w-10 rounded-full">
+            <img src={currentUser.photoURL} alt="loading..." />
+          </div>
+        </div>
       );
     } else {
       return (

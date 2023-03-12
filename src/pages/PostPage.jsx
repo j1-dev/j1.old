@@ -92,6 +92,8 @@ const PostPage = () => {
    */
   const { id } = useParams();
 
+  const [newId, setNewId] = useState(id);
+
   /**
    * Fetches the data for the post with the given ID and updates state variables related to post and comments
    *
@@ -133,7 +135,6 @@ const PostPage = () => {
           return (commentPath += segment + "/");
         });
         commentPath += "posts";
-        console.log(commentPath);
 
         // Update state variables with the path to the comments for the current post
         setPathComments(commentPath);
@@ -148,11 +149,12 @@ const PostPage = () => {
 
         // Remove the trailing slash from the path to the current post
         newPath = newPath.substring(0, newPath.length - 1);
+        console.log(newPath);
         // Update state variables with the path to the current post
         return setPathPost(newPath);
       });
     });
-  }, [id]);
+  }, [newId]);
 
   /**
    * Determines the nearest parent of the current post and updates state variables related to parent data
@@ -241,6 +243,8 @@ const PostPage = () => {
           <div>
             {parentData.length > 0 &&
               parentData.map((post, index) => {
+                // console.log(post.data());
+                console.log(parentPath[parentData.length - index - 1]);
                 return (
                   <Post
                     data={{ ...post.data(), id: post.id }}
