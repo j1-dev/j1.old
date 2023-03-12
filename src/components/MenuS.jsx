@@ -114,9 +114,7 @@ const MenuS = ({ open, pageWrapId, outerContainerId }) => {
             </ul>
           </Menu>
         </div>
-      ) : (
-        <></>
-      )}
+      ) : null}
     </div>
   );
 };

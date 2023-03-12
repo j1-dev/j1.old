@@ -248,9 +248,7 @@ const UserCard = ({ user }) => {
             Unfollow
           </button>
         )
-      ) : (
-        <></>
-      )}
+      ) : null}
 
       <div className="user-panel-followers">
         {followers && <div>{followers.data().count} Followers</div>}

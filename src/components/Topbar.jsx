@@ -127,12 +127,12 @@ const Topbar = ({ pageWrapId, outerContainerId }) => {
     if (pathname === "/Home" || pathname === "/") {
       return (
         <div
-          className="avatar m-3"
+          className="avatar float-left m-3"
           onClick={() => {
             setOpen(!isOpen);
           }}
         >
-          <div className="w-10 rounded-full">
+          <div className="w-14 rounded-full">
             <img src={currentUser.photoURL} alt="loading..." />
           </div>
         </div>
@@ -248,9 +248,7 @@ const Topbar = ({ pageWrapId, outerContainerId }) => {
             </ul>
           </Menu>
         </div>
-      ) : (
-        <></>
-      )}
+      ) : null}
     </div>
   );
 };

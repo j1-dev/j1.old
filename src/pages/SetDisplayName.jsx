@@ -166,9 +166,7 @@ const SetDisplayName = () => {
             submit
           </button>
         </div>
-      ) : (
-        <></>
-      )}
+      ) : null}
     </div>
   );
 };

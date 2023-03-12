@@ -524,9 +524,7 @@ const SendBox = ({ className, path }) => {
           </button>
           <img src={imageURL} className="mx-6 my-4 w-1/2 rounded-xl" alt="" />
         </div>
-      ) : (
-        <></>
-      )}
+      ) : null}
       {/* 
         Show the characters thata are left in the post until 200
         when it reaches 50, it changes to red
@@ -554,10 +552,11 @@ const SendBox = ({ className, path }) => {
         {/* 
           Send Button
         */}
-        <div className="tootip" data-tip="Enviar">
+        <div>
           <button
             onClick={handlePost}
-            className="button-still float-right mb-3 p-3 text-2xl hover:translate-x-0 hover:border-red-400"
+            data-tip="Enviar"
+            className="button-still tooltip float-right mb-3 p-3 text-2xl hover:translate-x-0 hover:border-red-400"
           >
             <TbSend />
           </button>
@@ -574,11 +573,16 @@ const SendBox = ({ className, path }) => {
           }
         >
           <button
+            data-tip={
+              imageURL === null
+                ? "Imagen no adjuntada"
+                : "Imagen adjuntada con exito"
+            }
             onClick={handleImageButton}
             className={
               imageURL === null
-                ? "button-still float-right mb-3 p-3 text-2xl hover:border-gray-400"
-                : "button-still float-right mb-3 border-green-400 p-3 text-2xl hover:border-green-600"
+                ? "button-still tooltip float-right mb-3 p-3 text-2xl hover:border-gray-400"
+                : "button-still tooltip float-right mb-3 border-green-400 p-3 text-2xl hover:border-green-600"
             }
           >
             <CgImage />
@@ -587,11 +591,12 @@ const SendBox = ({ className, path }) => {
         {/* 
           Emoji button - fucking broken
         */}
-        <div className="tootip" data-tip="Emojis">
+        <div>
           <Popover className="relative">
             <Popover.Button
               ref={setReferenceElement}
-              className="button-still z-40 float-right mb-3 p-3 text-2xl hover:border-yellow-400"
+              className="button-still tooltip z-40 float-right mb-3 p-3 text-2xl hover:border-yellow-400"
+              data-tip="Emojis"
             >
               <BsFillEmojiSmileFill />
             </Popover.Button>

@@ -229,9 +229,7 @@ const Navbar = () => {
                   </div>
                 </div>
 
-                {windowSize[0] <= 1024 ? (
-                  <></>
-                ) : (
+                {windowSize[0] <= 1024 ? null : (
                   <p className="float-left mt-1 pl-4 text-3xl font-normal">
                     {currentUser.displayName}
                   </p>
@@ -270,9 +268,7 @@ const Navbar = () => {
                 </div>
               )}
 
-              {windowSize[0] < 1024 ? (
-                <></>
-              ) : (
+              {windowSize[0] < 1024 ? null : (
                 <p className="float-left pl-4 text-3xl font-normal">
                   Notificaciones
                 </p>
@@ -301,9 +297,7 @@ const Navbar = () => {
               to="/Shop"
             >
               <HiOutlineShoppingCart className="float-left text-4xl" />
-              {windowSize[0] < 1024 ? (
-                <></>
-              ) : (
+              {windowSize[0] < 1024 ? null : (
                 <p className="float-left pl-4 text-3xl font-normal">Tienda</p>
               )}
             </NavLink>
@@ -329,9 +323,7 @@ const Navbar = () => {
               to="/Settings"
             >
               <HiOutlineCog className="float-left text-4xl" />
-              {windowSize[0] < 1024 ? (
-                <></>
-              ) : (
+              {windowSize[0] < 1024 ? null : (
                 <p className="float-left pl-4 text-3xl font-normal">Ajustes</p>
               )}
             </NavLink>
