@@ -88,7 +88,7 @@ const Post = ({ data, path, className }) => {
    * A collection object used to perform CRUD operations on the Dislikes subcollection
    * @type {Object}
    */
-  const dislikesRef = collection(db, `${path}/${data.id}/lislikes`);
+  const dislikesRef = collection(db, `${path}/${data.id}/dislikes`);
 
   /**
    * A collection object used to perform CRUD operations on the Posts subcollection
@@ -100,19 +100,19 @@ const Post = ({ data, path, className }) => {
    * A Firestore query object used to retrieve the Likes subcollection
    * @type {Object}
    */
-  const queryLikes = useMemo(() => query(likesRef), [path, data.id]);
+  const queryLikes = query(likesRef);
 
   /**
    * A Firestore query object used to retrieve the Dislikes subcollection
    * @type {Object}
    */
-  const queryDislikes = useMemo(() => query(dislikesRef), [path, data.id]);
+  const queryDislikes = query(dislikesRef);
 
   /**
    * A Firestore query object used to retrieve the Posts subcollection
    * @type {Object}
    */
-  const queryComments = useMemo(() => query(commentsRef), [path, data.id]);
+  const queryComments = query(commentsRef);
 
   /**
    * A state variable that holds the number of likes
@@ -200,7 +200,7 @@ const Post = ({ data, path, className }) => {
 
     // Unsubscribe the snapshot listener
     unsub();
-  }, [path]);
+  }, [likesRef]);
 
   /**
    * A useEffect hook that checks if the current user has already disliked a specific post
@@ -228,7 +228,7 @@ const Post = ({ data, path, className }) => {
 
     // Unsubscribe the snapshot listener
     unsub();
-  }, [path]);
+  }, [dislikesRef]);
 
   /**
    * A memoized function that handles the like button click event.
@@ -236,92 +236,91 @@ const Post = ({ data, path, className }) => {
    * @param {React.MouseEvent<HTMLButtonElement>} e - The click event.
    * @returns {Promise<void>}
    */
-  const handleLike = useCallback(
-    async (e) => {
-      e.preventDefault();
+  const handleLike = (e) => {
+    e.preventDefault();
+    console.log(path);
+    console.log(data.id);
+    console.log(likesRef);
 
-      // Get a reference to the user's likes for the post
-      const likeRef = doc(likesRef, user.uid);
+    // Get a reference to the user's likes for the post
+    const likeRef = doc(likesRef, user.uid);
 
-      // Reference to the notification subcollection in the User
-      const notificationRef = doc(
-        collection(db, `users/${data.uid}/notifications`),
-        data.id + user.uid
-      );
+    // Reference to the notification subcollection in the User
+    const notificationRef = doc(
+      collection(db, `/users/${data.uid}/notifications`),
+      data.id + user.uid
+    );
 
-      // Timestamp in seconds
-      const ts = Date.now() / 1000;
+    // Timestamp in seconds
+    const ts = Date.now() / 1000;
 
-      // Create a new user object with the user ID
-      const newUser = {
-        uid: user.uid,
-      };
+    // Create a new user object with the user ID
+    const newUser = {
+      uid: user.uid,
+    };
 
-      // Create a new notification object with the notification info
-      const newNotification = {
-        id: notificationRef.id,
-        from: user.uid,
-        to: data.uid,
-        message: "Tu post ha recibido un like!",
-        sentAt: ts,
-        type: "like",
-        postId: data.id,
-      };
+    // Create a new notification object with the notification info
+    const newNotification = {
+      id: notificationRef.id,
+      from: user.uid,
+      to: data.uid,
+      message: "Tu post ha recibido un like!",
+      sentAt: ts,
+      type: "like",
+      postId: data.id,
+    };
 
-      // If the post has not been liked by the user yet
-      if (likeable) {
-        // Set dislikeable to true and likeable to false
-        setDislikeable(true);
-        setLikeable(false);
+    // If the post has not been liked by the user yet
+    if (likeable) {
+      // Set dislikeable to true and likeable to false
+      setDislikeable(true);
+      setLikeable(false);
 
-        // Set like update variable to +1
-        setL(l + 1);
-        // Add the user and notification to the likes collection
-        await setDoc(likeRef, newUser);
-        if (user.uid !== data.uid)
-          await setDoc(notificationRef, newNotification);
+      // Set like update variable to +1
+      // setL(l + 1);
+      // Add the user and notification to the likes collection
+      setDoc(likeRef, newUser);
+      if (user.uid !== data.uid) setDoc(notificationRef, newNotification);
 
-        await updateDoc(postRef, {
-          score: increment(1),
-          likesCounter: increment(1),
-        });
-        await updateDoc(userRef, {
-          score: increment(1),
-          likesCounter: increment(1),
-        });
+      // updateDoc(postRef, {
+      //   score: increment(1),
+      //   likesCounter: increment(1),
+      // });
+      // updateDoc(userRef, {
+      //   score: increment(1),
+      //   likesCounter: increment(1),
+      // });
 
-        // If the user has already disliked the post, remove the dislike and set the dislike update variable
-        if (!dislikeable) {
-          setD(d - 1);
-          await deleteDoc(doc(dislikesRef, user.uid));
-          await updateDoc(postRef, {
-            score: increment(+1),
-            dislikesCounter: increment(-1),
-          });
-          await updateDoc(userRef, {
-            score: increment(+1),
-            dislikesCounter: increment(-1),
-          });
-        }
-      } else {
-        // If the post has already been liked by the user
-        // Set likeable to true and remove the user from the likes collection and set the like update variable
-        setL(l - 1);
-        setLikeable(true);
-        await deleteDoc(likeRef);
-        await deleteDoc(notificationRef);
-        await updateDoc(postRef, {
-          score: increment(-1),
-          likesCounter: increment(-1),
-        });
-        await updateDoc(userRef, {
-          score: increment(-1),
-          likesCounter: increment(-1),
-        });
+      // If the user has already disliked the post, remove the dislike and set the dislike update variable
+      if (!dislikeable) {
+        // setD(d - 1);
+        deleteDoc(doc(dislikesRef, user.uid));
+        // updateDoc(postRef, {
+        //   score: increment(+1),
+        //   dislikesCounter: increment(-1),
+        // });
+        // updateDoc(userRef, {
+        //   score: increment(+1),
+        //   dislikesCounter: increment(-1),
+        // });
       }
-    },
-    [likeable, dislikesRef, likesRef, user.uid]
-  );
+    } else {
+      // If the post has already been liked by the user
+      // Set likeable to true and remove the user from the likes collection and set the like update variable
+      // setL(l - 1);
+      setLikeable(true);
+      deleteDoc(likeRef);
+      deleteDoc(notificationRef);
+      // updateDoc(postRef, {
+      //   score: increment(-1),
+      //   likesCounter: increment(-1),
+      // });
+      // updateDoc(userRef, {
+      //   score: increment(-1),
+      //   likesCounter: increment(-1),
+      // });
+    }
+  };
 
   /**
    * A memoized function that handles the dislike button click event.
@@ -329,92 +328,88 @@ const Post = ({ data, path, className }) => {
    * @param {React.MouseEvent<HTMLButtonElement>} e - The click event.
    * @returns {Promise<void>}
    */
-  const handleDislike = useCallback(
-    async (e) => {
-      e.preventDefault();
+  const handleDislike = (e) => {
+    e.preventDefault();
 
-      // Get a reference to the user's dislikes for the post
-      const dislikeRef = doc(dislikesRef, user.uid);
+    // Get a reference to the user's dislikes for the post
+    const dislikeRef = doc(dislikesRef, user.uid);
 
-      // Reference to the notification subcollection in the User
-      const notificationRef = doc(
-        collection(db, `users/${data.uid}/notifications`),
-        data.id + user.uid
-      );
+    // Reference to the notification subcollection in the User
+    const notificationRef = doc(
+      collection(db, `/users/${data.uid}/notifications`),
+      data.id + user.uid
+    );
 
-      // Timestamp in seconds
-      const ts = Date.now() / 1000;
+    // Timestamp in seconds
+    const ts = Date.now() / 1000;
 
-      // Create a new user object with the user ID
-      const newUser = {
-        uid: user.uid,
-      };
+    // Create a new user object with the user ID
+    const newUser = {
+      uid: user.uid,
+    };
 
-      // Create a new notification object with the notification info
-      const newNotification = {
-        id: notificationRef.id,
-        from: user.uid,
-        to: data.uid,
-        message: "Tu post ha recibido un dislike!",
-        sentAt: ts,
-        type: "dislike",
-        postId: data.id,
-      };
+    // Create a new notification object with the notification info
+    const newNotification = {
+      id: notificationRef.id,
+      from: user.uid,
+      to: data.uid,
+      message: "Tu post ha recibido un dislike!",
+      sentAt: ts,
+      type: "dislike",
+      postId: data.id,
+    };
 
-      // If the post has not been disliked by the user yet
-      if (dislikeable) {
-        // Set likeable to true and dislikeable to false
-        setLikeable(true);
-        setDislikeable(false);
+    // If the post has not been disliked by the user yet
+    if (dislikeable) {
+      // Set likeable to true and dislikeable to false
+      setLikeable(true);
+      setDislikeable(false);
 
-        // Set dislike update variable to +1
-        setD(d + 1);
-        // Add the user to the dislikes collection
-        await setDoc(dislikeRef, newUser);
-        if (user.uid !== data.uid)
-          await setDoc(notificationRef, newNotification);
+      // Set dislike update variable to +1
+      // setD(d + 1);
+      // Add the user to the dislikes collection
+      setDoc(dislikeRef, newUser);
+      if (user.uid !== data.uid) setDoc(notificationRef, newNotification);
 
-        await updateDoc(postRef, {
-          score: increment(-1),
-          dislikesCounter: increment(+1),
-        });
-        await updateDoc(userRef, {
-          score: increment(-1),
-          dislikesCounter: increment(+1),
-        });
+      // updateDoc(postRef, {
+      //   score: increment(-1),
+      //   dislikesCounter: increment(+1),
+      // });
+      // updateDoc(userRef, {
+      //   score: increment(-1),
+      //   dislikesCounter: increment(+1),
+      // });
 
-        // If the user has already liked the post, remove the like and set the like update variable
-        if (!likeable) {
-          setL(l - 1);
-          await deleteDoc(doc(likesRef, user.uid));
-          await updateDoc(postRef, {
-            score: increment(-1),
-            likesCounter: increment(-1),
-          });
-          await updateDoc(userRef, {
-            score: increment(-1),
-            likesCounter: increment(-1),
-          });
-        }
-      } else {
-        // If the post has already been disliked by the user
-        // Set dislikeable to true and remove the user from the dislikes collection and set the dislike update variable
-        setD(d - 1);
-        setDislikeable(true);
-        await deleteDoc(dislikeRef);
-        await deleteDoc(notificationRef);
-        await updateDoc(postRef, {
-          score: increment(+1),
-          dislikesCounter: increment(-1),
-        });
-        await updateDoc(userRef, {
-          score: increment(+1),
-          dislikesCounter: increment(-1),
-        });
+      // If the user has already liked the post, remove the like and set the like update variable
+      if (!likeable) {
+        // setL(l - 1);
+        deleteDoc(doc(likesRef, user.uid));
+        // updateDoc(postRef, {
+        //   score: increment(-1),
+        //   likesCounter: increment(-1),
+        // });
+        // updateDoc(userRef, {
+        //   score: increment(-1),
+        //   likesCounter: increment(-1),
+        // });
       }
-    },
-    [dislikeable, likesRef, dislikesRef, user.uid]
-  );
+    } else {
+      // If the post has already been disliked by the user
+      // Set dislikeable to true and remove the user from the dislikes collection and set the dislike update variable
+      // setD(d - 1);
+      setDislikeable(true);
+      deleteDoc(dislikeRef);
+      deleteDoc(notificationRef);
+      // updateDoc(postRef, {
+      //   score: increment(+1),
+      //   dislikesCounter: increment(-1),
+      // });
+      // updateDoc(userRef, {
+      //   score: increment(+1),
+      //   dislikesCounter: increment(-1),
+      // });
+    }
+  };
 
   /**
    * Converts a Unix timestamp (in seconds) to formatted time difference.
@@ -479,7 +474,7 @@ const Post = ({ data, path, className }) => {
         This Link wraps around the entire post so that when it is clicked, it navigates the user to the Post page
         that shows the other Posts that this post is a response to and also shows responses to this post.
       */}
-      <Link to={`/post/${data.id}`}>
+      <Link to={`/post/${data.id}`} key={data.id}>
         {/* 
           This post renders information about the user that has posted this post, like the avatar, the display name and 
           also the time when this post was posted

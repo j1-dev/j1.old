@@ -92,8 +92,6 @@ const PostPage = () => {
    */
   const { id } = useParams();
 
-  const [newId, setNewId] = useState(id);
-
   /**
    * Fetches the data for the post with the given ID and updates state variables related to post and comments
    *
@@ -149,12 +147,11 @@ const PostPage = () => {
 
         // Remove the trailing slash from the path to the current post
         newPath = newPath.substring(0, newPath.length - 1);
-        console.log(newPath);
         // Update state variables with the path to the current post
-        return setPathPost(newPath);
+        setPathPost(newPath);
       });
     });
-  }, [newId]);
+  }, [id]);
 
   /**
    * Determines the nearest parent of the current post and updates state variables related to parent data
@@ -184,18 +181,13 @@ const PostPage = () => {
       const parentRef = doc(db, path, parentId[index]);
 
       // Set up a snapshot listener to listen for changes to the parent data
-      return onSnapshot(parentRef, (doc) => {
+      onSnapshot(parentRef, (doc) => {
         // Add the parent document to the beginning of the parent posts array
         parentPosts.unshift(doc);
         // Update state variables with the parent posts array
-        return setParentData(parentPosts);
+        setParentData(parentPosts);
       });
     });
-
-    // If there are parent posts, update state variables with the parent data
-    if (parentPosts.length > 0) {
-      setParentData(parentPosts);
-    }
   }, [parentPath, parentId]);
 
   /**
@@ -236,25 +228,30 @@ const PostPage = () => {
     return <Posts path={pathComments} className="panel-post" />;
   };
 
+  const getParents = () => {
+    return (
+      <div>
+        {parentData.length > 0 &&
+          parentData.map((post, index) => {
+            return (
+              <Post
+                data={{ ...post.data(), id: post.id }}
+                path={parentPath[parentData.length - index - 1]}
+                className="panel-post "
+                key={parentId[index]}
+              />
+            );
+          })}
+      </div>
+    );
+  };
+
   return (
     <div>
       {data && pathComments && (
         <div>
-          <div>
-            {parentData.length > 0 &&
-              parentData.map((post, index) => {
-                // console.log(post.data());
-                console.log(parentPath[parentData.length - index - 1]);
-                return (
-                  <Post
-                    data={{ ...post.data(), id: post.id }}
-                    path={parentPath[parentData.length - index - 1]}
-                    className="panel-post "
-                    key={parentId[index]}
-                  />
-                );
-              })}
-          </div>
+          <div>{parentData.length > 0 && <div>{getParents()}</div>}</div>
+
           <Post
             data={{ ...data.data(), id: data.id }}
             path={pathPost}
