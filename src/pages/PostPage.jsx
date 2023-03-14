@@ -148,7 +148,7 @@ const PostPage = () => {
         // Remove the trailing slash from the path to the current post
         newPath = newPath.substring(0, newPath.length - 1);
         // Update state variables with the path to the current post
-        setPathPost(newPath);
+        return setPathPost(newPath);
       });
     });
   }, [id]);
@@ -181,7 +181,7 @@ const PostPage = () => {
       const parentRef = doc(db, path, parentId[index]);
 
       // Set up a snapshot listener to listen for changes to the parent data
-      onSnapshot(parentRef, (doc) => {
+      return onSnapshot(parentRef, (doc) => {
         // Add the parent document to the beginning of the parent posts array
         parentPosts.unshift(doc);
         // Update state variables with the parent posts array
