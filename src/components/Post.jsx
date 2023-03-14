@@ -69,6 +69,8 @@ const Post = ({ data, path, className }) => {
    */
   const userRef = doc(db, "users", data.uid);
 
+  // const postRef = doc(db, path, data.id);
+
   /**
    * An array of the user of the post and a loading state variable
    * @todo change useCollection for useDocument
@@ -86,7 +88,7 @@ const Post = ({ data, path, className }) => {
    * A collection object used to perform CRUD operations on the Dislikes subcollection
    * @type {Object}
    */
-  const dislikesRef = collection(db, `${path}/${data.id}/dislikes`);
+  const dislikesRef = collection(db, `${path}/${data.id}/lislikes`);
 
   /**
    * A collection object used to perform CRUD operations on the Posts subcollection
@@ -98,19 +100,19 @@ const Post = ({ data, path, className }) => {
    * A Firestore query object used to retrieve the Likes subcollection
    * @type {Object}
    */
-  const queryLikes = useMemo(() => query(likesRef), [likesRef]);
+  const queryLikes = useMemo(() => query(likesRef), [path, data.id]);
 
   /**
    * A Firestore query object used to retrieve the Dislikes subcollection
    * @type {Object}
    */
-  const queryDislikes = useMemo(() => query(dislikesRef), [dislikesRef]);
+  const queryDislikes = useMemo(() => query(dislikesRef), [path, data.id]);
 
   /**
    * A Firestore query object used to retrieve the Posts subcollection
    * @type {Object}
    */
-  const queryComments = useMemo(() => query(commentsRef), [commentsRef]);
+  const queryComments = useMemo(() => query(commentsRef), [path, data.id]);
 
   /**
    * A state variable that holds the number of likes
@@ -198,7 +200,7 @@ const Post = ({ data, path, className }) => {
 
     // Unsubscribe the snapshot listener
     unsub();
-  }, [likesRef, user.uid]);
+  }, [path]);
 
   /**
    * A useEffect hook that checks if the current user has already disliked a specific post
@@ -226,7 +228,7 @@ const Post = ({ data, path, className }) => {
 
     // Unsubscribe the snapshot listener
     unsub();
-  }, [dislikesRef, user.uid]);
+  }, [path]);
 
   /**
    * A memoized function that handles the like button click event.
@@ -235,17 +237,15 @@ const Post = ({ data, path, className }) => {
    * @returns {Promise<void>}
    */
   const handleLike = useCallback(
-    async (e) => {
+    (e) => {
       e.preventDefault();
-      // There is something wrong with this ref
-      // const postRef = doc(db, path, data.id);
 
       // Get a reference to the user's likes for the post
       const likeRef = doc(likesRef, user.uid);
 
       // Reference to the notification subcollection in the User
       const notificationRef = doc(
-        collection(db, `/users/${data.uid}/notifications`),
+        collection(db, `users/${data.uid}/notifications`),
         data.id + user.uid
       );
 
@@ -270,17 +270,17 @@ const Post = ({ data, path, className }) => {
 
       // If the post has not been liked by the user yet
       if (likeable) {
+        // Set like update variable to +1
+        setL(l + 1);
         // Set dislikeable to true and likeable to false
         setDislikeable(true);
         setLikeable(false);
 
-        // Set like update variable to +1
-        // setL(l + 1);
         // Add the user and notification to the likes collection
         setDoc(likeRef, newUser);
         if (user.uid !== data.uid) setDoc(notificationRef, newNotification);
 
-        // updateDoc(postRef, {
+        // await updateDoc(postRef, {
         //   score: increment(1),
         //   likesCounter: increment(1),
         // });
@@ -291,9 +291,9 @@ const Post = ({ data, path, className }) => {
 
         // If the user has already disliked the post, remove the dislike and set the dislike update variable
         if (!dislikeable) {
-          // setD(d - 1);
+          setD(d - 1);
           deleteDoc(doc(dislikesRef, user.uid));
-          // updateDoc(postRef, {
+          // await updateDoc(postRef, {
           //   score: increment(+1),
           //   dislikesCounter: increment(-1),
           // });
@@ -305,11 +305,11 @@ const Post = ({ data, path, className }) => {
       } else {
         // If the post has already been liked by the user
         // Set likeable to true and remove the user from the likes collection and set the like update variable
-        // setL(l - 1);
+        setL(l - 1);
         setLikeable(true);
         deleteDoc(likeRef);
         deleteDoc(notificationRef);
-        // updateDoc(postRef, {
+        // await updateDoc(postRef, {
         //   score: increment(-1),
         //   likesCounter: increment(-1),
         // });
@@ -319,17 +319,7 @@ const Post = ({ data, path, className }) => {
         });
       }
     },
-    [
-      likeable,
-      dislikesRef,
-      likesRef,
-      user.uid,
-      path,
-      data.id,
-      data.uid,
-      dislikeable,
-      userRef,
-    ]
+    [likeable, dislikesRef, likesRef, user.uid]
   );
 
   /**
@@ -339,17 +329,15 @@ const Post = ({ data, path, className }) => {
    * @returns {Promise<void>}
    */
   const handleDislike = useCallback(
-    async (e) => {
+    (e) => {
       e.preventDefault();
-      // There is something wrong with this ref
-      // const postRef = doc(db, path, data.id);
 
       // Get a reference to the user's dislikes for the post
       const dislikeRef = doc(dislikesRef, user.uid);
 
       // Reference to the notification subcollection in the User
       const notificationRef = doc(
-        collection(db, `/users/${data.uid}/notifications`),
+        collection(db, `users/${data.uid}/notifications`),
         data.id + user.uid
       );
 
@@ -374,17 +362,17 @@ const Post = ({ data, path, className }) => {
 
       // If the post has not been disliked by the user yet
       if (dislikeable) {
+        // Set dislike update variable to +1
+        setD(d + 1);
         // Set likeable to true and dislikeable to false
         setLikeable(true);
         setDislikeable(false);
 
-        // Set dislike update variable to +1
-        // setD(d + 1);
         // Add the user to the dislikes collection
         setDoc(dislikeRef, newUser);
         if (user.uid !== data.uid) setDoc(notificationRef, newNotification);
 
-        // updateDoc(postRef, {
+        // await updateDoc(postRef, {
         //   score: increment(-1),
         //   dislikesCounter: increment(+1),
         // });
@@ -395,9 +383,9 @@ const Post = ({ data, path, className }) => {
 
         // If the user has already liked the post, remove the like and set the like update variable
         if (!likeable) {
-          // setL(l - 1);
+          setL(l - 1);
           deleteDoc(doc(likesRef, user.uid));
-          // updateDoc(postRef, {
+          // await updateDoc(postRef, {
           //   score: increment(-1),
           //   likesCounter: increment(-1),
           // });
@@ -409,11 +397,11 @@ const Post = ({ data, path, className }) => {
       } else {
         // If the post has already been disliked by the user
         // Set dislikeable to true and remove the user from the dislikes collection and set the dislike update variable
-        // setD(d - 1);
+        setD(d - 1);
         setDislikeable(true);
         deleteDoc(dislikeRef);
         deleteDoc(notificationRef);
-        // updateDoc(postRef, {
+        // await updateDoc(postRef, {
         //   score: increment(+1),
         //   dislikesCounter: increment(-1),
         // });
@@ -423,17 +411,7 @@ const Post = ({ data, path, className }) => {
         });
       }
     },
-    [
-      likeable,
-      dislikesRef,
-      likesRef,
-      user.uid,
-      path,
-      data.id,
-      data.uid,
-      dislikeable,
-      userRef,
-    ]
+    [dislikeable, likesRef, dislikesRef, user.uid]
   );
 
   /**
@@ -499,7 +477,7 @@ const Post = ({ data, path, className }) => {
         This Link wraps around the entire post so that when it is clicked, it navigates the user to the Post page
         that shows the other Posts that this post is a response to and also shows responses to this post.
       */}
-      <Link classname="inline-block" to={`/post/${data.id}`} key={data.id}>
+      <Link to={`/post/${data.id}`}>
         {/* 
           This post renders information about the user that has posted this post, like the avatar, the display name and 
           also the time when this post was posted
@@ -552,44 +530,45 @@ const Post = ({ data, path, className }) => {
 
         {/* Separator */}
         <hr className="-z-50 mt-4 border" />
-      </Link>
-      {/* 
+
+        {/* 
           This div contains the like/dislike/comments button/counters
         */}
-      <div className="float-left w-full pt-5 pl-3 text-base">
-        <button className="float-left w-1/6" onClick={handleLike}>
-          {!!likes && (
-            <div className="pt-2">
-              <GoThumbsup
-                className={`${
-                  likeable ? "text-black" : "text-green-600"
-                } absolute scale-150`}
-              />
-              {likes && likes.data().count + l}
-            </div>
-          )}
-        </button>
-        <button className="float-left w-1/6" onClick={handleDislike}>
-          {!!dislikes && (
-            <div className="pt-2">
-              <GoThumbsdown
-                className={`${
-                  dislikeable ? "text-black" : "text-red-600"
-                } absolute scale-150`}
-              />
-              {dislikes && dislikes.data().count + d}
-            </div>
-          )}
-        </button>
-        <button className="float-left w-1/6">
-          {!!comments && (
-            <div className="pt-2">
-              <TbMessage className="absolute scale-150" />
-              {comments && comments.data().count}
-            </div>
-          )}
-        </button>
-      </div>
+        <div className="float-left w-full pt-5 pl-3 text-base">
+          <button className="float-left w-1/6" onClick={handleLike}>
+            {!!likes && (
+              <div className="pt-2">
+                <GoThumbsup
+                  className={`${
+                    likeable ? "text-black" : "text-green-600"
+                  } absolute scale-150`}
+                />
+                {likes && likes.data().count + l}
+              </div>
+            )}
+          </button>
+          <button className="float-left w-1/6" onClick={handleDislike}>
+            {!!dislikes && (
+              <div className="pt-2">
+                <GoThumbsdown
+                  className={`${
+                    dislikeable ? "text-black" : "text-red-600"
+                  } absolute scale-150`}
+                />
+                {dislikes && dislikes.data().count + d}
+              </div>
+            )}
+          </button>
+          <button className="float-left w-1/6">
+            {!!comments && (
+              <div className="pt-2">
+                <TbMessage className="absolute scale-150" />
+                {comments && comments.data().count}
+              </div>
+            )}
+          </button>
+        </div>
+      </Link>
     </div>
   );
 };

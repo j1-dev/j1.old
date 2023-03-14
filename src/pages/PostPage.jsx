@@ -133,6 +133,7 @@ const PostPage = () => {
           return (commentPath += segment + "/");
         });
         commentPath += "posts";
+        console.log(commentPath);
 
         // Update state variables with the path to the comments for the current post
         setPathComments(commentPath);
@@ -185,9 +186,14 @@ const PostPage = () => {
         // Add the parent document to the beginning of the parent posts array
         parentPosts.unshift(doc);
         // Update state variables with the parent posts array
-        setParentData(parentPosts);
+        return setParentData(parentPosts);
       });
     });
+
+    // If there are parent posts, update state variables with the parent data
+    if (parentPosts.length > 0) {
+      setParentData(parentPosts);
+    }
   }, [parentPath, parentId]);
 
   /**
@@ -228,30 +234,23 @@ const PostPage = () => {
     return <Posts path={pathComments} className="panel-post" />;
   };
 
-  const getParents = () => {
-    return (
-      <div>
-        {parentData.length > 0 &&
-          parentData.map((post, index) => {
-            return (
-              <Post
-                data={{ ...post.data(), id: post.id }}
-                path={parentPath[parentData.length - index - 1]}
-                className="panel-post "
-                key={parentId[index]}
-              />
-            );
-          })}
-      </div>
-    );
-  };
-
   return (
     <div>
       {data && pathComments && (
         <div>
-          <div>{parentData.length > 0 && <div>{getParents()}</div>}</div>
-
+          <div>
+            {parentData.length > 0 &&
+              parentData.map((post, index) => {
+                return (
+                  <Post
+                    data={{ ...post.data(), id: post.id }}
+                    path={parentPath[parentData.length - index - 1]}
+                    className="panel-post "
+                    key={parentId[index]}
+                  />
+                );
+              })}
+          </div>
           <Post
             data={{ ...data.data(), id: data.id }}
             path={pathPost}

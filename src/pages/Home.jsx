@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import ThreadDisplay from "../components/ThreadDisplay";
 import SetDisplayName from "./SetDisplayName";
 import { auth, db } from "../api/firebase-config";
-import { query, collection, doc } from "firebase/firestore";
-import { useCollection, useDocument } from "react-firebase-hooks/firestore";
+// import { query, collection, doc } from "firebase/firestore";
+// import { useCollection, useDocument } from "react-firebase-hooks/firestore";
 
 /**
  * @component
