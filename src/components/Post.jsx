@@ -238,7 +238,7 @@ const Post = ({ data, path, className }) => {
     async (e) => {
       e.preventDefault();
       // There is something wrong with this ref
-      const postRef = doc(db, path, data.id);
+      // const postRef = doc(db, path, data.id);
 
       // Get a reference to the user's likes for the post
       const likeRef = doc(likesRef, user.uid);
@@ -280,10 +280,10 @@ const Post = ({ data, path, className }) => {
         setDoc(likeRef, newUser);
         if (user.uid !== data.uid) setDoc(notificationRef, newNotification);
 
-        updateDoc(postRef, {
-          score: increment(1),
-          likesCounter: increment(1),
-        });
+        // updateDoc(postRef, {
+        //   score: increment(1),
+        //   likesCounter: increment(1),
+        // });
         updateDoc(userRef, {
           score: increment(1),
           likesCounter: increment(1),
@@ -293,10 +293,10 @@ const Post = ({ data, path, className }) => {
         if (!dislikeable) {
           // setD(d - 1);
           deleteDoc(doc(dislikesRef, user.uid));
-          updateDoc(postRef, {
-            score: increment(+1),
-            dislikesCounter: increment(-1),
-          });
+          // updateDoc(postRef, {
+          //   score: increment(+1),
+          //   dislikesCounter: increment(-1),
+          // });
           updateDoc(userRef, {
             score: increment(+1),
             dislikesCounter: increment(-1),
@@ -309,10 +309,10 @@ const Post = ({ data, path, className }) => {
         setLikeable(true);
         deleteDoc(likeRef);
         deleteDoc(notificationRef);
-        updateDoc(postRef, {
-          score: increment(-1),
-          likesCounter: increment(-1),
-        });
+        // updateDoc(postRef, {
+        //   score: increment(-1),
+        //   likesCounter: increment(-1),
+        // });
         updateDoc(userRef, {
           score: increment(-1),
           likesCounter: increment(-1),
@@ -342,7 +342,7 @@ const Post = ({ data, path, className }) => {
     async (e) => {
       e.preventDefault();
       // There is something wrong with this ref
-      const postRef = doc(db, path, data.id);
+      // const postRef = doc(db, path, data.id);
 
       // Get a reference to the user's dislikes for the post
       const dislikeRef = doc(dislikesRef, user.uid);
@@ -384,10 +384,10 @@ const Post = ({ data, path, className }) => {
         setDoc(dislikeRef, newUser);
         if (user.uid !== data.uid) setDoc(notificationRef, newNotification);
 
-        updateDoc(postRef, {
-          score: increment(-1),
-          dislikesCounter: increment(+1),
-        });
+        // updateDoc(postRef, {
+        //   score: increment(-1),
+        //   dislikesCounter: increment(+1),
+        // });
         updateDoc(userRef, {
           score: increment(-1),
           dislikesCounter: increment(+1),
@@ -397,10 +397,10 @@ const Post = ({ data, path, className }) => {
         if (!likeable) {
           // setL(l - 1);
           deleteDoc(doc(likesRef, user.uid));
-          updateDoc(postRef, {
-            score: increment(-1),
-            likesCounter: increment(-1),
-          });
+          // updateDoc(postRef, {
+          //   score: increment(-1),
+          //   likesCounter: increment(-1),
+          // });
           updateDoc(userRef, {
             score: increment(-1),
             likesCounter: increment(-1),
@@ -413,10 +413,10 @@ const Post = ({ data, path, className }) => {
         setDislikeable(true);
         deleteDoc(dislikeRef);
         deleteDoc(notificationRef);
-        updateDoc(postRef, {
-          score: increment(+1),
-          dislikesCounter: increment(-1),
-        });
+        // updateDoc(postRef, {
+        //   score: increment(+1),
+        //   dislikesCounter: increment(-1),
+        // });
         updateDoc(userRef, {
           score: increment(+1),
           dislikesCounter: increment(-1),
