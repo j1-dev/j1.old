@@ -8,7 +8,8 @@ import {
   startAfter,
 } from "firebase/firestore";
 import Post from "./Post";
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useRef } from "react";
+import debounce from "lodash/debounce";
 
 /**
  * @component
@@ -63,6 +64,8 @@ const Posts = ({ path, className }) => {
    * @type {DocumentSnapshot}
    */
   const [cursor, setCursor] = useState(null);
+
+  const executing = useRef(false);
 
   /**
    * Hook that fetches posts from the Firestore database when the component is mounted.
@@ -132,8 +135,10 @@ const Posts = ({ path, className }) => {
    * @callback
    * @returns {void}
    */
+
   const handleScroll = useCallback(() => {
-    if (loading || atBottom) return;
+    if (loading || atBottom || executing.current) return;
+    executing.current = true;
 
     // Check if the user has scrolled to the bottom of the page
     if (
@@ -144,21 +149,20 @@ const Posts = ({ path, className }) => {
       setAtBottom(true);
       if (!loading) handleLoadMore();
     }
+
+    executing.current = false;
   }, [loading, atBottom, handleLoadMore]);
 
-  /**
-   * Registers a scroll event listener on the window object and removes it when the
-   * component unmounts.
-   *
-   * @callback
-   * @returns {void}
-   */
+  const debouncedHandleScroll = useCallback(debounce(handleScroll, 300), [
+    handleScroll,
+  ]);
+
   useEffect(() => {
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", debouncedHandleScroll);
     return () => {
-      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("scroll", debouncedHandleScroll);
     };
-  }, [posts, handleScroll]);
+  }, [debouncedHandleScroll]);
 
   /**
    * Clears the "atBottom" state if it's set to true and the component is not loading.
