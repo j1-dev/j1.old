@@ -480,7 +480,7 @@ const SendBox = ({ className, path }) => {
 
       <div className="avatar float-left mt-5 ml-5">
         <div className="w-16 rounded-full">
-          <img src={user.photoURL} alt="loading..." />
+          <img src={user.photoURL} alt="loading..." loading="lazy" />
         </div>
       </div>
       {dragging && (
@@ -534,7 +534,12 @@ const SendBox = ({ className, path }) => {
           >
             <GrClose />
           </button>
-          <img src={imageURL} className="mx-6 my-4 w-1/2 rounded-xl" alt="" />
+          <img
+            src={imageURL}
+            className="mx-6 my-4 w-1/2 rounded-xl"
+            alt=""
+            loading="lazy"
+          />
         </div>
       ) : null}
       {/* 

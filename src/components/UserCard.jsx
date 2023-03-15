@@ -252,7 +252,7 @@ const UserCard = ({ user }) => {
 
       <div className="avatar ">
         <div className="w-24 rounded-full">
-          <img src={user.photo} alt="loading..." />
+          <img src={user.photo} alt="loading..." loading="lazy" />
         </div>
       </div>
       <div className="user-panel-data">

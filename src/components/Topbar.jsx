@@ -133,7 +133,7 @@ const Topbar = ({ pageWrapId, outerContainerId }) => {
           }}
         >
           <div className="w-14 rounded-full">
-            <img src={currentUser.photoURL} alt="loading..." />
+            <img src={currentUser.photoURL} alt="loading..." loading="lazy" />
           </div>
         </div>
       );
@@ -161,6 +161,7 @@ const Topbar = ({ pageWrapId, outerContainerId }) => {
               alt="J1"
               onClick={() => navigate("/Home")}
               className="float-right h-20 p-2"
+              loading="lazy"
             />
           </div>
           <div className="float-right w-1/3">{renderWindowTitle(path)}</div>
@@ -179,7 +180,7 @@ const Topbar = ({ pageWrapId, outerContainerId }) => {
             <div className="relative">
               <div className="avatar absolute top-8 left-8">
                 <div className="w-24 rounded-full">
-                  <img src={user.photoURL} alt="loading..." />
+                  <img src={user.photoURL} alt="loading..." loading="lazy" />
                 </div>
               </div>
               <Link

@@ -159,7 +159,11 @@ const Notification = ({ data, key }) => {
     <div key={key} className={classname}>
       <div className="avatar top-0 left-0">
         <div className="w-10 rounded-full">
-          <img src={loading ? null : value.data().photo} alt="loading..." />
+          <img
+            src={loading ? null : value.data().photo}
+            alt="loading..."
+            loading="lazy"
+          />
         </div>
       </div>
       {renderNotificationMessage()}

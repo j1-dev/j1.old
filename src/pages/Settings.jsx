@@ -294,7 +294,7 @@ const Settings = () => {
             <div className="w-full">
               <div className="avatar m-5 mt-9">
                 <div className="w-44 rounded-full">
-                  <img src={profilePic} alt="loading..." />
+                  <img src={profilePic} alt="loading..." loading="lazy" />
                 </div>
               </div>
             </div>

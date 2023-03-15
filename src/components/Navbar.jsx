@@ -135,7 +135,7 @@ const Navbar = () => {
           */}
           <div>
             <NavLink to="/Home">
-              <img src={logo} className="nav-logo" alt=""></img>
+              <img src={logo} className="nav-logo" alt="" loading="lazy" />
             </NavLink>
           </div>
 
@@ -225,7 +225,7 @@ const Navbar = () => {
               >
                 <div className="avatar float-left">
                   <div className="w-10 rounded-full">
-                    <img src={currentUser.photoURL} />
+                    <img src={currentUser.photoURL} loading="lazy" />
                   </div>
                 </div>
 

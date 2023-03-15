@@ -71,6 +71,7 @@ const Register = () => {
         src={banner}
         alt="yes"
         className="z-50 block w-full -translate-y-24 md:hidden"
+        loading="lazy"
       />
       <div className=" float-right w-full md:w-1/2">
         <form className="md:pt-64">

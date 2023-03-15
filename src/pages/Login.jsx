@@ -71,6 +71,7 @@ const Login = () => {
         src={banner}
         alt="yes"
         className="z-50 block w-full -translate-y-24 md:hidden"
+        loading="lazy"
       />
       <div className="float-left w-full md:w-1/2">
         <form className="md:pt-64">

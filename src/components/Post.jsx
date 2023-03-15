@@ -522,6 +522,7 @@ const Post = ({ data, path, className }) => {
                       <img
                         src={loading ? null : value.data().photo}
                         alt="loading..."
+                        loading="lazy"
                       />
                     </div>
                   </div>
@@ -556,7 +557,7 @@ const Post = ({ data, path, className }) => {
               className="border-gray m-auto my-3 w-8/12 rounded-3xl"
               src={data.photoURL}
               loading="lazy"
-            ></img>
+            />
           )}
         </Link>
 
