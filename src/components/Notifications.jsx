@@ -1,14 +1,26 @@
 import { auth, db } from "../api/firebase-config";
-import {
-  collection,
-  orderBy,
-  query,
-  onSnapshot,
-  limit,
-  startAfter,
-} from "firebase/firestore";
+// import {
+//   collection,
+//   orderBy,
+//   query,
+//   onSnapshot,
+//   limit,
+//   startAfter,
+// } from "firebase/firestore";
 import Notification from "./Notification";
 import React, { useEffect, useState, useCallback } from "react";
+
+let collection, orderBy, query, onSnapshot, limit, startAfter;
+
+(async () => {
+  const firestoreModule = await import("firebase/firestore");
+  collection = firestoreModule.collection;
+  orderBy = firestoreModule.orderBy;
+  query = firestoreModule.query;
+  onSnapshot = firestoreModule.onSnapshot;
+  limit = firestoreModule.limit;
+  startAfter = firestoreModule.startAfter;
+})();
 
 function Notifications() {
   const user = auth.currentUser;

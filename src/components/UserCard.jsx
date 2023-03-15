@@ -1,7 +1,18 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo, useCallback } from "react";
 import { auth, db } from "../api/firebase-config";
-import {
-  setDoc,
+// import {
+//   setDoc,
+//   doc,
+//   getDoc,
+//   collection,
+//   deleteDoc,
+//   query,
+//   getCountFromServer,
+//   updateDoc,
+//   increment,
+// } from "firebase/firestore";
+
+let setDoc,
   doc,
   getDoc,
   collection,
@@ -9,8 +20,20 @@ import {
   query,
   getCountFromServer,
   updateDoc,
-  increment,
-} from "firebase/firestore";
+  increment;
+
+(async () => {
+  const firestoreModule = await import("firebase/firestore");
+  collection = firestoreModule.collection;
+  query = firestoreModule.query;
+  setDoc = firestoreModule.setDoc;
+  doc = firestoreModule.doc;
+  deleteDoc = firestoreModule.deleteDoc;
+  getDoc = firestoreModule.getDoc;
+  getCountFromServer = firestoreModule.getCountFromServer;
+  updateDoc = firestoreModule.updateDoc;
+  increment = firestoreModule.increment;
+})();
 
 /**
  * @component
@@ -73,13 +96,13 @@ const UserCard = ({ user }) => {
    * A Firestore query to retrieve the current user's followers.
    * @type {Object}
    */
-  const queryFollowers = query(followersRef);
+  const queryFollowers = useMemo(() => query(followersRef), [followersRef]);
 
   /**
    * A Firestore query to retrieve the users that the current user follows.
    * @type {Object}
    */
-  const queryFollows = query(followsRef);
+  const queryFollows = useMemo(() => query(followsRef), [followsRef]);
 
   /**
    * Follows counter
@@ -104,9 +127,10 @@ const UserCard = ({ user }) => {
       setFollows(await getCountFromServer(queryFollows));
       setFollowers(await getCountFromServer(queryFollowers));
     };
+    console.log("cockfuck");
 
     unsub();
-  }, [queryFollows, queryFollowers]);
+  }, []);
 
   /**
    * Handles the action of following a user, updating both the current user's followers collection and the target user's follows collection.
@@ -115,7 +139,7 @@ const UserCard = ({ user }) => {
    * @param {Event} e - The event object that triggered the function.
    * @returns {void}
    */
-  const handleFollow = async (e) => {
+  const handleFollow = useCallback(async (e) => {
     e.preventDefault();
 
     setFolloweable(false); // disable the follow button
@@ -159,7 +183,7 @@ const UserCard = ({ user }) => {
     } else {
       return console.log("You are already a follower"); // if the user is already following them, log a message and do nothing
     }
-  };
+  }, []);
 
   /**
    * Handles the action of unfollowing a user, removing the current user from both the target user's followers collection and the current user's follows collection.
@@ -168,7 +192,7 @@ const UserCard = ({ user }) => {
    * @param {Event} e - The event object that triggered the function.
    * @returns {void}
    */
-  const handleUnfollow = async (e) => {
+  const handleUnfollow = useCallback(async (e) => {
     e.preventDefault();
 
     setFolloweable(true); // enable the follow button
@@ -194,7 +218,7 @@ const UserCard = ({ user }) => {
     } else {
       return console.log("You are not following this user"); // if the user is not following them, log a message and do nothing
     }
-  };
+  }, []);
 
   /**
    * Checks whether the current user is following the target user and updates the followeable state accordingly.

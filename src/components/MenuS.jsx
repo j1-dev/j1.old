@@ -3,7 +3,6 @@ import { push as Menu } from "react-burger-menu";
 import { NavLink } from "react-router-dom";
 import { auth } from "../api/firebase-config";
 import { useAuth } from "../api/authContext";
-
 import {
   HiOutlineHome,
   HiOutlineUserCircle,

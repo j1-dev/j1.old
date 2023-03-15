@@ -1,16 +1,22 @@
-import {
-  collection,
-  query,
-  setDoc,
-  doc,
-  deleteDoc,
-  getDoc,
-  getCountFromServer,
-  updateDoc,
-  increment,
-  // updateDoc,
-} from "firebase/firestore";
-import React, { useState, useMemo, useEffect, useCallback } from "react";
+// import {
+//   collection,
+//   query,
+//   setDoc,
+//   doc,
+//   deleteDoc,
+//   getDoc,
+//   getCountFromServer,
+//   updateDoc,
+//   increment,
+//   // updateDoc,
+// } from "firebase/firestore";
+import React, {
+  useState,
+  useMemo,
+  useEffect,
+  useCallback,
+  Suspense,
+} from "react";
 import { auth, db } from "../api/firebase-config";
 import { useDocument } from "react-firebase-hooks/firestore";
 import { NavLink, Link } from "react-router-dom";
@@ -18,6 +24,28 @@ import YouTube from "react-youtube";
 import { GoThumbsdown, GoThumbsup } from "react-icons/go";
 import { TbMessage } from "react-icons/tb";
 
+let collection,
+  query,
+  setDoc,
+  doc,
+  deleteDoc,
+  getDoc,
+  getCountFromServer,
+  updateDoc,
+  increment;
+
+(async () => {
+  const firestoreModule = await import("firebase/firestore");
+  collection = firestoreModule.collection;
+  query = firestoreModule.query;
+  setDoc = firestoreModule.setDoc;
+  doc = firestoreModule.doc;
+  deleteDoc = firestoreModule.deleteDoc;
+  getDoc = firestoreModule.getDoc;
+  getCountFromServer = firestoreModule.getCountFromServer;
+  updateDoc = firestoreModule.updateDoc;
+  increment = firestoreModule.increment;
+})();
 /**
  * @component
  * A component that displays a single post, along with information about its author and comments, likes, and dislikes.
@@ -88,7 +116,7 @@ const Post = ({ data, path, className }) => {
    * A collection object used to perform CRUD operations on the Dislikes subcollection
    * @type {Object}
    */
-  const dislikesRef = collection(db, `${path}/${data.id}/lislikes`);
+  const dislikesRef = collection(db, `${path}/${data.id}/dislikes`);
 
   /**
    * A collection object used to perform CRUD operations on the Posts subcollection
@@ -473,60 +501,64 @@ const Post = ({ data, path, className }) => {
 
   return (
     <div className={className} key={data.id}>
-      {/* 
+      <Suspense fallback={<div>Loading...</div>}>
+        {/* 
         This Link wraps around the entire post so that when it is clicked, it navigates the user to the Post page
         that shows the other Posts that this post is a response to and also shows responses to this post.
       */}
-      <Link to={`/post/${data.id}`}>
-        {/* 
+        <Link to={`/post/${data.id}`}>
+          {/* 
           This post renders information about the user that has posted this post, like the avatar, the display name and 
           also the time when this post was posted
           @todo Instead of the time, show number of minutes/hours/days since the time of the post.
         */}
-        <div className="mb-10 w-full pb-7">
-          {loading && ""}
-          {typeof value !== "undefined" ? (
-            <div className="float-left w-11/12">
-              <p className="text-base">
-                <div className="avatar float-left mr-3">
-                  <div className="w-10 rounded-full">
-                    <img
-                      src={loading ? null : value.data().photo}
-                      alt="loading..."
-                    />
+          <div className="mb-10 w-full pb-7">
+            {loading && ""}
+            {typeof value !== "undefined" ? (
+              <div className="float-left w-11/12">
+                <p className="text-base">
+                  <div className="avatar float-left mr-3">
+                    <div className="w-10 rounded-full">
+                      <img
+                        src={loading ? null : value.data().photo}
+                        alt="loading..."
+                      />
+                    </div>
                   </div>
+                  <NavLink
+                    to={`/${value.data().displayName}`}
+                    className="underline hover:no-underline"
+                  >
+                    {value.data().displayName}
+                  </NavLink>
+                </p>
+                <div className="text-xs ">
+                  Posted {timeDiff(data.createdAt)}
                 </div>
-                <NavLink
-                  to={`/${value.data().displayName}`}
-                  className="underline hover:no-underline"
-                >
-                  {value.data().displayName}
-                </NavLink>
-              </p>
-              <div className="text-xs ">Posted {timeDiff(data.createdAt)}</div>
-            </div>
-          ) : null}
-        </div>
+              </div>
+            ) : null}
+          </div>
 
-        {/* 
+          {/* 
           If the post is a youtube url. If it is it renders the embeded youtube video. If not, it renders the post body
           (data.post) in a <p>
         */}
-        {matchYoutubeUrl(data.post) ? (
-          <YouTube videoId={matchYoutubeUrl(data.post)} />
-        ) : (
-          <p className="mb-3 font-inter text-lg">{data.post}</p>
-        )}
-        {/* 
+          {matchYoutubeUrl(data.post) ? (
+            <YouTube videoId={matchYoutubeUrl(data.post)} />
+          ) : (
+            <p className="mb-3 font-inter text-lg">{data.post}</p>
+          )}
+          {/* 
           If the post has a photo attached, it renders it
         */}
-        {data.photoURL && (
-          <img
-            className="border-gray m-auto my-3 w-8/12 rounded-3xl"
-            src={data.photoURL}
-            loading="lazy"
-          ></img>
-        )}
+          {data.photoURL && (
+            <img
+              className="border-gray m-auto my-3 w-8/12 rounded-3xl"
+              src={data.photoURL}
+              loading="lazy"
+            ></img>
+          )}
+        </Link>
 
         {/* Separator */}
         <hr className="-z-50 mt-4 border" />
@@ -568,7 +600,7 @@ const Post = ({ data, path, className }) => {
             )}
           </button>
         </div>
-      </Link>
+      </Suspense>
     </div>
   );
 };

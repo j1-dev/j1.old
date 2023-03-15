@@ -10,15 +10,27 @@ import { GrClose } from "react-icons/gr";
 import { Popover } from "@headlessui/react";
 import { usePopper } from "react-popper";
 import EmojiPicker from "emoji-picker-react";
-import {
-  doc,
-  collection,
-  setDoc,
-  getDoc,
-  updateDoc,
-  increment,
-} from "firebase/firestore";
+// import {
+//   doc,
+//   collection,
+//   setDoc,
+//   getDoc,
+//   updateDoc,
+//   increment,
+// } from "firebase/firestore";
 import { db } from "../api/firebase-config";
+
+let collection, setDoc, doc, getDoc, updateDoc, increment;
+
+(async () => {
+  const firestoreModule = await import("firebase/firestore");
+  collection = firestoreModule.collection;
+  setDoc = firestoreModule.setDoc;
+  doc = firestoreModule.doc;
+  getDoc = firestoreModule.getDoc;
+  updateDoc = firestoreModule.updateDoc;
+  increment = firestoreModule.increment;
+})();
 
 /**
  * @component
