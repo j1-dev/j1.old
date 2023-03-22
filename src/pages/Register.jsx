@@ -1,9 +1,9 @@
 import React, { useState } from "react";
+import { TbSend } from "react-icons/tb";
 import { useAuth } from "../api/authContext";
-import LogInNavbar from "../components/LogInNavbar";
 import { Tilt } from "../api/TiltApi";
 import banner from "../banner.gif";
-import { TbSend } from "react-icons/tb";
+import LogInNavbar from "../components/LogInNavbar";
 
 /**
  * @component

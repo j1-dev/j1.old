@@ -7,8 +7,8 @@ import { auth, db } from "../api/firebase-config";
 //   limit,
 //   startAfter,
 // } from "firebase/firestore";
+import React, { useCallback, useEffect, useState } from "react";
 import Notification from "./Notification";
-import React, { useEffect, useState, useCallback } from "react";
 
 let collection, orderBy, query, onSnapshot, limit, startAfter;
 

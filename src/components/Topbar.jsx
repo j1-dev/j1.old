@@ -1,19 +1,18 @@
 import React, { useState } from "react";
-import logo from "../logo.png";
-import { useAuth } from "../api/authContext";
-import { auth } from "../api/firebase-config";
-import { Link, useNavigate } from "react-router-dom";
-import { FiArrowLeft } from "react-icons/fi";
 import { slide as Menu } from "react-burger-menu";
-import { NavLink } from "react-router-dom";
-import { RiNotification3Line } from "react-icons/ri";
+import { FiArrowLeft } from "react-icons/fi";
 import {
   HiLogout,
-  HiOutlineHome,
-  HiOutlineUserCircle,
-  HiOutlineShoppingCart,
   HiOutlineCog,
+  HiOutlineHome,
+  HiOutlineShoppingCart,
+  HiOutlineUserCircle,
 } from "react-icons/hi";
+import { RiNotification3Line } from "react-icons/ri";
+import { Link, NavLink, useNavigate } from "react-router-dom";
+import { useAuth } from "../api/authContext";
+import { auth } from "../api/firebase-config";
+import logo from "../logo.png";
 
 /**
  * @component

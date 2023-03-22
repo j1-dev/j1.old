@@ -1,15 +1,14 @@
-import React, { useState, useRef, useEffect } from "react";
-import { auth } from "../api/firebase-config";
-import { storage } from "../api/firebase-config";
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { v4 } from "uuid";
-import { TbSend } from "react-icons/tb";
-import { CgImage } from "react-icons/cg";
-import { BsFillEmojiSmileFill } from "react-icons/bs";
-import { GrClose } from "react-icons/gr";
 import { Popover } from "@headlessui/react";
-import { usePopper } from "react-popper";
 import EmojiPicker from "emoji-picker-react";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import React, { useEffect, useRef, useState } from "react";
+import { BsFillEmojiSmileFill } from "react-icons/bs";
+import { CgImage } from "react-icons/cg";
+import { GrClose } from "react-icons/gr";
+import { TbSend } from "react-icons/tb";
+import { usePopper } from "react-popper";
+import { v4 } from "uuid";
+import { auth, storage } from "../api/firebase-config";
 // import {
 //   doc,
 //   collection,

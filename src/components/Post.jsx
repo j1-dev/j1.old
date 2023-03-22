@@ -11,18 +11,18 @@
 //   // updateDoc,
 // } from "firebase/firestore";
 import React, {
-  useState,
-  useMemo,
-  useEffect,
-  useCallback,
   Suspense,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
 } from "react";
-import { auth, db } from "../api/firebase-config";
 import { useDocument } from "react-firebase-hooks/firestore";
-import { NavLink, Link } from "react-router-dom";
-import YouTube from "react-youtube";
 import { GoThumbsdown, GoThumbsup } from "react-icons/go";
 import { TbMessage } from "react-icons/tb";
+import { Link, NavLink } from "react-router-dom";
+import YouTube from "react-youtube";
+import { auth, db } from "../api/firebase-config";
 
 let collection,
   query,

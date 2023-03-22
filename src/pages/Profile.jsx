@@ -1,6 +1,6 @@
-import React, { useEffect, useState, useCallback } from "react";
-import SetDisplayName from "./SetDisplayName";
+import React, { useCallback, useEffect, useState } from "react";
 import { auth } from "../api/firebase-config";
+import SetDisplayName from "./SetDisplayName";
 // import {
 //   query,
 //   where,
@@ -11,10 +11,10 @@ import { auth } from "../api/firebase-config";
 //   limit,
 //   startAfter,
 // } from "firebase/firestore";
+import { useParams } from "react-router-dom";
 import { db } from "../api/firebase-config";
 import Post from "../components/Post";
 import UserCard from "../components/UserCard";
-import { useParams } from "react-router-dom";
 
 let query,
   where,

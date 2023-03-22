@@ -1,9 +1,9 @@
 import { deleteDoc, doc } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { useDocument } from "react-firebase-hooks/firestore";
+import { RxCross1 } from "react-icons/rx";
 import { Link } from "react-router-dom";
 import { db } from "../api/firebase-config";
-import { RxCross1 } from "react-icons/rx";
 
 const Notification = ({ data, key }) => {
   const type = data.type;

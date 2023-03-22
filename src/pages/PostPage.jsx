@@ -1,15 +1,15 @@
-import React, { useEffect, useState, useRef } from "react";
-import Post from "../components/Post";
-import Posts from "../components/Posts";
 import {
-  query,
-  where,
-  onSnapshot,
   collectionGroup,
   doc,
+  onSnapshot,
+  query,
+  where,
 } from "firebase/firestore";
-import { db } from "../api/firebase-config";
+import React, { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
+import { db } from "../api/firebase-config";
+import Post from "../components/Post";
+import Posts from "../components/Posts";
 import SendBox from "../components/SendBox";
 
 /**

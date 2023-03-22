@@ -3,9 +3,9 @@
 
 // If they are: they proceed to the page
 // If not: they are redirected to the login page.
-import React from 'react';
-import { useAuth } from '../api/authContext';
-import { Navigate, Outlet } from 'react-router-dom';
+import React from "react";
+import { Navigate, Outlet } from "react-router-dom";
+import { useAuth } from "../api/authContext";
 
 const PrivateRoutes = () => {
   const { user, loading } = useAuth();

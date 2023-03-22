@@ -1,20 +1,20 @@
 import { updateProfile } from "firebase/auth";
 import {
   collection,
-  onSnapshot,
-  query,
-  where,
   doc,
   getDoc,
-  setDoc,
+  onSnapshot,
+  query,
   serverTimestamp,
+  setDoc,
+  where,
 } from "firebase/firestore";
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import { auth, db } from "../api/firebase-config";
 import { Tilt } from "../api/TiltApi";
 import UserServices from "../api/user.services";
-import { toast } from "react-toastify";
 
 /**
  * @component

@@ -1,16 +1,4 @@
-import { updateProfile, sendEmailVerification } from "firebase/auth";
-import {
-  deleteObject,
-  getDownloadURL,
-  ref,
-  uploadBytes,
-} from "firebase/storage";
-import React, { useRef, useState, useEffect } from "react";
-import { RxCheck, RxCross1 } from "react-icons/rx";
-import { v4 } from "uuid";
-import { auth, db, storage } from "../api/firebase-config";
-import UserServices from "../api/user.services";
-import { useNavigate } from "react-router-dom";
+import { sendEmailVerification, updateProfile } from "firebase/auth";
 import {
   deleteDoc,
   doc,
@@ -18,7 +6,19 @@ import {
   serverTimestamp,
   setDoc,
 } from "firebase/firestore";
+import {
+  deleteObject,
+  getDownloadURL,
+  ref,
+  uploadBytes,
+} from "firebase/storage";
+import React, { useEffect, useRef, useState } from "react";
+import { RxCheck, RxCross1 } from "react-icons/rx";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { v4 } from "uuid";
+import { auth, db, storage } from "../api/firebase-config";
+import UserServices from "../api/user.services";
 
 /**
  * @component
