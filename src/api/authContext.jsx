@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "../api/firebase-config";
+import { auth } from "./firebase-config";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import UserService from "./user.services";

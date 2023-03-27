@@ -1,18 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { auth, db } from "../api/firebase-config";
-// import {
-//   setDoc,
-//   doc,
-//   getDoc,
-//   collection,
-//   deleteDoc,
-//   query,
-//   getCountFromServer,
-//   updateDoc,
-//   increment,
-// } from "firebase/firestore";
-
-let setDoc,
+import {
+  setDoc,
   doc,
   getDoc,
   collection,
@@ -20,20 +9,31 @@ let setDoc,
   query,
   getCountFromServer,
   updateDoc,
-  increment;
+  increment,
+} from "firebase/firestore";
 
-(async () => {
-  const firestoreModule = await import("firebase/firestore");
-  collection = firestoreModule.collection;
-  query = firestoreModule.query;
-  setDoc = firestoreModule.setDoc;
-  doc = firestoreModule.doc;
-  deleteDoc = firestoreModule.deleteDoc;
-  getDoc = firestoreModule.getDoc;
-  getCountFromServer = firestoreModule.getCountFromServer;
-  updateDoc = firestoreModule.updateDoc;
-  increment = firestoreModule.increment;
-})();
+// let setDoc,
+//   doc,
+//   getDoc,
+//   collection,
+//   deleteDoc,
+//   query,
+//   getCountFromServer,
+//   updateDoc,
+//   increment;
+
+// (async () => {
+//   const firestoreModule = await import("firebase/firestore");
+//   collection = firestoreModule.collection;
+//   query = firestoreModule.query;
+//   setDoc = firestoreModule.setDoc;
+//   doc = firestoreModule.doc;
+//   deleteDoc = firestoreModule.deleteDoc;
+//   getDoc = firestoreModule.getDoc;
+//   getCountFromServer = firestoreModule.getCountFromServer;
+//   updateDoc = firestoreModule.updateDoc;
+//   increment = firestoreModule.increment;
+// })();
 
 /**
  * @component

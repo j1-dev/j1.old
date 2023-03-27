@@ -1,41 +1,41 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { auth } from "../api/firebase-config";
 import SetDisplayName from "./SetDisplayName";
-// import {
-//   query,
-//   where,
-//   collectionGroup,
-//   collection,
-//   orderBy,
-//   onSnapshot,
-//   limit,
-//   startAfter,
-// } from "firebase/firestore";
-import { useParams } from "react-router-dom";
-import { db } from "../api/firebase-config";
-import Post from "../components/Post";
-import UserCard from "../components/UserCard";
-
-let query,
+import {
+  query,
   where,
   collectionGroup,
   collection,
   orderBy,
   onSnapshot,
   limit,
-  startAfter;
+  startAfter,
+} from "firebase/firestore";
+import { useParams } from "react-router-dom";
+import { db } from "../api/firebase-config";
+import Post from "../components/Post";
+import UserCard from "../components/UserCard";
 
-(async () => {
-  const firestoreModule = await import("firebase/firestore");
-  query = firestoreModule.query;
-  where = firestoreModule.where;
-  collectionGroup = firestoreModule.collectionGroup;
-  collection = firestoreModule.collection;
-  orderBy = firestoreModule.orderBy;
-  onSnapshot = firestoreModule.onSnapshot;
-  limit = firestoreModule.limit;
-  startAfter = firestoreModule.startAfter;
-})();
+// let query,
+//   where,
+//   collectionGroup,
+//   collection,
+//   orderBy,
+//   onSnapshot,
+//   limit,
+//   startAfter;
+
+// (async () => {
+//   const firestoreModule = await import("firebase/firestore");
+//   query = firestoreModule.query;
+//   where = firestoreModule.where;
+//   collectionGroup = firestoreModule.collectionGroup;
+//   collection = firestoreModule.collection;
+//   orderBy = firestoreModule.orderBy;
+//   onSnapshot = firestoreModule.onSnapshot;
+//   limit = firestoreModule.limit;
+//   startAfter = firestoreModule.startAfter;
+// })();
 
 /**
  * @component

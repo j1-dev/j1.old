@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { TbSend } from "react-icons/tb";
 import { useAuth } from "../api/authContext";
 import { Tilt } from "../api/TiltApi";
-import banner from "../banner.gif";
+// import banner from "../banner.gif";
 import LogInNavbar from "../components/LogInNavbar";
 
 /**
@@ -67,12 +67,12 @@ const Register = () => {
       <div className="float-right hidden h-screen w-1/2 border-l-2 border-black md:block">
         <Tilt className="mt-80 w-full text-9xl font-bold">Register</Tilt>
       </div>
-      <img
+      {/* <img
         src={banner}
         alt="yes"
         className="z-50 block w-full -translate-y-24 md:hidden"
         loading="lazy"
-      />
+      /> */}
       <div className=" float-right w-full md:w-1/2">
         <form className="md:pt-64">
           <label htmlFor="email" className="p-3 text-2xl">

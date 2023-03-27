@@ -1,15 +1,15 @@
-// import {
-//   collection,
-//   query,
-//   setDoc,
-//   doc,
-//   deleteDoc,
-//   getDoc,
-//   getCountFromServer,
-//   updateDoc,
-//   increment,
-//   // updateDoc,
-// } from "firebase/firestore";
+import {
+  collection,
+  query,
+  setDoc,
+  doc,
+  deleteDoc,
+  getDoc,
+  getCountFromServer,
+  updateDoc,
+  increment,
+  // updateDoc,
+} from "firebase/firestore";
 import React, {
   Suspense,
   useCallback,
@@ -24,28 +24,28 @@ import { Link, NavLink } from "react-router-dom";
 import YouTube from "react-youtube";
 import { auth, db } from "../api/firebase-config";
 
-let collection,
-  query,
-  setDoc,
-  doc,
-  deleteDoc,
-  getDoc,
-  getCountFromServer,
-  updateDoc,
-  increment;
+// let collection,
+//   query,
+//   setDoc,
+//   doc,
+//   deleteDoc,
+//   getDoc,
+//   getCountFromServer,
+//   updateDoc,
+//   increment;
 
-(async () => {
-  const firestoreModule = await import("firebase/firestore");
-  collection = firestoreModule.collection;
-  query = firestoreModule.query;
-  setDoc = firestoreModule.setDoc;
-  doc = firestoreModule.doc;
-  deleteDoc = firestoreModule.deleteDoc;
-  getDoc = firestoreModule.getDoc;
-  getCountFromServer = firestoreModule.getCountFromServer;
-  updateDoc = firestoreModule.updateDoc;
-  increment = firestoreModule.increment;
-})();
+// (async () => {
+//   const firestoreModule = await import("firebase/firestore");
+//   collection = firestoreModule.collection;
+//   query = firestoreModule.query;
+//   setDoc = firestoreModule.setDoc;
+//   doc = firestoreModule.doc;
+//   deleteDoc = firestoreModule.deleteDoc;
+//   getDoc = firestoreModule.getDoc;
+//   getCountFromServer = firestoreModule.getCountFromServer;
+//   updateDoc = firestoreModule.updateDoc;
+//   increment = firestoreModule.increment;
+// })();
 /**
  * @component
  * A component that displays a single post, along with information about its author and comments, likes, and dislikes.

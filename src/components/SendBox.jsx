@@ -9,27 +9,27 @@ import { TbSend } from "react-icons/tb";
 import { usePopper } from "react-popper";
 import { v4 } from "uuid";
 import { auth, storage } from "../api/firebase-config";
-// import {
-//   doc,
-//   collection,
-//   setDoc,
-//   getDoc,
-//   updateDoc,
-//   increment,
-// } from "firebase/firestore";
+import {
+  doc,
+  collection,
+  setDoc,
+  getDoc,
+  updateDoc,
+  increment,
+} from "firebase/firestore";
 import { db } from "../api/firebase-config";
 
-let collection, setDoc, doc, getDoc, updateDoc, increment;
+// let collection, setDoc, doc, getDoc, updateDoc, increment;
 
-(async () => {
-  const firestoreModule = await import("firebase/firestore");
-  collection = firestoreModule.collection;
-  setDoc = firestoreModule.setDoc;
-  doc = firestoreModule.doc;
-  getDoc = firestoreModule.getDoc;
-  updateDoc = firestoreModule.updateDoc;
-  increment = firestoreModule.increment;
-})();
+// (async () => {
+//   const firestoreModule = await import("firebase/firestore");
+//   collection = firestoreModule.collection;
+//   setDoc = firestoreModule.setDoc;
+//   doc = firestoreModule.doc;
+//   getDoc = firestoreModule.getDoc;
+//   updateDoc = firestoreModule.updateDoc;
+//   increment = firestoreModule.increment;
+// })();
 
 /**
  * @component
